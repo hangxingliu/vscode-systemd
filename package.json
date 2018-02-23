@@ -1,5 +1,8 @@
 {
   "name": "systemd-unit-file",
+  "repository": {
+    "url": "https://github.com/bearmini/vscode-systemd-unit-file"
+  },
   "displayName": "systemd-unit-file",
   "description": "Language support for systemd unit files",
   "version": "0.0.1",
@@ -7,6 +10,7 @@
   "engines": {
     "vscode": "^1.20.0"
   },
+  "license": "MIT",
   "categories": [
     "Languages"
   ],
