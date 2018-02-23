@@ -1,0 +1,39 @@
+{
+  "name": "systemd-unit-file",
+  "displayName": "systemd-unit-file",
+  "description": "Language support for systemd unit files",
+  "version": "0.0.1",
+  "publisher": "coolbear",
+  "engines": {
+    "vscode": "^1.20.0"
+  },
+  "categories": [
+    "Languages"
+  ],
+  "contributes": {
+    "languages": [{
+      "id": "systemd-unit-file",
+      "aliases": ["systemd unit file", "systemd-unit-file"],
+      "extensions": [
+        ".service",
+        ".socket",
+        ".device",
+        ".mount",
+        ".automount",
+        ".swap",
+        ".target",
+        ".path",
+        ".timer",
+        ".snapshot",
+        ".slice",
+        ".scope"
+      ],
+      "configuration": "./language-configuration.json"
+    }],
+    "grammars": [{
+      "language": "systemd-unit-file",
+      "scopeName": "source.systemdUnitFile",
+      "path": "./syntaxes/systemd-unit-file.tmLanguage.json"
+    }]
+  }
+}

@@ -1,0 +1,212 @@
+# line comment 1
+; line comment 2
+[UnknownSection]
+UnknownOption1 = hoge # 日本語
+UnknownOption2=hoge # no space before and after '='
+WrappedLine = foo bar \
+  aaa bbb ccc # not supported
+X-prefixed-options1 = 
+
+[Unit]
+Description=Service sample Description ; comment
+Documentation=http://doc.example.com https://doc.example.com file:///usr/shared/doc/sample
+Documentation = info:sample.service man:sample.service
+Documentation =   # empty string to reset prior settings
+Requires=requires1.service requires2.service
+Requires = requires3.service
+RequiresOverridable = test for specifiers %n %N %p %P %i %I %f %c %r %R %t %u %U %h %s %m %b %H %v %%
+Requisite = should not recognized as specifiers: %a %no
+RequisiteOverridable = true false on off yes no
+Wants =
+BindsTo =
+PartOf =
+Conflicts =
+Before =
+After =
+OnFailure =
+PropagatesReloadTo =
+ReloadPropagatedFrom =
+JoinsNamespaceOf =
+RequiresMountsFor = fail replace replace-irreversibly isolate flush ignore-dependencies ignore-requirements
+IgnoreOnIsolate =
+IgnoreOnSnapshot =
+StopWhenUnneeded =
+RefuseManualStart =
+RefuseManualStop =
+AllowIsolate =
+DefaultDependencies =
+JobTimeoutSec = 10 50s 3min 1h 2d 3w 4ms 500us
+JobTimeoutAction =
+JobTimeoutRebootArgument
+ConditionArchitecture = x86 !x86 x86-64 !x86-64 arm arm-be arm64 arm64-be native
+ConditionVirtualization = qemu kvm zvm vmware microsoft oracle xen bochs uml openvz lxc-libvirt lxc systemd-nspawn docker
+ConditionHost =
+ConditionKernelCommandLine = 
+ConditionSecurity = selinux apparmor ima smack audit
+ConditionCapability =
+ConditionACPower =
+ConditionNeedsUpdate =
+ConditionFirstBoot =
+ConditionPathExists =
+ConditionPathExistsGlob =
+ConditionPathIsDirectory =
+ConditionPathIsSymbolicLink =
+ConditionPathIsMountPoint =
+ConditionPathIsReadWrite =
+ConditionDirectoryNotEmpty =
+ConditionFileNotEmpty =
+ConditionFileIsExecutable =
+AssertArchitecture =
+AssertVirtualization =
+AssertHost =
+AssertKernelCommandLine =
+AssertSecurity =
+AssertCapability =
+AssertACPower =
+AssertNeedsUpdate =
+AssertFirstBoot =
+AssertPathExists =
+AssertPathExistsGlob =
+AssertPathIsDirectory =
+AssertPathIsSymbolicLink =
+AssertPathIsMountPoint =
+AssertPathIsReadWrite =
+AssertDirectoryNotEmpty =
+AssertFileNotEmpty =
+AssertFileIsExecutable =
+SourcePath =
+
+[Install]
+Alias =
+WantedBy =
+RequiredBy =
+Also =
+DefaultInstance =
+
+[Service]
+Type = simple forking oneshot dbus notify idle
+RemainAfterExit =
+GuessMainPID =
+PIDFile =
+BusName =
+BusPolicy = see talk own
+ExecStartPre =
+ExecStartPost =
+ExecStart =
+ExecReload =
+ExecStop =
+RestartSec =
+TimeoutStartSec =
+TimeoutStopSec =
+TimeoutSec =
+WatchdogSec =
+Restart = no always on-success on-failure on-abnormal on-abort on-watchdog
+SuccessExitStatus = SIGHUP SIGINT SIGTERM SIGPIPE
+RestartPreventExitStatus =
+RestartForceExitStatus =
+PermissionsStartOnly =
+RootDirectoryStartOnly =
+NonBlocking =
+NotifyAccess = none main all
+Sockets =
+StartLimitInterval =
+StartLimitBurst =
+StartLimitAction = none reboot-force reboot-immediate reboot poweroff-force poweroff-immediate poweroff
+FailureAction =
+RebootArgument =
+FileDescriptorStoreMax =
+
+[Socket]
+ListenStream =
+ListenDatagram =
+ListenSequentialPacket =
+ListenFIFO =
+ListenSpecial =
+ListenNetlink =
+ListenMessageQueue =
+BindIPv6Only = default both ipv6-only
+Backlog =
+BindToDevice =
+SocketUser =
+SocketGroup =
+SocketMode =
+DirectoryMode =
+Accept =
+MaxConnections =
+KeepAliveTimeSec =
+KeepAliveIntervalSec =
+KeepAliveProbes =
+KeepAlive =
+NoDelay =
+Priority =
+DeferAcceptSec =
+ReceiveBuffer =
+SendBuffer = 
+IPTOS =
+IPTTL =
+Mark =
+ReusePort =
+SmackLabelIPIn =
+SmackLabelIPOut =
+SmackLabel =
+SELinuxContextFromNet =
+PipeSize =
+MessageQueueMaxMessages =
+MessageQueueMessageSize =
+FreeBind =
+Transparent =
+Broadcast =
+PassCredentials =
+PassSecurity =
+TCPCongestion =
+ExecStartPre =
+ExecStartPost =
+ExecStopPre =
+ExecStopPost =
+TimeoutSec =
+Service =
+RemoveOnStop =
+Symlinks =
+
+[Mount]
+What =
+Where =
+Type =
+Options =
+SloppyOptions =
+DirectoryMode =
+TimeoutSec =
+
+[Automount]
+Where =
+DirectoryMode =
+TimeoutIdleSec =
+
+[Swap]
+What =
+Priority =
+Options =
+TimeoutSec =
+
+[Path]
+PathExists =
+PathExistsGlob =
+PathChanged =
+PathModified =
+DirectoryNotEmpty =
+Unit =
+MakeDirectory =
+DirectoryMode =
+
+[Timer]
+OnActiveSec =
+OnBootSec =
+OnStartupSec =
+OnUnitActiveSec =
+OnUnitInactiveSec =
+OnCalendar =
+AccuracySec =
+RandomizedDelaySec =
+Unit =
+Persistent =
+WakeSystem =
