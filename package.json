@@ -1,7 +1,8 @@
 {
 	"name": "vscode-systemd-support",
 	"repository": {
-		"url": "https://github.com/bearmini/vscode-systemd-unit-file"
+		"type": "git",
+		"url": "https://github.com/hangxingliu/vscode-systemd-support"
 	},
 	"displayName": "Systemd Support",
 	"description": "Fork from systemd-unit-file extension by bearmini",

@@ -1,5 +1,8 @@
-# vscode package
-.vsix
+# archive files
+*.tgz
+*.vsix
+*.zip
+*.tar
 
 # Logs
 logs

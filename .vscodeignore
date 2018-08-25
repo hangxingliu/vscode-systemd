@@ -12,3 +12,15 @@
 
 # cache
 utils/request-cache/**
+
+# example files
+examples/**
+
+# utils scripts
+utils/*.js
+
+# archive files
+*.tgz
+*.vsix
+*.zip
+*.tar
