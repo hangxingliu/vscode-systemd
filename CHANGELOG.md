@@ -1,8 +1,5 @@
-# Change Log
-All notable changes to the "systemd-unit-file" extension will be documented in this file.
+# CHANGELOG
 
-The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
-and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
+### [0.0.1] - 2018-02-23
 
-## [1.0.0] - 2018-02-23
-- Initial release
+- Initial release by [@bearmini (Takashi Oguma)](https://github.com/bearmini)

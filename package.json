@@ -1,43 +1,53 @@
 {
-  "name": "systemd-unit-file",
+  "name": "vscode-systemd-support",
   "repository": {
     "url": "https://github.com/bearmini/vscode-systemd-unit-file"
   },
-  "displayName": "systemd-unit-file",
-  "description": "Language support for systemd unit files",
-  "version": "0.0.1",
-  "publisher": "coolbear",
+  "displayName": "Systemd Support",
+  "description": "Fork from systemd-unit-file extension by bearmini",
+  "icon": "./images/icon-64x64.png",
+  "version": "0.1.0",
+  "publisher": "hangxingliu",
+  "author": "hangxingliu",
   "engines": {
     "vscode": "^1.20.0"
   },
   "license": "MIT",
   "categories": [
-    "Languages"
+    "Programming Languages",
+    "Snippets"
   ],
   "contributes": {
-    "languages": [{
-      "id": "systemd-unit-file",
-      "aliases": ["systemd unit file", "systemd-unit-file"],
-      "extensions": [
-        ".service",
-        ".socket",
-        ".device",
-        ".mount",
-        ".automount",
-        ".swap",
-        ".target",
-        ".path",
-        ".timer",
-        ".snapshot",
-        ".slice",
-        ".scope"
-      ],
-      "configuration": "./language-configuration.json"
-    }],
-    "grammars": [{
-      "language": "systemd-unit-file",
-      "scopeName": "source.systemdUnitFile",
-      "path": "./syntaxes/systemd-unit-file.tmLanguage.json"
-    }]
+    "languages": [
+      {
+        "id": "systemd-unit-file",
+        "aliases": [
+          "systemd unit file",
+          "systemd-unit-file"
+        ],
+        "extensions": [
+          ".service",
+          ".socket",
+          ".device",
+          ".mount",
+          ".automount",
+          ".swap",
+          ".target",
+          ".path",
+          ".timer",
+          ".snapshot",
+          ".slice",
+          ".scope"
+        ],
+        "configuration": "./language-configuration.json"
+      }
+    ],
+    "grammars": [
+      {
+        "language": "systemd-unit-file",
+        "scopeName": "source.systemdUnitFile",
+        "path": "./syntaxes/systemd-unit-file.tmLanguage.json"
+      }
+    ]
   }
 }

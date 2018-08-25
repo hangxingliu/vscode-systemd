@@ -1,4 +1,11 @@
+# vscode package
+.vsix
+
+# vscode configuartion
 .vscode/**
+
+# vscode test files
 .vscode-test/**
+
+# ignore gitignore fuke
 .gitignore
-vsc-extension-quickstart.md
