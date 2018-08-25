@@ -45,13 +45,13 @@
     "known-sections": {
       "patterns": [{
         "name": "entity.name.section",
-        "match": "\\[(Unit|Install|Service|Socket|Mount|Automount|Swap|Path|Timer)\\]"
+        "match": "^\\s*\\[(Unit|Install|Service|Socket|Mount|Automount|Swap|Path|Timer)\\]"
       }]
     },
     "unknown-sections": {
       "patterns": [{
         "name": "keyword.other",
-        "match": "\\[.*\\]"
+        "match": "^\\s*\\[.*\\]"
       }]
     },
     "unit-section-known-options": {
@@ -117,7 +117,7 @@
     "unknown-options": {
       "patterns": [{
         "name": "keyword.other",
-        "match": "^[^=]+"
+		"match": "^[^=]+="
       }]
     },
     "on-failure-job-modes": {
@@ -188,7 +188,7 @@
     },
     "specifiers": {
       "patterns": [{
-        "name": "entity.name.tag",
+        "name": "constant.other.placeholder",
         "match": "(%(n|N|p|P|i|I|f|c|r|R|t|u|U|h|s|m|b|H|v|)\\b|%%)"
       }]
     },

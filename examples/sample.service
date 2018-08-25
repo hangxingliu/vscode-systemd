@@ -14,7 +14,8 @@ Documentation = info:sample.service man:sample.service
 Documentation =   # empty string to reset prior settings
 Requires=requires1.service requires2.service
 Requires = requires3.service
-RequiresOverridable = test for specifiers %n %N %p %P %i %I %f %c %r %R %t %u %U %h %s %m %b %H %v %%
+RequiresOverridable = test for \
+  specifiers %n %N %p %P %i %I %f %c %r %R %t %u %U %h %s %m %b %H %v %%
 Requisite = should not recognized as specifiers: %a %no
 RequisiteOverridable = true false on off yes no
 Wants =
