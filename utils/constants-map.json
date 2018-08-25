@@ -1,0 +1,109 @@
+{
+	"service.Restart": [
+		"no",
+		"always",
+		"on-success",
+		"on-failure",
+		"on-abnormal",
+		"on-abort",
+		"on-watchdog"
+	],
+	"service.SuccessExitStatus": [
+		"SIGHUP",
+		"SIGINT",
+		"SIGTERM",
+		"SIGPIPE"
+	],
+	"system.SystemCallArchitectures,system.ConditionArchitecture": [
+		"x86-64",
+		"x86",
+		"ppc-le",
+		"ppc",
+		"ppc64-le",
+		"ppc64",
+		"ia64",
+		"parisc",
+		"parisc64",
+		"s390",
+		"s390x",
+		"sparc",
+		"sparc64",
+		"mips-le",
+		"mips",
+		"mips64-le",
+		"mips64",
+		"alpha",
+		"arm-be",
+		"arm64-be",
+		"arm64",
+		"arm",
+		"sh",
+		"sh64",
+		"m86k",
+		"tilegx",
+		"cris",
+		"native"
+	],
+	"system.ConditionVirtualization": [
+		"qemu",
+		"kvm",
+		"zvm",
+		"vmware",
+		"microsoft",
+		"oracle",
+		"xen",
+		"bochs",
+		"uml",
+		"bhyve",
+		"qnx",
+		"openvz",
+		"lxc",
+		"lxc-libvirt",
+		"systemd-nspawn",
+		"docker",
+		"rkt"
+	],
+	"unit.ConditionSecurity": [
+		"selinux",
+		"apparmor",
+		"ima",
+		"smack",
+		"audit"
+	],
+	"unit.OnFailureJobMode": [
+		"fail",
+		"replace-irreversibly",
+		"replace",
+		"isolate",
+		"flush",
+		"ignore-dependencies",
+		"ignore-requirements"
+	],
+	"service.Type": [
+		"simple",
+		"forking",
+		"oneshot",
+		"dbus",
+		"notify",
+		"idle"
+	],
+	"service.NotifyAccess": [
+		"none",
+		"main",
+		"all"
+	],
+	"service.StartLimitAction": [
+		"none",
+		"reboot-force",
+		"reboot-immediate",
+		"reboot",
+		"poweroff-force",
+		"poweroff-immediate",
+		"poweroff"
+	],
+	"socket.BindIPv6Only": [
+		"default",
+		"both",
+		"ipv6-only"
+	]
+}

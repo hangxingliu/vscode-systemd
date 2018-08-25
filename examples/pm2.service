@@ -1,0 +1,21 @@
+[Unit]
+Description=PM2 process manager
+Documentation=https://pm2.keymetrics.io/
+After=network.target
+
+[Service]
+Type=forking
+User=hangxingliu
+LimitNOFILE=infinity
+LimitNPROC=infinity
+LimitCORE=infinity
+Environment=PATH=/home/hangxingliu/.nvm/versions/node/v10.1.0/bin:/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin
+Environment=PM2_HOME=/home/hangxingliu/.pm2
+PIDFile=/home/hangxingliu/.pm2/pm2.pid
+
+ExecStart=/home/hangxingliu/.nvm/versions/node/v10.1.0/lib/node_modules/pm2/bin/pm2 resurrect
+ExecReload=/home/hangxingliu/.nvm/versions/node/v10.1.0/lib/node_modules/pm2/bin/pm2 reload all
+ExecStop=/home/hangxingliu/.nvm/versions/node/v10.1.0/lib/node_modules/pm2/bin/pm2 kill
+
+[Install]
+WantedBy=multi-user.target

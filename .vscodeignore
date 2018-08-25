@@ -9,3 +9,6 @@
 
 # ignore gitignore fuke
 .gitignore
+
+# cache
+utils/request-cache/**
