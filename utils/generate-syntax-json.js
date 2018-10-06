@@ -104,8 +104,8 @@ function main() {
 				const repoName = sectionName.replace(/^systemd\./, '') + '-section-known-options';
 				repositoryResult[repoName] = {
 					patterns: [{
-						name: "entity.name.tag",
-						match: `\\b(${optionsMap[sectionName].join('|')})\\b`
+						match: `^\\s*(${optionsMap[sectionName].join('|')})\\s*=`,
+						captures: { "1": { name: "entity.name.tag" } },
 					}]
 				};
 			}
@@ -136,6 +136,8 @@ function main() {
 	};
 
 	fs.writeJsonSync(TARGET, tmLanguageResult, { spaces: '\t' });
-	console.log(`success: generated ${TARGET}`);
+	console.log(`success: syntax file are generated!`);
+	console.log(`  time: ${new Date().toLocaleString()}`);
+	console.log(`  file: ${TARGET}`);
 }
 

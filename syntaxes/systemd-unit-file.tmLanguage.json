@@ -183,240 +183,360 @@
 		"socket-section-known-options": {
 			"patterns": [
 				{
-					"name": "entity.name.tag",
-					"match": "\\b(Accept|Backlog|BindIPv6Only|BindToDevice|Broadcast|DeferAcceptSec|DirectoryMode|ExecStartPost|ExecStartPre|ExecStopPost|ExecStopPre|FileDescriptorName|FreeBind|IPTOS|IPTTL|KeepAlive|KeepAliveIntervalSec|KeepAliveProbes|KeepAliveTimeSec|ListenDatagram|ListenFIFO|ListenMessageQueue|ListenNetlink|ListenSequentialPacket|ListenSpecial|ListenStream|ListenUSBFunction|Mark|MaxConnections|MaxConnectionsPerSource|MessageQueueMaxMessages|MessageQueueMessageSize|NoDelay|PassCredentials|PassSecurity|PipeSize|Priority|ReceiveBuffer|RemoveOnStop|ReusePort|SELinuxContextFromNet|SendBuffer|Service|SmackLabel|SmackLabelIPIn|SmackLabelIPOut|SocketGroup|SocketMode|SocketProtocol|SocketUser|Symlinks|TCPCongestion|TimeoutSec|Transparent|TriggerLimitBurst|TriggerLimitIntervalSec|Writable)\\b"
+					"match": "^\\s*(Accept|Backlog|BindIPv6Only|BindToDevice|Broadcast|DeferAcceptSec|DirectoryMode|ExecStartPost|ExecStartPre|ExecStopPost|ExecStopPre|FileDescriptorName|FreeBind|IPTOS|IPTTL|KeepAlive|KeepAliveIntervalSec|KeepAliveProbes|KeepAliveTimeSec|ListenDatagram|ListenFIFO|ListenMessageQueue|ListenNetlink|ListenSequentialPacket|ListenSpecial|ListenStream|ListenUSBFunction|Mark|MaxConnections|MaxConnectionsPerSource|MessageQueueMaxMessages|MessageQueueMessageSize|NoDelay|PassCredentials|PassSecurity|PipeSize|Priority|ReceiveBuffer|RemoveOnStop|ReusePort|SELinuxContextFromNet|SendBuffer|Service|SmackLabel|SmackLabelIPIn|SmackLabelIPOut|SocketGroup|SocketMode|SocketProtocol|SocketUser|Symlinks|TCPCongestion|TimeoutSec|Transparent|TriggerLimitBurst|TriggerLimitIntervalSec|Writable)\\s*=",
+					"captures": {
+						"1": {
+							"name": "entity.name.tag"
+						}
+					}
 				}
 			]
 		},
 		"timer-section-known-options": {
 			"patterns": [
 				{
-					"name": "entity.name.tag",
-					"match": "\\b(AccuracySec|OnActiveSec|OnBootSec|OnCalendar|OnStartupSec|OnUnitActiveSec|OnUnitInactiveSec|Persistent|RandomizedDelaySec|RemainAfterElapse|Unit|WakeSystem)\\b"
+					"match": "^\\s*(AccuracySec|OnActiveSec|OnBootSec|OnCalendar|OnStartupSec|OnUnitActiveSec|OnUnitInactiveSec|Persistent|RandomizedDelaySec|RemainAfterElapse|Unit|WakeSystem)\\s*=",
+					"captures": {
+						"1": {
+							"name": "entity.name.tag"
+						}
+					}
 				}
 			]
 		},
 		"unit-section-known-options": {
 			"patterns": [
 				{
-					"name": "entity.name.tag",
-					"match": "\\b(After|Alias|AllowIsolate|Also|AssertACPower|AssertArchitecture|AssertCapability|AssertControlGroupController|AssertDirectoryNotEmpty|AssertFileIsExecutable|AssertFileNotEmpty|AssertFirstBoot|AssertGroup|AssertHost|AssertKernelCommandLine|AssertKernelVersion|AssertNeedsUpdate|AssertPathExists|AssertPathExistsGlob|AssertPathIsDirectory|AssertPathIsMountPoint|AssertPathIsReadWrite|AssertPathIsSymbolicLink|AssertSecurity|AssertUser|AssertVirtualization|Before|BindsTo|CollectMode|ConditionACPower|ConditionArchitecture|ConditionCapability|ConditionControlGroupController|ConditionDirectoryNotEmpty|ConditionFileIsExecutable|ConditionFileNotEmpty|ConditionFirstBoot|ConditionGroup|ConditionHost|ConditionKernelCommandLine|ConditionKernelVersion|ConditionNeedsUpdate|ConditionPathExists|ConditionPathExistsGlob|ConditionPathIsDirectory|ConditionPathIsMountPoint|ConditionPathIsReadWrite|ConditionPathIsSymbolicLink|ConditionSecurity|ConditionUser|ConditionVirtualization|Conflicts|DefaultDependencies|DefaultInstance|Description|Documentation|FailureAction|IgnoreOnIsolate|JobRunningTimeoutSec|JobTimeoutAction|JobTimeoutRebootArgument|JobTimeoutSec|JoinsNamespaceOf|OnFailure|OnFailureJobMode|PartOf|PropagatesReloadTo|RebootArgument|RefuseManualStart|RefuseManualStop|ReloadPropagatedFrom|RequiredBy|Requires|RequiresMountsFor|Requisite|SourcePath|StartLimitAction|StartLimitBurst|StartLimitIntervalSec|StopWhenUnneeded|SuccessAction|WantedBy|Wants)\\b"
+					"match": "^\\s*(After|Alias|AllowIsolate|Also|AssertACPower|AssertArchitecture|AssertCapability|AssertControlGroupController|AssertDirectoryNotEmpty|AssertFileIsExecutable|AssertFileNotEmpty|AssertFirstBoot|AssertGroup|AssertHost|AssertKernelCommandLine|AssertKernelVersion|AssertNeedsUpdate|AssertPathExists|AssertPathExistsGlob|AssertPathIsDirectory|AssertPathIsMountPoint|AssertPathIsReadWrite|AssertPathIsSymbolicLink|AssertSecurity|AssertUser|AssertVirtualization|Before|BindsTo|CollectMode|ConditionACPower|ConditionArchitecture|ConditionCapability|ConditionControlGroupController|ConditionDirectoryNotEmpty|ConditionFileIsExecutable|ConditionFileNotEmpty|ConditionFirstBoot|ConditionGroup|ConditionHost|ConditionKernelCommandLine|ConditionKernelVersion|ConditionNeedsUpdate|ConditionPathExists|ConditionPathExistsGlob|ConditionPathIsDirectory|ConditionPathIsMountPoint|ConditionPathIsReadWrite|ConditionPathIsSymbolicLink|ConditionSecurity|ConditionUser|ConditionVirtualization|Conflicts|DefaultDependencies|DefaultInstance|Description|Documentation|FailureAction|IgnoreOnIsolate|JobRunningTimeoutSec|JobTimeoutAction|JobTimeoutRebootArgument|JobTimeoutSec|JoinsNamespaceOf|OnFailure|OnFailureJobMode|PartOf|PropagatesReloadTo|RebootArgument|RefuseManualStart|RefuseManualStop|ReloadPropagatedFrom|RequiredBy|Requires|RequiresMountsFor|Requisite|SourcePath|StartLimitAction|StartLimitBurst|StartLimitIntervalSec|StopWhenUnneeded|SuccessAction|WantedBy|Wants)\\s*=",
+					"captures": {
+						"1": {
+							"name": "entity.name.tag"
+						}
+					}
 				}
 			]
 		},
 		"link-section-known-options": {
 			"patterns": [
 				{
-					"name": "entity.name.tag",
-					"match": "\\b(Alias|Description|Type|Architecture|AutoNegotiation|BitsPerSecond|CombinedChannels|Driver|Duplex|GenericReceiveOffload|GenericSegmentationOffload|Host|KernelCommandLine|KernelVersion|LargeReceiveOffload|MACAddress|MACAddressPolicy|MTUBytes|Name|NamePolicy|OriginalName|OtherChannels|Path|Port|RxChannels|TCP6SegmentationOffload|TCPSegmentationOffload|TxChannels|Virtualization|WakeOnLan)\\b"
+					"match": "^\\s*(Alias|Description|Type|Architecture|AutoNegotiation|BitsPerSecond|CombinedChannels|Driver|Duplex|GenericReceiveOffload|GenericSegmentationOffload|Host|KernelCommandLine|KernelVersion|LargeReceiveOffload|MACAddress|MACAddressPolicy|MTUBytes|Name|NamePolicy|OriginalName|OtherChannels|Path|Port|RxChannels|TCP6SegmentationOffload|TCPSegmentationOffload|TxChannels|Virtualization|WakeOnLan)\\s*=",
+					"captures": {
+						"1": {
+							"name": "entity.name.tag"
+						}
+					}
 				}
 			]
 		},
 		"exec-section-known-options": {
 			"patterns": [
 				{
-					"name": "entity.name.tag",
-					"match": "\\b(AmbientCapabilities|BindPaths|BindReadOnlyPaths|CapabilityBoundingSet|DynamicUser|Group|MountAPIVFS|NoNewPrivileges|PAMName|RootDirectory|RootImage|SecureBits|SupplementaryGroups|User|WorkingDirectory|CPUAffinity|SystemCallArchitectures|TimerSlackNSec|AppArmorProfile|CPUSchedulingPolicy|CPUSchedulingPriority|CPUSchedulingResetOnFork|CacheDirectory|CacheDirectoryMode|ConfigurationDirectory|ConfigurationDirectoryMode|Environment|EnvironmentFile|IOSchedulingClass|IOSchedulingPriority|IgnoreSIGPIPE|InaccessiblePaths|KeyringMode|LimitAS|LimitCORE|LimitCPU|LimitDATA|LimitFSIZE|LimitLOCKS|LimitMEMLOCK|LimitMSGQUEUE|LimitNICE|LimitNOFILE|LimitNPROC|LimitRSS|LimitRTPRIO|LimitRTTIME|LimitSIGPENDING|LimitSTACK|LockPersonality|LogExtraFields|LogLevelMax|LogsDirectory|LogsDirectoryMode|MemoryDenyWriteExecute|MountFlags|Nice|OOMScoreAdjust|PassEnvironment|Personality|PrivateDevices|PrivateMounts|PrivateNetwork|PrivateTmp|PrivateUsers|ProtectControlGroups|ProtectHome|ProtectKernelModules|ProtectKernelTunables|ProtectSystem|ReadOnlyPaths|ReadWritePaths|RemoveIPC|RestrictAddressFamilies|RestrictNamespaces|RestrictRealtime|RuntimeDirectory|RuntimeDirectoryMode|RuntimeDirectoryPreserve|SELinuxContext|SmackProcessLabel|StandardError|StandardInput|StandardInputData|StandardInputText|StandardOutput|StateDirectory|StateDirectoryMode|SyslogFacility|SyslogIdentifier|SyslogLevel|SyslogLevelPrefix|SystemCallErrorNumber|SystemCallFilter|TTYPath|TTYReset|TTYVHangup|TTYVTDisallocate|TemporaryFileSystem|UMask|UnsetEnvironment|UtmpIdentifier|UtmpMode)\\b"
+					"match": "^\\s*(AmbientCapabilities|BindPaths|BindReadOnlyPaths|CapabilityBoundingSet|DynamicUser|Group|MountAPIVFS|NoNewPrivileges|PAMName|RootDirectory|RootImage|SecureBits|SupplementaryGroups|User|WorkingDirectory|CPUAffinity|SystemCallArchitectures|TimerSlackNSec|AppArmorProfile|CPUSchedulingPolicy|CPUSchedulingPriority|CPUSchedulingResetOnFork|CacheDirectory|CacheDirectoryMode|ConfigurationDirectory|ConfigurationDirectoryMode|Environment|EnvironmentFile|IOSchedulingClass|IOSchedulingPriority|IgnoreSIGPIPE|InaccessiblePaths|KeyringMode|LimitAS|LimitCORE|LimitCPU|LimitDATA|LimitFSIZE|LimitLOCKS|LimitMEMLOCK|LimitMSGQUEUE|LimitNICE|LimitNOFILE|LimitNPROC|LimitRSS|LimitRTPRIO|LimitRTTIME|LimitSIGPENDING|LimitSTACK|LockPersonality|LogExtraFields|LogLevelMax|LogsDirectory|LogsDirectoryMode|MemoryDenyWriteExecute|MountFlags|Nice|OOMScoreAdjust|PassEnvironment|Personality|PrivateDevices|PrivateMounts|PrivateNetwork|PrivateTmp|PrivateUsers|ProtectControlGroups|ProtectHome|ProtectKernelModules|ProtectKernelTunables|ProtectSystem|ReadOnlyPaths|ReadWritePaths|RemoveIPC|RestrictAddressFamilies|RestrictNamespaces|RestrictRealtime|RuntimeDirectory|RuntimeDirectoryMode|RuntimeDirectoryPreserve|SELinuxContext|SmackProcessLabel|StandardError|StandardInput|StandardInputData|StandardInputText|StandardOutput|StateDirectory|StateDirectoryMode|SyslogFacility|SyslogIdentifier|SyslogLevel|SyslogLevelPrefix|SystemCallErrorNumber|SystemCallFilter|TTYPath|TTYReset|TTYVHangup|TTYVTDisallocate|TemporaryFileSystem|UMask|UnsetEnvironment|UtmpIdentifier|UtmpMode)\\s*=",
+					"captures": {
+						"1": {
+							"name": "entity.name.tag"
+						}
+					}
 				}
 			]
 		},
 		"resource-control-section-known-options": {
 			"patterns": [
 				{
-					"name": "entity.name.tag",
-					"match": "\\b(BlockIOAccounting|BlockIODeviceWeight|BlockIOReadBandwidth|BlockIOWeight|BlockIOWriteBandwidth|CPUAccounting|CPUQuota|CPUShares|CPUWeight|Delegate|DeviceAllow|DevicePolicy|IOAccounting|IODeviceWeight|IOReadBandwidthMax|IOReadIOPSMax|IOWeight|IOWriteBandwidthMax|IOWriteIOPSMax|IPAccounting|IPAddressAllow|IPAddressDeny|MemoryAccounting|MemoryHigh|MemoryLimit|MemoryLow|MemoryMax|MemorySwapMax|Slice|StartupBlockIOWeight|StartupCPUShares|StartupCPUWeight|StartupIOWeight|TasksAccounting|TasksMax)\\b"
+					"match": "^\\s*(BlockIOAccounting|BlockIODeviceWeight|BlockIOReadBandwidth|BlockIOWeight|BlockIOWriteBandwidth|CPUAccounting|CPUQuota|CPUShares|CPUWeight|Delegate|DeviceAllow|DevicePolicy|IOAccounting|IODeviceWeight|IOReadBandwidthMax|IOReadIOPSMax|IOWeight|IOWriteBandwidthMax|IOWriteIOPSMax|IPAccounting|IPAddressAllow|IPAddressDeny|MemoryAccounting|MemoryHigh|MemoryLimit|MemoryLow|MemoryMax|MemorySwapMax|Slice|StartupBlockIOWeight|StartupCPUShares|StartupCPUWeight|StartupIOWeight|TasksAccounting|TasksMax)\\s*=",
+					"captures": {
+						"1": {
+							"name": "entity.name.tag"
+						}
+					}
 				}
 			]
 		},
 		"network-section-known-options": {
 			"patterns": [
 				{
-					"name": "entity.name.tag",
-					"match": "\\b(Broadcast|Description|Priority|RestartSec|Type|ARP|ActiveSlave|Address|AddressAutoconfiguration|AllMulticast|AllowPortToBeRoot|Anonymize|Architecture|AutoJoin|BindCarrier|BitRate|Bond|Bridge|ClientIdentifier|ConfigureWithoutCarrier|Cost|CriticalConnection|DHCP|DHCPServer|DNS|DNSLifetimeSec|DNSOverTLS|DNSSEC|DNSSECNegativeTrustAnchors|DUIDRawData|DUIDType|DefaultLeaseTimeSec|Destination|Domains|Driver|DuplicateAddressDetection|EgressUntagged|EmitDNS|EmitDomains|EmitLLDP|EmitNTP|EmitRouter|EmitTimezone|FastLeave|FirewallMark|From|Gateway|GatewayOnlink|HairPin|HomeAddress|Host|Hostname|IAID|IPForward|IPMasquerade|IPv4LLRoute|IPv4ProxyARP|IPv6AcceptRA|IPv6DuplicateAddressDetection|IPv6HopLimit|IPv6MTUBytes|IPv6Preference|IPv6PrefixDelegation|IPv6PrivacyExtensions|IPv6ProxyNDP|IPv6ProxyNDPAddress|IPv6Token|IncomingInterface|InitialAdvertisedReceiveWindow|InitialCongestionWindow|KernelCommandLine|KernelVersion|LLDP|LLMNR|Label|LinkLocalAddressing|ListenPort|MACAddress|MACVLAN|MTUBytes|ManageTemporaryAddress|Managed|MaxLeaseTimeSec|Metric|Multicast|MulticastDNS|NTP|Name|OnLink|OtherInformation|OutgoingInterface|PVID|Path|Peer|PoolOffset|PoolSize|PreferredLifetime|PreferredLifetimeSec|PreferredSource|Prefix|PrefixRoute|PrimarySlave|Protocol|QuickAck|RapidCommit|RequestBroadcast|RequiredForOnline|RouteMetric|RouteTable|RouterLifetimeSec|RouterPreference|SamplePoint|Scope|SendHostname|Source|Table|Timezone|To|Tunnel|TypeOfService|UnicastFlood|Unmanaged|UseBPDU|UseDNS|UseDomains|UseHostname|UseMTU|UseNTP|UseRoutes|UseTimezone|UserClass|VLAN|VLANId|VRF|VXLAN|ValidLifetimeSec|VendorClassIdentifier|Virtualization)\\b"
+					"match": "^\\s*(Broadcast|Description|Priority|RestartSec|Type|ARP|ActiveSlave|Address|AddressAutoconfiguration|AllMulticast|AllowPortToBeRoot|Anonymize|Architecture|AutoJoin|BindCarrier|BitRate|Bond|Bridge|ClientIdentifier|ConfigureWithoutCarrier|Cost|CriticalConnection|DHCP|DHCPServer|DNS|DNSLifetimeSec|DNSOverTLS|DNSSEC|DNSSECNegativeTrustAnchors|DUIDRawData|DUIDType|DefaultLeaseTimeSec|Destination|Domains|Driver|DuplicateAddressDetection|EgressUntagged|EmitDNS|EmitDomains|EmitLLDP|EmitNTP|EmitRouter|EmitTimezone|FastLeave|FirewallMark|From|Gateway|GatewayOnlink|HairPin|HomeAddress|Host|Hostname|IAID|IPForward|IPMasquerade|IPv4LLRoute|IPv4ProxyARP|IPv6AcceptRA|IPv6DuplicateAddressDetection|IPv6HopLimit|IPv6MTUBytes|IPv6Preference|IPv6PrefixDelegation|IPv6PrivacyExtensions|IPv6ProxyNDP|IPv6ProxyNDPAddress|IPv6Token|IncomingInterface|InitialAdvertisedReceiveWindow|InitialCongestionWindow|KernelCommandLine|KernelVersion|LLDP|LLMNR|Label|LinkLocalAddressing|ListenPort|MACAddress|MACVLAN|MTUBytes|ManageTemporaryAddress|Managed|MaxLeaseTimeSec|Metric|Multicast|MulticastDNS|NTP|Name|OnLink|OtherInformation|OutgoingInterface|PVID|Path|Peer|PoolOffset|PoolSize|PreferredLifetime|PreferredLifetimeSec|PreferredSource|Prefix|PrefixRoute|PrimarySlave|Protocol|QuickAck|RapidCommit|RequestBroadcast|RequiredForOnline|RouteMetric|RouteTable|RouterLifetimeSec|RouterPreference|SamplePoint|Scope|SendHostname|Source|Table|Timezone|To|Tunnel|TypeOfService|UnicastFlood|Unmanaged|UseBPDU|UseDNS|UseDomains|UseHostname|UseMTU|UseNTP|UseRoutes|UseTimezone|UserClass|VLAN|VLANId|VRF|VXLAN|ValidLifetimeSec|VendorClassIdentifier|Virtualization)\\s*=",
+					"captures": {
+						"1": {
+							"name": "entity.name.tag"
+						}
+					}
 				}
 			]
 		},
 		"service-section-known-options": {
 			"patterns": [
 				{
-					"name": "entity.name.tag",
-					"match": "\\b(BusName|ExecReload|ExecStart|ExecStartPost|ExecStartPre|ExecStop|ExecStopPost|FileDescriptorStoreMax|GuessMainPID|NonBlocking|NotifyAccess|PIDFile|PermissionsStartOnly|RemainAfterExit|Restart|RestartForceExitStatus|RestartPreventExitStatus|RestartSec|RootDirectoryStartOnly|RuntimeMaxSec|Sockets|SuccessExitStatus|TimeoutSec|TimeoutStartSec|TimeoutStopSec|Type|USBFunctionDescriptors|USBFunctionStrings|WatchdogSec)\\b"
+					"match": "^\\s*(BusName|ExecReload|ExecStart|ExecStartPost|ExecStartPre|ExecStop|ExecStopPost|FileDescriptorStoreMax|GuessMainPID|NonBlocking|NotifyAccess|PIDFile|PermissionsStartOnly|RemainAfterExit|Restart|RestartForceExitStatus|RestartPreventExitStatus|RestartSec|RootDirectoryStartOnly|RuntimeMaxSec|Sockets|SuccessExitStatus|TimeoutSec|TimeoutStartSec|TimeoutStopSec|Type|USBFunctionDescriptors|USBFunctionStrings|WatchdogSec)\\s*=",
+					"captures": {
+						"1": {
+							"name": "entity.name.tag"
+						}
+					}
 				}
 			]
 		},
 		"systemd-system.conf-section-known-options": {
 			"patterns": [
 				{
-					"name": "entity.name.tag",
-					"match": "\\b(CapabilityBoundingSet|NoNewPrivileges|CPUAffinity|CrashChangeVT|CrashReboot|CrashShell|CtrlAltDelBurstAction|DefaultBlockIOAccounting|DefaultCPUAccounting|DefaultEnvironment|DefaultIPAccounting|DefaultLimitAS|DefaultLimitCORE|DefaultLimitCPU|DefaultLimitDATA|DefaultLimitFSIZE|DefaultLimitLOCKS|DefaultLimitMEMLOCK|DefaultLimitMSGQUEUE|DefaultLimitNICE|DefaultLimitNOFILE|DefaultLimitNPROC|DefaultLimitRSS|DefaultLimitRTPRIO|DefaultLimitRTTIME|DefaultLimitSIGPENDING|DefaultLimitSTACK|DefaultMemoryAccounting|DefaultRestartSec|DefaultStandardError|DefaultStandardOutput|DefaultStartLimitBurst|DefaultStartLimitIntervalSec|DefaultTasksAccounting|DefaultTasksMax|DefaultTimeoutStartSec|DefaultTimeoutStopSec|DefaultTimerAccuracySec|DumpCore|JoinControllers|LogColor|LogLevel|LogLocation|LogTarget|RuntimeWatchdogSec|ShowStatus|ShutdownWatchdogSec|SystemCallArchitectures|TimerSlackNSec|WatchdogDevice)\\b"
+					"match": "^\\s*(CapabilityBoundingSet|NoNewPrivileges|CPUAffinity|CrashChangeVT|CrashReboot|CrashShell|CtrlAltDelBurstAction|DefaultBlockIOAccounting|DefaultCPUAccounting|DefaultEnvironment|DefaultIPAccounting|DefaultLimitAS|DefaultLimitCORE|DefaultLimitCPU|DefaultLimitDATA|DefaultLimitFSIZE|DefaultLimitLOCKS|DefaultLimitMEMLOCK|DefaultLimitMSGQUEUE|DefaultLimitNICE|DefaultLimitNOFILE|DefaultLimitNPROC|DefaultLimitRSS|DefaultLimitRTPRIO|DefaultLimitRTTIME|DefaultLimitSIGPENDING|DefaultLimitSTACK|DefaultMemoryAccounting|DefaultRestartSec|DefaultStandardError|DefaultStandardOutput|DefaultStartLimitBurst|DefaultStartLimitIntervalSec|DefaultTasksAccounting|DefaultTasksMax|DefaultTimeoutStartSec|DefaultTimeoutStopSec|DefaultTimerAccuracySec|DumpCore|JoinControllers|LogColor|LogLevel|LogLocation|LogTarget|RuntimeWatchdogSec|ShowStatus|ShutdownWatchdogSec|SystemCallArchitectures|TimerSlackNSec|WatchdogDevice)\\s*=",
+					"captures": {
+						"1": {
+							"name": "entity.name.tag"
+						}
+					}
 				}
 			]
 		},
 		"netdev-section-known-options": {
 			"patterns": [
 				{
-					"name": "entity.name.tag",
-					"match": "\\b(Description|Group|Priority|User|ARPAllTargets|ARPIPTargets|ARPIntervalSec|ARPValidate|AdSelect|AgeingTimeSec|AllSlavesActive|AllowLocalRemote|AllowedIPs|Architecture|CopyDSCP|DefaultPVID|DestinationPort|DiscoverPathMTU|DownDelaySec|EncapsulationLimit|Endpoint|FDBAgeingSec|FailOverMACPolicy|Flags|FlowLabel|ForwardDelaySec|FwMark|GVRP|GratuitousARP|GroupForwardMask|GroupPolicyExtension|HelloTimeSec|Host|IPv6FlowLabel|Id|Independent|InputKey|KernelCommandLine|KernelVersion|Key|Kind|L2MissNotification|L3MissNotification|LACPTransmitRate|LearnPacketIntervalSec|ListenPort|Local|LooseBinding|MACAddress|MIIMonitorSec|MTUBytes|MVRP|MacLearning|MaxAgeSec|MaximumFDBEntries|MinLinks|Mode|MultiQueue|MulticastQuerier|MulticastSnooping|Name|OneQueue|OutputKey|PacketInfo|PacketsPerSlave|Peer|PersistentKeepalive|PortRange|PresharedKey|PrimaryReselectPolicy|PrivateKey|PublicKey|ReduceARPProxy|Remote|RemoteChecksumRx|RemoteChecksumTx|ReorderHeader|ResendIGMP|RouteShortCircuit|STP|TOS|TTL|TransmitHashPolicy|UDP6ZeroChecksumRx|UDP6ZeroChecksumTx|UDPChecksum|UpDelaySec|VLANFiltering|VNetHeader|Virtualization)\\b"
+					"match": "^\\s*(Description|Group|Priority|User|ARPAllTargets|ARPIPTargets|ARPIntervalSec|ARPValidate|AdSelect|AgeingTimeSec|AllSlavesActive|AllowLocalRemote|AllowedIPs|Architecture|CopyDSCP|DefaultPVID|DestinationPort|DiscoverPathMTU|DownDelaySec|EncapsulationLimit|Endpoint|FDBAgeingSec|FailOverMACPolicy|Flags|FlowLabel|ForwardDelaySec|FwMark|GVRP|GratuitousARP|GroupForwardMask|GroupPolicyExtension|HelloTimeSec|Host|IPv6FlowLabel|Id|Independent|InputKey|KernelCommandLine|KernelVersion|Key|Kind|L2MissNotification|L3MissNotification|LACPTransmitRate|LearnPacketIntervalSec|ListenPort|Local|LooseBinding|MACAddress|MIIMonitorSec|MTUBytes|MVRP|MacLearning|MaxAgeSec|MaximumFDBEntries|MinLinks|Mode|MultiQueue|MulticastQuerier|MulticastSnooping|Name|OneQueue|OutputKey|PacketInfo|PacketsPerSlave|Peer|PersistentKeepalive|PortRange|PresharedKey|PrimaryReselectPolicy|PrivateKey|PublicKey|ReduceARPProxy|Remote|RemoteChecksumRx|RemoteChecksumTx|ReorderHeader|ResendIGMP|RouteShortCircuit|STP|TOS|TTL|TransmitHashPolicy|UDP6ZeroChecksumRx|UDP6ZeroChecksumTx|UDPChecksum|UpDelaySec|VLANFiltering|VNetHeader|Virtualization)\\s*=",
+					"captures": {
+						"1": {
+							"name": "entity.name.tag"
+						}
+					}
 				}
 			]
 		},
 		"automount-section-known-options": {
 			"patterns": [
 				{
-					"name": "entity.name.tag",
-					"match": "\\b(DirectoryMode|TimeoutIdleSec|Where)\\b"
+					"match": "^\\s*(DirectoryMode|TimeoutIdleSec|Where)\\s*=",
+					"captures": {
+						"1": {
+							"name": "entity.name.tag"
+						}
+					}
 				}
 			]
 		},
 		"mount-section-known-options": {
 			"patterns": [
 				{
-					"name": "entity.name.tag",
-					"match": "\\b(DirectoryMode|ForceUnmount|LazyUnmount|Options|SloppyOptions|TimeoutSec|Type|What|Where)\\b"
+					"match": "^\\s*(DirectoryMode|ForceUnmount|LazyUnmount|Options|SloppyOptions|TimeoutSec|Type|What|Where)\\s*=",
+					"captures": {
+						"1": {
+							"name": "entity.name.tag"
+						}
+					}
 				}
 			]
 		},
 		"path-section-known-options": {
 			"patterns": [
 				{
-					"name": "entity.name.tag",
-					"match": "\\b(DirectoryMode|DirectoryNotEmpty|MakeDirectory|PathChanged|PathExists|PathExistsGlob|PathModified|Unit)\\b"
+					"match": "^\\s*(DirectoryMode|DirectoryNotEmpty|MakeDirectory|PathChanged|PathExists|PathExistsGlob|PathModified|Unit)\\s*=",
+					"captures": {
+						"1": {
+							"name": "entity.name.tag"
+						}
+					}
 				}
 			]
 		},
 		"kill-section-known-options": {
 			"patterns": [
 				{
-					"name": "entity.name.tag",
-					"match": "\\b(KillMode|KillSignal|SendSIGHUP|SendSIGKILL)\\b"
+					"match": "^\\s*(KillMode|KillSignal|SendSIGHUP|SendSIGKILL)\\s*=",
+					"captures": {
+						"1": {
+							"name": "entity.name.tag"
+						}
+					}
 				}
 			]
 		},
 		"nspawn-section-known-options": {
 			"patterns": [
 				{
-					"name": "entity.name.tag",
-					"match": "\\b(KillSignal|WorkingDirectory|Bridge|Hostname|MACVLAN|Port|Timezone|CPUAffinity|Bind|BindReadOnly|Boot|Capability|DropCapability|Environment|IPVLAN|Interface|LimitAS|LimitCORE|LimitCPU|LimitDATA|LimitFSIZE|LimitLOCKS|LimitMEMLOCK|LimitMSGQUEUE|LimitNICE|LimitNOFILE|LimitNPROC|LimitRSS|LimitRTPRIO|LimitRTTIME|LimitSIGPENDING|LimitSTACK|LinkJournal|MachineID|NotifyReady|OOMScoreAdjust|Overlay|OverlayReadOnly|Parameters|Personality|PivotRoot|Private|PrivateUsers|PrivateUsersChown|ProcessTwo|ReadOnly|ResolvConf|SystemCallFilter|TemporaryFileSystem|VirtualEthernet|VirtualEthernetExtra|Volatile|Zone)\\b"
+					"match": "^\\s*(KillSignal|WorkingDirectory|Bridge|Hostname|MACVLAN|Port|Timezone|CPUAffinity|Bind|BindReadOnly|Boot|Capability|DropCapability|Environment|IPVLAN|Interface|LimitAS|LimitCORE|LimitCPU|LimitDATA|LimitFSIZE|LimitLOCKS|LimitMEMLOCK|LimitMSGQUEUE|LimitNICE|LimitNOFILE|LimitNPROC|LimitRSS|LimitRTPRIO|LimitRTTIME|LimitSIGPENDING|LimitSTACK|LinkJournal|MachineID|NotifyReady|OOMScoreAdjust|Overlay|OverlayReadOnly|Parameters|Personality|PivotRoot|Private|PrivateUsers|PrivateUsersChown|ProcessTwo|ReadOnly|ResolvConf|SystemCallFilter|TemporaryFileSystem|VirtualEthernet|VirtualEthernetExtra|Volatile|Zone)\\s*=",
+					"captures": {
+						"1": {
+							"name": "entity.name.tag"
+						}
+					}
 				}
 			]
 		},
 		"swap-section-known-options": {
 			"patterns": [
 				{
-					"name": "entity.name.tag",
-					"match": "\\b(Options|Priority|TimeoutSec|What)\\b"
+					"match": "^\\s*(Options|Priority|TimeoutSec|What)\\s*=",
+					"captures": {
+						"1": {
+							"name": "entity.name.tag"
+						}
+					}
 				}
 			]
 		},
 		"dnssd-section-known-options": {
 			"patterns": [
 				{
-					"name": "entity.name.tag",
-					"match": "\\b(Priority|Type|Name|Port|TxtData|TxtText|Weight)\\b"
+					"match": "^\\s*(Priority|Type|Name|Port|TxtData|TxtText|Weight)\\s*=",
+					"captures": {
+						"1": {
+							"name": "entity.name.tag"
+						}
+					}
 				}
 			]
 		},
 		"resolved.conf-section-known-options": {
 			"patterns": [
 				{
-					"name": "entity.name.tag",
-					"match": "\\b(Cache|DNS|DNSOverTLS|DNSSEC|DNSStubListener|Domains|FallbackDNS|LLMNR|MulticastDNS)\\b"
+					"match": "^\\s*(Cache|DNS|DNSOverTLS|DNSSEC|DNSStubListener|Domains|FallbackDNS|LLMNR|MulticastDNS)\\s*=",
+					"captures": {
+						"1": {
+							"name": "entity.name.tag"
+						}
+					}
 				}
 			]
 		},
 		"networkd.conf-section-known-options": {
 			"patterns": [
 				{
-					"name": "entity.name.tag",
-					"match": "\\b(DUIDRawData|DUIDType)\\b"
+					"match": "^\\s*(DUIDRawData|DUIDType)\\s*=",
+					"captures": {
+						"1": {
+							"name": "entity.name.tag"
+						}
+					}
 				}
 			]
 		},
 		"timesyncd.conf-section-known-options": {
 			"patterns": [
 				{
-					"name": "entity.name.tag",
-					"match": "\\b(FallbackNTP|NTP|PollIntervalMaxSec|PollIntervalMinSec|RootDistanceMaxSec)\\b"
+					"match": "^\\s*(FallbackNTP|NTP|PollIntervalMaxSec|PollIntervalMinSec|RootDistanceMaxSec)\\s*=",
+					"captures": {
+						"1": {
+							"name": "entity.name.tag"
+						}
+					}
 				}
 			]
 		},
 		"journal-fields-section-known-options": {
 			"patterns": [
 				{
-					"name": "entity.name.tag",
-					"match": "\\b(CODE_FILE|CODE_FUNC|CODE_LINE|COREDUMP_UNIT|COREDUMP_USER_UNIT|ERRNO|MESSAGE|MESSAGE_ID|OBJECT_AUDIT_LOGINUID|OBJECT_AUDIT_SESSION|OBJECT_CMDLINE|OBJECT_COMM|OBJECT_EXE|OBJECT_GID|OBJECT_PID|OBJECT_SYSTEMD_CGROUP|OBJECT_SYSTEMD_OWNER_UID|OBJECT_SYSTEMD_SESSION|OBJECT_SYSTEMD_UNIT|OBJECT_SYSTEMD_USER_UNIT|OBJECT_UID|PRIORITY|SYSLOG_FACILITY|SYSLOG_IDENTIFIER|SYSLOG_PID|_AUDIT_LOGINUID|_AUDIT_SESSION|_BOOT_ID|_CAP_EFFECTIVE|_CMDLINE|_COMM|_EXE|_GID|_HOSTNAME|_KERNEL_DEVICE|_KERNEL_SUBSYSTEM|_LINE_BREAK|_MACHINE_ID|_PID|_SELINUX_CONTEXT|_SOURCE_REALTIME_TIMESTAMP|_STREAM_ID|_SYSTEMD_CGROUP|_SYSTEMD_INVOCATION_ID|_SYSTEMD_OWNER_UID|_SYSTEMD_SESSION|_SYSTEMD_SLICE|_SYSTEMD_UNIT|_SYSTEMD_USER_UNIT|_TRANSPORT|_UDEV_DEVLINK|_UDEV_DEVNODE|_UDEV_SYSNAME|_UID|__CURSOR|__MONOTONIC_TIMESTAMP|__REALTIME_TIMESTAMP)\\b"
+					"match": "^\\s*(CODE_FILE|CODE_FUNC|CODE_LINE|COREDUMP_UNIT|COREDUMP_USER_UNIT|ERRNO|MESSAGE|MESSAGE_ID|OBJECT_AUDIT_LOGINUID|OBJECT_AUDIT_SESSION|OBJECT_CMDLINE|OBJECT_COMM|OBJECT_EXE|OBJECT_GID|OBJECT_PID|OBJECT_SYSTEMD_CGROUP|OBJECT_SYSTEMD_OWNER_UID|OBJECT_SYSTEMD_SESSION|OBJECT_SYSTEMD_UNIT|OBJECT_SYSTEMD_USER_UNIT|OBJECT_UID|PRIORITY|SYSLOG_FACILITY|SYSLOG_IDENTIFIER|SYSLOG_PID|_AUDIT_LOGINUID|_AUDIT_SESSION|_BOOT_ID|_CAP_EFFECTIVE|_CMDLINE|_COMM|_EXE|_GID|_HOSTNAME|_KERNEL_DEVICE|_KERNEL_SUBSYSTEM|_LINE_BREAK|_MACHINE_ID|_PID|_SELINUX_CONTEXT|_SOURCE_REALTIME_TIMESTAMP|_STREAM_ID|_SYSTEMD_CGROUP|_SYSTEMD_INVOCATION_ID|_SYSTEMD_OWNER_UID|_SYSTEMD_SESSION|_SYSTEMD_SLICE|_SYSTEMD_UNIT|_SYSTEMD_USER_UNIT|_TRANSPORT|_UDEV_DEVLINK|_UDEV_DEVNODE|_UDEV_SYSNAME|_UID|__CURSOR|__MONOTONIC_TIMESTAMP|__REALTIME_TIMESTAMP)\\s*=",
+					"captures": {
+						"1": {
+							"name": "entity.name.tag"
+						}
+					}
 				}
 			]
 		},
 		"systemd-sleep.conf-section-known-options": {
 			"patterns": [
 				{
-					"name": "entity.name.tag",
-					"match": "\\b(HibernateDelaySec|HibernateMode|HibernateState|HybridSleepMode|HybridSleepState|SuspendMode|SuspendState)\\b"
+					"match": "^\\s*(HibernateDelaySec|HibernateMode|HibernateState|HybridSleepMode|HybridSleepState|SuspendMode|SuspendState)\\s*=",
+					"captures": {
+						"1": {
+							"name": "entity.name.tag"
+						}
+					}
 				}
 			]
 		},
 		"os-release-section-known-options": {
 			"patterns": [
 				{
-					"name": "entity.name.tag",
-					"match": "\\b(ANSI_COLOR|BUG_REPORT_URL|BUILD_ID|CPE_NAME|HOME_URL|ID|ID_LIKE|NAME|PRETTY_NAME|PRIVACY_POLICY_URL|SUPPORT_URL|VARIANT|VARIANT_ID|VERSION|VERSION_CODENAME|VERSION_ID)\\b"
+					"match": "^\\s*(ANSI_COLOR|BUG_REPORT_URL|BUILD_ID|CPE_NAME|HOME_URL|ID|ID_LIKE|NAME|PRETTY_NAME|PRIVACY_POLICY_URL|SUPPORT_URL|VARIANT|VARIANT_ID|VERSION|VERSION_CODENAME|VERSION_ID)\\s*=",
+					"captures": {
+						"1": {
+							"name": "entity.name.tag"
+						}
+					}
 				}
 			]
 		},
 		"machine-info-section-known-options": {
 			"patterns": [
 				{
-					"name": "entity.name.tag",
-					"match": "\\b(CHASSIS|DEPLOYMENT|ICON_NAME|LOCATION|PRETTY_HOSTNAME)\\b"
+					"match": "^\\s*(CHASSIS|DEPLOYMENT|ICON_NAME|LOCATION|PRETTY_HOSTNAME)\\s*=",
+					"captures": {
+						"1": {
+							"name": "entity.name.tag"
+						}
+					}
 				}
 			]
 		},
 		"coredump.conf-section-known-options": {
 			"patterns": [
 				{
-					"name": "entity.name.tag",
-					"match": "\\b(Compress|ExternalSizeMax|JournalSizeMax|KeepFree|MaxUse|ProcessSizeMax|Storage)\\b"
+					"match": "^\\s*(Compress|ExternalSizeMax|JournalSizeMax|KeepFree|MaxUse|ProcessSizeMax|Storage)\\s*=",
+					"captures": {
+						"1": {
+							"name": "entity.name.tag"
+						}
+					}
 				}
 			]
 		},
 		"journald.conf-section-known-options": {
 			"patterns": [
 				{
-					"name": "entity.name.tag",
-					"match": "\\b(Compress|ForwardToConsole|ForwardToKMsg|ForwardToSyslog|ForwardToWall|LineMax|MaxFileSec|MaxLevelConsole|MaxLevelKMsg|MaxLevelStore|MaxLevelSyslog|MaxLevelWall|MaxRetentionSec|RateLimitBurst|RateLimitIntervalSec|ReadKMsg|RuntimeKeepFree|RuntimeMaxFileSize|RuntimeMaxFiles|RuntimeMaxUse|Seal|SplitMode|Storage|SyncIntervalSec|SystemKeepFree|SystemMaxFileSize|SystemMaxFiles|SystemMaxUse|TTYPath)\\b"
+					"match": "^\\s*(Compress|ForwardToConsole|ForwardToKMsg|ForwardToSyslog|ForwardToWall|LineMax|MaxFileSec|MaxLevelConsole|MaxLevelKMsg|MaxLevelStore|MaxLevelSyslog|MaxLevelWall|MaxRetentionSec|RateLimitBurst|RateLimitIntervalSec|ReadKMsg|RuntimeKeepFree|RuntimeMaxFileSize|RuntimeMaxFiles|RuntimeMaxUse|Seal|SplitMode|Storage|SyncIntervalSec|SystemKeepFree|SystemMaxFileSize|SystemMaxFiles|SystemMaxUse|TTYPath)\\s*=",
+					"captures": {
+						"1": {
+							"name": "entity.name.tag"
+						}
+					}
 				}
 			]
 		},
 		"vconsole.conf-section-known-options": {
 			"patterns": [
 				{
-					"name": "entity.name.tag",
-					"match": "\\b(FONT|FONT_MAP|FONT_UNIMAP|KEYMAP|KEYMAP_TOGGLE)\\b"
+					"match": "^\\s*(FONT|FONT_MAP|FONT_UNIMAP|KEYMAP|KEYMAP_TOGGLE)\\s*=",
+					"captures": {
+						"1": {
+							"name": "entity.name.tag"
+						}
+					}
 				}
 			]
 		},
 		"logind.conf-section-known-options": {
 			"patterns": [
 				{
-					"name": "entity.name.tag",
-					"match": "\\b(HandleHibernateKey|HandleLidSwitch|HandleLidSwitchDocked|HandleLidSwitchExternalPower|HandlePowerKey|HandleSuspendKey|HibernateKeyIgnoreInhibited|HoldoffTimeoutSec|IdleAction|IdleActionSec|InhibitDelayMaxSec|InhibitorsMax|KillExcludeUsers|KillOnlyUsers|KillUserProcesses|LidSwitchIgnoreInhibited|NAutoVTs|PowerKeyIgnoreInhibited|RemoveIPC|ReserveVT|RuntimeDirectorySize|SessionsMax|SuspendKeyIgnoreInhibited)\\b"
+					"match": "^\\s*(HandleHibernateKey|HandleLidSwitch|HandleLidSwitchDocked|HandleLidSwitchExternalPower|HandlePowerKey|HandleSuspendKey|HibernateKeyIgnoreInhibited|HoldoffTimeoutSec|IdleAction|IdleActionSec|InhibitDelayMaxSec|InhibitorsMax|KillExcludeUsers|KillOnlyUsers|KillUserProcesses|LidSwitchIgnoreInhibited|NAutoVTs|PowerKeyIgnoreInhibited|RemoveIPC|ReserveVT|RuntimeDirectorySize|SessionsMax|SuspendKeyIgnoreInhibited)\\s*=",
+					"captures": {
+						"1": {
+							"name": "entity.name.tag"
+						}
+					}
 				}
 			]
 		},
 		"journal-remote.conf-section-known-options": {
 			"patterns": [
 				{
-					"name": "entity.name.tag",
-					"match": "\\b(Seal|ServerCertificateFile|ServerKeyFile|SplitMode|TrustedCertificateFile)\\b"
+					"match": "^\\s*(Seal|ServerCertificateFile|ServerKeyFile|SplitMode|TrustedCertificateFile)\\s*=",
+					"captures": {
+						"1": {
+							"name": "entity.name.tag"
+						}
+					}
 				}
 			]
 		},
 		"journal-upload.conf-section-known-options": {
 			"patterns": [
 				{
-					"name": "entity.name.tag",
-					"match": "\\b(ServerCertificateFile|ServerKeyFile|TrustedCertificateFile|URL)\\b"
+					"match": "^\\s*(ServerCertificateFile|ServerKeyFile|TrustedCertificateFile|URL)\\s*=",
+					"captures": {
+						"1": {
+							"name": "entity.name.tag"
+						}
+					}
 				}
 			]
 		},
