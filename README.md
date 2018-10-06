@@ -21,6 +21,10 @@ This VSCode extension if fork from [bearmini/vscode-systemd-unit-file](https://g
 
 [CHANGELOG.md](CHANGELOG.md)
 
+## Reference
+
+- Syntax: <https://macromates.com/manual/en/language_grammars>
+
 ## License
 
 [MIT](LICENSE)

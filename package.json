@@ -20,7 +20,8 @@
 		"Snippets"
 	],
 	"scripts": {
-		"postinstall": "node ./node_modules/vscode/bin/install"
+		"postinstall": "node ./node_modules/vscode/bin/install",
+		"generate-syntax": "node ./utils/generate-syntax-json.js"
 	},
 	"activationEvents": [
 		"onLanguage:systemd-unit-file"

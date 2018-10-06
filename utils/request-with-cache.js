@@ -6,7 +6,7 @@ const md5 = require('md5');
 const req = require('request');
 const colors = require('colors/safe')
 
-const CACHE_DIR = path.join(__dirname, 'request-cahce');
+const CACHE_DIR = path.join(__dirname, 'request-cache');
 
 // create cache directory
 if (!fs.existsSync(CACHE_DIR))
