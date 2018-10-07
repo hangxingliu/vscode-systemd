@@ -31,15 +31,15 @@ const patterns = {
 	},
 	"-sction-known-options-insert-point": null,
 	// "install-section-known-options": {
-	// 	patterns: [{
-	// 		name: "entity.name.tag",
-	// 		match: "\\b(Alias|WantedBy|RequiredBy|Also|DefaultInstance)\\b"
-	// 	}]
+	// 	  patterns: [{
+	//      match: `^\\s*(Alias|WantedBy|RequiredBy|Also|DefaultInstance)\\s*=`,
+	//      captures: { "1": { name: "entity.name.tag" } },
+	// 	  }]
 	// },
 	"options-prefixed-with-x": {
 		patterns: [{
-			name: "entity.name.tag",
-			match: "\\bX-.*\\b"
+			match: `^\\s*(X-.*)\\s*=`,
+			captures: { "1": { name: "entity.name.tag" } },
 		}]
 	},
 	"unknown-options": {

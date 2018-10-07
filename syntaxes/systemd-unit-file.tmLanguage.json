@@ -543,8 +543,12 @@
 		"options-prefixed-with-x": {
 			"patterns": [
 				{
-					"name": "entity.name.tag",
-					"match": "\\bX-.*\\b"
+					"match": "^\\s*(X-.*)\\s*=",
+					"captures": {
+						"1": {
+							"name": "entity.name.tag"
+						}
+					}
 				}
 			]
 		},
