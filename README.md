@@ -10,6 +10,10 @@ This VSCode extension if fork from [bearmini/vscode-systemd-unit-file](https://g
 
 ## Changelog
 
+### [0.1.1] - 2018-10-08
+
+- Fix syntax highlights
+
 ### [0.1.0] - 2018-08-25
 
 - Imporve syntaxes

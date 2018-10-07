@@ -8,7 +8,7 @@
 	"description": "Fork from systemd-unit-file extension by bearmini",
 	"icon": "images/icon-64x64.png",
 	"main": "extension/index.js",
-	"version": "0.1.0",
+	"version": "0.1.1",
 	"publisher": "hangxingliu",
 	"author": "hangxingliu",
 	"engines": {

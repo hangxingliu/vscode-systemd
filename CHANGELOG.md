@@ -1,5 +1,9 @@
 # CHANGELOG
 
+### [0.1.1] - 2018-10-08
+
+- Fix syntax highlights
+
 ### [0.1.0] - 2018-08-25
 
 - Imporve syntaxes
