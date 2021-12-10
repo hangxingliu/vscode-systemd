@@ -25,6 +25,8 @@
 		"workspace"
 	],
 	"scripts": {
+		"ts": "ts-node",
+		"build:utils": "tsc -p tsconfig.utils.json",
 		"generate-syntax": "node ./utils/generate-syntax-json.js"
 	},
 	"activationEvents": [
@@ -74,6 +76,8 @@
 		"colors": "^1.4.0",
 		"https-proxy-agent": "^5.0.0",
 		"rimraf": "^3.0.2",
+		"ts-loader": "^9.2.6",
+		"ts-node": "^10.4.0",
 		"typescript": "^4.5.3",
 		"webpack": "^5.65.0",
 		"webpack-cli": "^4.9.1"

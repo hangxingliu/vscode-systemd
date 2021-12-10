@@ -1,3 +1,6 @@
+out
+cache
+
 # archive files
 *.tgz
 *.vsix
