@@ -26,8 +26,10 @@
 	],
 	"scripts": {
 		"ts": "ts-node",
-		"build:utils": "tsc -p tsconfig.utils.json",
-		"generate-syntax": "node ./utils/generate-syntax-json.js"
+		"build:all": "npm run build:syntax && npm run build:desktop",
+		"build:desktop": "tsc -p tsconfig.desktop.json && cd src && copyfiles '**/*.tmLanguage' ../out",
+		"build:syntax": "ts-node --project tsconfig.desktop.json ./src/syntax/generate-tmLanguage.ts",
+		"fetch:directives": "ts-node --project tsconfig.desktop.json ./src/utils/fetch-all-directives.ts"
 	},
 	"activationEvents": [
 		"onLanguage:systemd-unit-file"
@@ -64,7 +66,7 @@
 			{
 				"language": "systemd-unit-file",
 				"scopeName": "source.systemdUnitFile",
-				"path": "./syntaxes/systemd-unit-file.tmLanguage.json"
+				"path": "./out/syntax/systemd.tmLanguage"
 			}
 		]
 	},
@@ -74,10 +76,12 @@
 		"axios": "^0.24.0",
 		"cheerio": "^1.0.0-rc.10",
 		"colors": "^1.4.0",
+		"copyfiles": "^2.4.1",
 		"https-proxy-agent": "^5.0.0",
 		"rimraf": "^3.0.2",
 		"ts-loader": "^9.2.6",
 		"ts-node": "^10.4.0",
+		"turndown": "^7.1.1",
 		"typescript": "^4.5.3",
 		"webpack": "^5.65.0",
 		"webpack-cli": "^4.9.1"

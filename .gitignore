@@ -80,3 +80,7 @@ typings/
 
 # Serverless directories
 .serverless
+
+# Mac OS files
+._*
+.DS_Store

@@ -3,12 +3,17 @@
     "version": "0.1.0",
     "configurations": [
         {
-            "name": "Extension",
-            "type": "extensionHost",
+            "args": [
+                "--extensionDevelopmentPath=${workspaceFolder}",
+                "${workspaceFolder}/examples"
+            ],
+            "name": "Launch Extension",
+            "outFiles": [
+                "${workspaceFolder}/out/**/*.js"
+            ],
+            "preLaunchTask": "npm: build:all",
             "request": "launch",
-            "runtimeExecutable": "${execPath}",
-			"args": ["--extensionDevelopmentPath=${workspaceRoot}", "${workspaceRoot}/examples" ],
-			"preLaunchTask": "npm:generate-syntax"
+            "type": "pwa-extensionHost"
         }
     ]
 }
