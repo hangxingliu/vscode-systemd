@@ -7,6 +7,10 @@ import { resolve as resolvePath } from "path";
 import { yellow, bold as _bold, green, red, blue, dim } from "colors/safe";
 import { cacheDir } from "./config";
 
+import Turndown = require("turndown");
+const turndownService = new Turndown({ headingStyle: 'atx', hr: '***' })
+
+
 export const hasEnv = typeof process !== 'undefined' && process.env ? true : false;
 export const bold = (input: unknown) => _bold(String(input));
 
@@ -178,6 +182,11 @@ export function resolveURL(from: string, to: string) {
 }
 
 
+export function toMarkdown(html: string): string {
+	return turndownService.turndown(html)
+}
+
+
 export class JsonFileWriter {
     stream: WriteStream;
     isFirst = true;
@@ -194,4 +203,18 @@ export class JsonFileWriter {
         this.stream.write('\n]');
         this.stream.close();
     }
+}
+
+export class MapList<T = unknown> extends Map<string, T[]> {
+	push(key: string, ...items: T[]) {
+		const value = this.get(key);
+		if (!value) this.set(key, items);
+		else value.push(...items);
+	}
+	getList(key: string): T[] {
+		return this.get(key) || [];
+	}
+	getKeys() {
+		return Array.from(this.keys());
+	}
 }
