@@ -1,4 +1,7 @@
+# output files
+artifacts
 out
+
 cache
 
 # archive files

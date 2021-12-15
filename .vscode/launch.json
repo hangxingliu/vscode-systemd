@@ -8,9 +8,7 @@
                 "${workspaceFolder}/examples"
             ],
             "name": "Launch Extension",
-            "outFiles": [
-                "${workspaceFolder}/out/**/*.js"
-            ],
+            "sourceMaps": true,
             "preLaunchTask": "npm: build:all",
             "request": "launch",
             "type": "pwa-extensionHost"

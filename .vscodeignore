@@ -1,3 +1,26 @@
+# output files
+artifacts
+out/**/*.js
+out/**/*.js.map
+out/**/*.json
+!out/webpack.js
+
+# scripts
+scripts
+tsconfig*.json
+
+# documents
+docs
+
+# sources
+src
+
+# github files
+.github
+
+# cache
+cache
+
 # vscode package
 .vsix
 
