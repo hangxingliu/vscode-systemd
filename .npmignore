@@ -1,9 +1,0 @@
-.vscode
-examples
-utils/request-cache
-
-# archive files
-*.tgz
-*.vsix
-*.zip
-*.tar
