@@ -14,7 +14,7 @@ export const syntaxPatterns: Array<SyntaxPattern | SyntaxPattern[]> = [
         begin: /^\s*([\w\-\.]+)\s*(?==)/,
         end: /(?<!\\)\n/,
         beginCaptures: {
-            '1': names.entityName.unknownConfigKey,
+            '1': names.entityName.configKey,
         },
         patterns: [
             { include: includeRepo.commnets },

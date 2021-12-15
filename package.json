@@ -3,7 +3,7 @@
 	"displayName": "Systemd Helper",
 	"description": "Help you write Systemd configuration file on Visual Studio Code",
 	"icon": "images/icon-64x64.png",
-	"main": "extension/index.js",
+	"main": "out/index.js",
 	"version": "1.0.0",
 	"publisher": "hangxingliu",
 	"author": "hangxingliu",
@@ -27,19 +27,20 @@
 	"scripts": {
 		"ts": "ts-node",
 		"build:all": "npm run build:syntax && npm run build:desktop",
-		"build:desktop": "tsc -p tsconfig.desktop.json && cd src && copyfiles '**/*.tmLanguage' ../out",
+		"build:desktop": "tsc -p tsconfig.desktop.json && cd src && copyfiles '**/*.{tmLanguage,json}' ../out",
 		"build:syntax": "ts-node --project tsconfig.desktop.json ./src/syntax/generate-tmLanguage.ts",
 		"fetch:directives": "ts-node --project tsconfig.desktop.json ./src/utils/fetch-all-directives.ts"
 	},
 	"activationEvents": [
-		"onLanguage:systemd-unit-file"
+		"onLanguage:systemd-conf"
 	],
 	"contributes": {
 		"languages": [
 			{
-				"id": "systemd-unit-file",
+				"id": "systemd-conf",
 				"aliases": [
-					"systemd unit file",
+					"Systemd Configuration",
+                    "systemd-conf",
 					"systemd-unit-file"
 				],
 				"extensions": [
@@ -64,8 +65,8 @@
 		],
 		"grammars": [
 			{
-				"language": "systemd-unit-file",
-				"scopeName": "source.systemdUnitFile",
+				"language": "systemd-conf",
+				"scopeName": "source.systemd",
 				"path": "./out/syntax/systemd.tmLanguage"
 			}
 		]

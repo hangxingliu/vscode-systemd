@@ -1,8 +1,9 @@
 import { CompletionItem, CompletionItemKind, ExtensionContext, languages, Position, Range, TextDocument } from 'vscode';
-import { knownSections } from "./syntax/const";
+import { HintDataManager } from './hint-data/manager';
+import { knownSections, languageId } from "./syntax/const";
 
-let directives = [];
-const DOCUMENT_SELECTOR = ['systemd-unit-file'];
+const hintData = new HintDataManager();
+
 const completionItemsForSections = knownSections.map(it => {
     const ci = new CompletionItem(it, CompletionItemKind.Module);
     return ci;
@@ -19,18 +20,12 @@ function getTextBeforeCursor(document: TextDocument, position: Position): string
 }
 
 export function activate(context: ExtensionContext) {
-    directives = require('./hint-data/directives.json');
+    hintData.addItems(require('./hint-data/directives.json'));
 
-    const completionItems = directives.map(it => {
-        const completion = new CompletionItem(it.name, CompletionItemKind.Method);
-        completion.detail = it.docs.map(doc => doc.name).join(' ');
-        return completion;
-    });
-
-    let subscriptions = context.subscriptions;
-    subscriptions.push(languages.registerCompletionItemProvider(DOCUMENT_SELECTOR, {
+    const subscriptions = context.subscriptions;
+    subscriptions.push(languages.registerCompletionItemProvider([languageId], {
         provideCompletionItems,
-        resolveCompletionItem: (item) => item
+        resolveCompletionItem: hintData.resolveDirectiveCompletionItem,
     }, '[', '=', '\n'));
 
     function provideCompletionItems(document: TextDocument, position: Position): CompletionItem[] {
@@ -48,7 +43,7 @@ export function activate(context: ExtensionContext) {
 
         const mtx2 = beforeText.match(/^\s*(\w*)/);
         if (!mtx2) return;
-        return completionItems;
+        return hintData.directives;
     }
 }
 

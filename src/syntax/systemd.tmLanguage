@@ -3,7 +3,7 @@
 <plist version="1.0">
 <dict>
   <key>name</key>
-  <string>systemd unit file</string>
+  <string>systemd configuration file</string>
   <key>patterns</key>
   <array>
     <dict>
@@ -22,7 +22,7 @@
         <key>1</key>
         <dict>
           <key>name</key>
-          <string>entity.name.unknown-tag</string>
+          <string>entity.name.tag</string>
         </dict>
       </dict>
       <key>patterns</key>
@@ -191,7 +191,7 @@
     </dict>
   </dict>
   <key>scopeName</key>
-  <string>source.systemdUnitFile</string>
+  <string>source.systemd</string>
   <key>uuid</key>
   <string>277f468c-7fcf-4987-9e55-51927eb0c911</string>
 </dict>
