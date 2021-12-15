@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 
-import { directivesDataFile, hintDataDir, systemdDocsURLs } from './config';
+import { directivesDataFile } from '../config/fs';
+import { systemdDocsURLs } from '../config/url';
 import { print, getText, initHttpCache, loadHtml, writeJSON, lengthShouldBeEqual, AssertLevel, MapList, lengthShouldBeMoreThanOrEqual, resolveURL, JsonFileWriter, toMarkdown } from './helper';
 import { ManifestItemForDirective, ManifestItemForDocsMarkdown, ManifestItemForManPageInfo, ManifestItemType } from './types';
 import type { Cheerio, Element } from "cheerio";
@@ -206,7 +207,7 @@ async function main() {
                 if (index >= 0) {
                     const mtx = text
                         .slice(index + directiveName.length + 1)
-                        .match(/(.+?)(?=\s|,|$)/);
+                        .match(/(.+?)(?=,|$)/);
                     if (mtx) signature = mtx[1];
                 }
                 jsonFile.writeItem([

@@ -1,6 +1,6 @@
 import { CompletionItem, CompletionItemKind, CompletionItemTag, MarkdownString, Uri } from "vscode";
 import { deprecatedDirectivesSet } from "../syntax/const";
-import { systemdDocsURLs } from "../utils/config";
+import { systemdDocsURLs } from "../config/url";
 import { isManifestItemForDirective, isManifestItemForDocsMarkdown, isManifestItemForManPageInfo } from "../utils/types";
 
 export type ManPageInfo = {
