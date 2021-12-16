@@ -2,7 +2,7 @@
 	"name": "vscode-systemd-support",
 	"displayName": "Systemd Helper",
 	"description": "Help you write Systemd configuration file on Visual Studio Code",
-	"icon": "images/icon-64x64.png",
+	"icon": "out/assets/icon.png",
 	"main": "out/webpack.js",
     "browser": "out/webpack.js",
 	"version": "1.0.0",
@@ -28,7 +28,7 @@
 	"scripts": {
 		"ts": "ts-node",
 		"build:all": "npm run build:syntax && npm run build:desktop && npm run build:webpack",
-		"build:desktop": "tsc -p tsconfig.json && cd src && copyfiles '**/*.{tmLanguage,json}' ../out",
+		"build:desktop": "tsc -p tsconfig.json && cd src && copyfiles '**/*.{tmLanguage,json,png}' ../out",
 		"build:webpack": "webpack --mode production --devtool hidden-source-map",
 		"build:syntax": "ts-node ./src/syntax/generate-tmLanguage.ts",
 		"fetch:directives": "ts-node ./src/utils/fetch-all-directives.ts",
