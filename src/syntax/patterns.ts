@@ -1,3 +1,4 @@
+import { deprecatedDirectives } from "./const";
 import { names } from "./match-names";
 import { includeRepo } from "./repository";
 import type { SyntaxPattern } from "./types";
@@ -9,6 +10,22 @@ import type { SyntaxPattern } from "./types";
  */
 export const syntaxPatterns: Array<SyntaxPattern | SyntaxPattern[]> = [
     { include: includeRepo.commnets },
+	{
+        begin: '^\\s*(' + deprecatedDirectives.join('|') + ')\\s*(?==)',
+        end: /(?<!\\)\n/,
+        beginCaptures: {
+            '1': 'invalid.deprecated',
+        },
+        patterns: [
+            { include: includeRepo.commnets },
+            { include: includeRepo.variables },
+            { include: includeRepo.quotedString },
+            { include: includeRepo.booleans },
+            { include: includeRepo.restartOptions },
+            { include: includeRepo.timeSpans },
+            { include: includeRepo.numbers },
+        ]
+	},
     {
         name: names.meta.configEntry,
         begin: /^\s*([\w\-\.]+)\s*(?==)/,
@@ -19,6 +36,7 @@ export const syntaxPatterns: Array<SyntaxPattern | SyntaxPattern[]> = [
         patterns: [
             { include: includeRepo.commnets },
             { include: includeRepo.variables },
+            { include: includeRepo.quotedString },
             { include: includeRepo.booleans },
             { include: includeRepo.restartOptions },
             { include: includeRepo.timeSpans },

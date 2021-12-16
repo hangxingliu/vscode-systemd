@@ -1,15 +1,29 @@
 export const languageId = 'systemd-conf';
 
 export const knownSections = [
-    'Unit',
+    'Automount',
+    'Bridge',
+    'DHCPServer',
+    'Distribution',
     'Install',
+    'Link',
+    'Match',
+    'Mount',
+    'NetDev',
+    'Network',
+    'Output',
+    'Path',
+    'Partitions',
+    'Packages',
+    'Peer',
+    'Resolve',
     'Service',
     'Socket',
-    'Mount',
-    'Automount',
     'Swap',
-    'Path',
-    'Timer'
+    'Timer',
+    'Tunnel',
+    'Unit',
+    'VLAN',
 ];
 
 export const deprecatedDirectives = [

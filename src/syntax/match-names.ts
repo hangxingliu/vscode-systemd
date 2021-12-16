@@ -17,6 +17,10 @@ export const names = {
     languageConstant: 'constant.language',
     boolean: 'constant.language',
     numeric: 'constant.numeric',
+    string: {
+        singleQuoted: 'string.quoted.single',
+        doubleQuoted: 'string.quoted.double',
+    },
     specifier: 'constant.other.placeholder',
     variable: 'variable.other',
 

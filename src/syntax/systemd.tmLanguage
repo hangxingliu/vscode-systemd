@@ -11,6 +11,51 @@
       <string>#commnets</string>
     </dict>
     <dict>
+      <key>begin</key>
+      <string>^\s*(CPUShares|StartupCPUShares|MemoryLimit|BlockIOAccounting|BlockIOWeight|StartupBlockIOWeight|BlockIODeviceWeight|BlockIOReadBandwidth|BlockIOWriteBandwidth)\s*(?==)</string>
+      <key>end</key>
+      <string>(?&lt;!\\)\n</string>
+      <key>beginCaptures</key>
+      <dict>
+        <key>1</key>
+        <dict>
+          <key>name</key>
+          <string>invalid.deprecated</string>
+        </dict>
+      </dict>
+      <key>patterns</key>
+      <array>
+        <dict>
+          <key>include</key>
+          <string>#commnets</string>
+        </dict>
+        <dict>
+          <key>include</key>
+          <string>#variables</string>
+        </dict>
+        <dict>
+          <key>include</key>
+          <string>#quotedString</string>
+        </dict>
+        <dict>
+          <key>include</key>
+          <string>#booleans</string>
+        </dict>
+        <dict>
+          <key>include</key>
+          <string>#restartOptions</string>
+        </dict>
+        <dict>
+          <key>include</key>
+          <string>#timeSpans</string>
+        </dict>
+        <dict>
+          <key>include</key>
+          <string>#numbers</string>
+        </dict>
+      </array>
+    </dict>
+    <dict>
       <key>name</key>
       <string>meta.config-entry</string>
       <key>begin</key>
@@ -34,6 +79,10 @@
         <dict>
           <key>include</key>
           <string>#variables</string>
+        </dict>
+        <dict>
+          <key>include</key>
+          <string>#quotedString</string>
         </dict>
         <dict>
           <key>include</key>
@@ -110,7 +159,29 @@
           <key>name</key>
           <string>constant.numeric</string>
           <key>match</key>
-          <string>\b\d+\b</string>
+          <string>(?&lt;=\s|=)\d+(?:\.\d+)?(?=\s|$)</string>
+        </dict>
+      </array>
+    </dict>
+    <key>quotedString</key>
+    <dict>
+      <key>patterns</key>
+      <array>
+        <dict>
+          <key>name</key>
+          <string>string.quoted.single</string>
+          <key>begin</key>
+          <string>'</string>
+          <key>end</key>
+          <string>(?:(?&lt;!\\)'|$)</string>
+        </dict>
+        <dict>
+          <key>name</key>
+          <string>string.quoted.double</string>
+          <key>begin</key>
+          <string>"</string>
+          <key>end</key>
+          <string>(?:(?&lt;!\\)"|$)</string>
         </dict>
       </array>
     </dict>

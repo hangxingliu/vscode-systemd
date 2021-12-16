@@ -10,6 +10,7 @@ export const includeRepo = {
     booleans: '#booleans',
     restartOptions: '#restartOptions',
     variables: '#variables',
+    quotedString: '#quotedString',
 }
 
 /**
@@ -46,9 +47,20 @@ export const syntaxRepository: {
     },
     numbers: {
         patterns: [{
-            match: /\b\d+\b/,
+            match: /(?<=\s|=)\d+(?:\.\d+)?(?=\s|$)/,
             name: names.numeric,
         }]
+    },
+    quotedString: {
+        patterns: [{
+            begin: /'/,
+            end: /(?:(?<!\\)'|$)/,
+            name: names.string.singleQuoted,
+        },{
+            begin: /"/,
+            end: /(?:(?<!\\)"|$)/,
+            name: names.string.doubleQuoted,
+        }],
     },
     booleans: {
         patterns: [{
