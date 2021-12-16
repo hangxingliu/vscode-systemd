@@ -129,7 +129,7 @@
           <key>name</key>
           <string>entity.name.section</string>
           <key>match</key>
-          <string>^\s*\[(Unit|Install|Service|Socket|Mount|Automount|Swap|Path|Timer)\]</string>
+          <string>^\s*\[(Automount|Bridge|DHCPServer|Distribution|Install|Link|Match|Mount|NetDev|Network|Output|Path|Partitions|Packages|Peer|Resolve|Service|Socket|Swap|Timer|Tunnel|Unit|VLAN)\]</string>
         </dict>
         <dict>
           <key>name</key>

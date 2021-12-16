@@ -2,6 +2,7 @@ import { CompletionItem, CompletionItemKind, CompletionItemTag, MarkdownString, 
 import { deprecatedDirectivesSet } from "../syntax/const";
 import { systemdDocsURLs } from "../config/url";
 import { isManifestItemForDirective, isManifestItemForDocsMarkdown, isManifestItemForManPageInfo } from "../utils/types";
+import { MapList } from "../utils/data-types";
 
 export type ManPageInfo = {
     title: string;
@@ -10,7 +11,9 @@ export type ManPageInfo = {
 }
 export type MarkdownHelp = MarkdownString;
 export type DirectiveCompletionItem = CompletionItem & {
+    directiveNameLC?: string;
     directiveName?: string;
+    signature?: string;
     docsMarkdown?: number;
     manPage?: number;
 }
@@ -21,6 +24,8 @@ export class HintDataManager {
     manPages: Array<ManPageInfo> = [];
     docsMarkdown: Array<MarkdownHelp> = [];
     directives: Array<DirectiveCompletionItem> = [];
+    /** key is lowercase name */
+    directivesMap = new MapList<DirectiveCompletionItem>();
 
     constructor(items?: unknown[][]) {
         this.manPageBaseUri = Uri.parse(systemdDocsURLs.base);
@@ -53,11 +58,16 @@ export class HintDataManager {
             } else {
                 docsMarkdown = item[3];
             }
-            this.directives.push(Object.assign(ci, {
+            const directiveNameLC = directiveName.toLowerCase();
+            const d = Object.assign(ci, {
+                directiveNameLC,
                 directiveName,
                 docsMarkdown,
+                signature: item[2],
                 manPage: item[4],
-            }));
+            });
+            this.directivesMap.push(directiveNameLC, d);
+            this.directives.push(d);
         }
     }
 

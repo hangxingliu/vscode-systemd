@@ -1,12 +1,4 @@
-export const enum CursorType {
-    none = 0,
-    comment = 1,
-    section = 2,
-    directiveKey = 3,
-    directiveValue = 4,
-}
-
-export type LocationInfo = [offset: number, line: number, character: number];
+import { CursorType, LocationInfo, ParserOptions, TextLocationUtils } from "./types";
 
 export class CursorInfo {
     type: CursorType;
@@ -25,18 +17,6 @@ export class CursorInfo {
     directiveKey: string;
     directiveKeyLoc1: LocationInfo;
     directiveKeyLoc2: LocationInfo;
-}
-
-export class TextLocationUtils {
-    offset = 0;
-    line = 0;
-    character = 0;
-    newLine = () => { this.line++; this.character = 0; };
-    get = () => [this.offset, this.line, this.character] as LocationInfo;
-}
-
-export type ParserOptions = {
-    looseComment?: boolean;
 }
 
 export function getCursorInfoFromSystemdConf(conf: string, opts?: ParserOptions) {

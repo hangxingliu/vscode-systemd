@@ -72,7 +72,27 @@
 				"scopeName": "source.systemd",
 				"path": "./out/syntax/systemd.tmLanguage"
 			}
-		]
+		],
+		"configuration": [
+            {
+                "title": "Systemd",
+                "properties": {
+					"systemd.lintDirectiveKeys": {
+						"title": "Enable linter feature for directive keys",
+						"type": "boolean",
+						"default": false,
+						"description": "Give you warnings if any directive keys don't exist in the systemd"
+					},
+                    "systemd.customDirectiveKeys": {
+                        "title": "Custom directive keys",
+                        "type": "array",
+                        "default": [],
+                        "examples": ["custom-key", "/^x-(.+)$/i"],
+                        "description": "An array contains case-sensitive strings or regex expressions. The extension will add them to the completion list and linter."
+                    }
+                }
+            }
+        ]
 	},
 	"devDependencies": {
 		"@types/node": ">=14",

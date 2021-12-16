@@ -1,7 +1,9 @@
 import { readFileSync } from 'fs'
 import { resolve as resolvePath } from 'path'
 import { deepStrictEqual as eq } from 'assert'
-import { CursorInfo, CursorType, getCursorInfoFromSystemdConf } from "../../src/parser"
+import { CursorType } from "../../src/parser/types"
+import { CursorInfo, getCursorInfoFromSystemdConf } from "../../src/parser"
+import { getDirectiveKeys } from "../../src/parser/get-directive-keys"
 
 type UnitTest = [position: string, context: Partial<CursorInfo>];
 
@@ -10,6 +12,7 @@ const sampleFile = resolvePath(sampleDir, 'autorelabel.service');
 const sample = readFileSync(sampleFile, 'utf8');
 eq(sample.length, 500);
 
+console.log(getDirectiveKeys(sample));
 
 const tests: UnitTest[] = [
     ["1,1", { type: CursorType.directiveKey }],

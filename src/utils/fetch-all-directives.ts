@@ -2,7 +2,8 @@
 
 import { directivesDataFile } from '../config/fs';
 import { systemdDocsURLs } from '../config/url';
-import { print, getText, initHttpCache, loadHtml, writeJSON, lengthShouldBeEqual, AssertLevel, MapList, lengthShouldBeMoreThanOrEqual, resolveURL, JsonFileWriter, toMarkdown } from './helper';
+import { print, getText, initHttpCache, loadHtml, lengthShouldBeEqual, AssertLevel, lengthShouldBeMoreThanOrEqual, resolveURL, JsonFileWriter, toMarkdown } from './helper';
+import { MapList } from "./data-types"
 import { ManifestItemForDirective, ManifestItemForDocsMarkdown, ManifestItemForManPageInfo, ManifestItemType } from './types';
 import type { Cheerio, Element } from "cheerio";
 
