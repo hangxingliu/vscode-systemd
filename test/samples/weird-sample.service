@@ -1,0 +1,9 @@
+[TestSection]
+Test=#123 \
+# 1234
+; test 2
+456 \
+abc
+
+[Service]
+Type=idle

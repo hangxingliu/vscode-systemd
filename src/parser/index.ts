@@ -62,9 +62,8 @@ export function getCursorInfoFromSystemdConf(conf: string, opts?: ParserOptions)
                         break;
                     }
                     if (ch2 === '\n') {
-                        cursor.type = CursorType.none;
                         loc.newLine();
-                        cursor.resetPending(CursorType.none);
+                        cursor.resetPending(CursorType.directiveKey);
                         break;
                     }
                     loc.character++;
@@ -103,9 +102,8 @@ export function getCursorInfoFromSystemdConf(conf: string, opts?: ParserOptions)
                         break;
                     }
                     if (ch2 === '\n') {
-                        cursor.type = CursorType.none;
                         loc.newLine();
-                        cursor.resetPending(CursorType.none);
+                        cursor.resetPending(CursorType.directiveKey);
                         break;
                     }
                     loc.character++;
@@ -122,7 +120,7 @@ export function getCursorInfoFromSystemdConf(conf: string, opts?: ParserOptions)
                     loc.offset++;
                     loc.character++;
                     loc1 = loc.get();
-                    let isNotEnd = false;
+                    let isNotEnd = false, canBeComment = false;
                     for (; loc.offset < conf.length; loc.offset++) {
                         const ch2 = conf[loc.offset];
                         if (ch2 === '\\') {
@@ -133,15 +131,31 @@ export function getCursorInfoFromSystemdConf(conf: string, opts?: ParserOptions)
                         if (ch2 === '\n') {
                             loc.newLine();
                             if (isNotEnd) {
+                                isNotEnd = false;
+                                canBeComment = true;
                                 continue
                             } else {
-                                cursor.type = CursorType.none;
-                                cursor.resetPending(CursorType.none);
+                                cursor.resetPending(CursorType.directiveKey);
                                 break;
                             }
                         }
                         if (ch2 !== '\r')
                             isNotEnd = false;
+                        if (canBeComment && (ch2 === '#' || ch2 === ';')) {
+                            const nextIndex = conf.indexOf('\n', loc.offset + 1);
+                            if (nextIndex < 0) {
+                                cursor.pendingLoc = loc.get();
+                                cursor.type = CursorType.comment;
+                                loc.character += conf.length - loc.offset;
+                                loc.offset = conf.length;
+                                return cursor;
+                            }
+                            loc.offset = nextIndex;
+                            loc.newLine();
+                            continue;
+                        }
+                        if (ch2 !== ' ' && ch2 !== '\t')
+                            canBeComment = false;
                         loc.character++;
                     }
                     if (loc.offset >= conf.length) {

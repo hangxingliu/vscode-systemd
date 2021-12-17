@@ -84,7 +84,7 @@ export function getDirectiveKeys(conf: string) {
                     loc.offset++;
                     loc.character++;
                     loc1 = loc.get();
-                    let isNotEnd = false;
+                    let isNotEnd = false, canBeComment = false;
                     for (; loc.offset < conf.length; loc.offset++) {
                         const ch2 = conf[loc.offset];
                         if (ch2 === '\\') {
@@ -95,6 +95,8 @@ export function getDirectiveKeys(conf: string) {
                         if (ch2 === '\n') {
                             loc.newLine();
                             if (isNotEnd) {
+                                isNotEnd = false;
+                                canBeComment = true;
                                 continue
                             } else {
                                 break;
@@ -102,6 +104,19 @@ export function getDirectiveKeys(conf: string) {
                         }
                         if (ch2 !== '\r')
                             isNotEnd = false;
+                        if (canBeComment && (ch2 === '#' || ch2 === ';')) {
+                            const nextIndex = conf.indexOf('\n', loc.offset + 1);
+                            if (nextIndex < 0) {
+                                loc.character += conf.length - loc.offset;
+                                loc.offset = conf.length;
+                                return results;
+                            }
+                            loc.offset = nextIndex;
+                            loc.newLine();
+                            continue;
+                        }
+                        if (ch2 !== ' ' && ch2 !== '\t')
+                            canBeComment = false;
                         loc.character++;
                     }
                     if (loc.offset >= conf.length)
