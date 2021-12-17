@@ -5,7 +5,7 @@ import { HintDataManager } from './hint-data/manager';
 import { getCursorInfoFromSystemdConf } from './parser';
 import { getDirectiveKeys } from './parser/get-directive-keys';
 import { CursorType } from './parser/types';
-import { deprecatedDirectivesSet, knownSections, languageId } from "./syntax/const";
+import { customDirectives, deprecatedDirectivesSet, directivePrefixes, knownSections, languageId } from "./syntax/const";
 
 const hintData = new HintDataManager();
 const zeroPos = new Position(0, 0);
@@ -17,6 +17,7 @@ const completionItemsForSections = knownSections.map(it => {
 
 export function activate(context: ExtensionContext) {
     hintData.addItems(require('./hint-data/directives.json'));
+    hintData.addFallbackItems(customDirectives);
 
     const subs = context.subscriptions;
     const selector = [languageId];
@@ -29,7 +30,7 @@ export function activate(context: ExtensionContext) {
     subs.push(languages.registerCompletionItemProvider(selector, {
         provideCompletionItems,
         resolveCompletionItem: hintData.resolveDirectiveCompletionItem,
-    }, '[', '=', '\n', '%'));
+    }, '[', '=', '\n', '%', '.'));
 
     subs.push(languages.registerSignatureHelpProvider(selector, {
         provideSignatureHelp,
@@ -80,8 +81,8 @@ export function activate(context: ExtensionContext) {
                 return;
             }
 
-            if (directiveNameLC.startsWith('x-')) return;
             if (hintData.directivesMap.has(directiveNameLC)) return;
+            if (directivePrefixes.find(p => directiveName.startsWith(p))) return;
             if (config.customDirectiveKeys.indexOf(directiveName) >= 0) return;
             if (config.customDirectiveRegexps.findIndex(it => it.test(directiveName)) >= 0)
                 return;
@@ -102,7 +103,7 @@ export function activate(context: ExtensionContext) {
             case CursorType.directiveValue: {
                 const offset = cursorContext.pendingLoc[0];
                 const text = beforeText.slice(offset);
-                if (text.endsWith('%'))
+                if (text.endsWith('%') && !text.endsWith('%%'))
                     return hintData.specifiers;
             }
         }

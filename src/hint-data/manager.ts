@@ -1,5 +1,5 @@
 import { CompletionItem, CompletionItemKind, CompletionItemTag, MarkdownString, Uri } from "vscode";
-import { deprecatedDirectivesSet } from "../syntax/const";
+import { CustomSystemdDirective, deprecatedDirectivesSet } from "../syntax/const";
 import { systemdDocsURLs } from "../config/url";
 import { isManifestItemForDirective, isManifestItemForDocsMarkdown, isManifestItemForManPageInfo, isManifestItemForSpecifier } from "../utils/types";
 import { MapList } from "../utils/data-types";
@@ -90,6 +90,38 @@ export class HintDataManager {
             });
             this.specifiers.push(s);
             return;
+        }
+    }
+    addFallbackItems(items: CustomSystemdDirective[]) {
+        items.forEach(it => this.addFallbackItem(it))
+    }
+    addFallbackItem(item: CustomSystemdDirective) {
+        if (!item) return;
+        const names: string[] = [];
+        const namesLC: string[] = [];
+        const array = Array.isArray(item.name) ? item.name : [item.name];
+        for (let i = 0; i < array.length; i++) {
+            const name = array[i];
+            const nameLC = name.toLowerCase();
+            if (this.directivesMap.has(nameLC)) continue;
+            names.push(name);
+            namesLC.push(nameLC);
+        }
+        let docsMarkdown: number;
+        if (typeof item.description === 'string') {
+            docsMarkdown = this.docsMarkdown.push(new MarkdownString(item.description)) - 1;
+        }
+        for (let i = 0; i < names.length; i++) {
+            const directiveName = names[i];
+            const directiveNameLC = directiveName.toLowerCase();
+            const ci = new CompletionItem(directiveName, CompletionItemKind.Property);
+            const d = Object.assign(ci, {
+                directiveNameLC,
+                directiveName,
+                docsMarkdown,
+            });
+            this.directivesMap.push(directiveNameLC, d);
+            this.directives.push(d);
         }
     }
 
