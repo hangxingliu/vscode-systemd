@@ -1,4 +1,4 @@
-import { CancellationToken, CompletionItem, CompletionItemKind, Diagnostic, DiagnosticSeverity, DiagnosticTag, ExtensionContext, Hover, languages, Position, Range, SignatureHelp, SignatureHelpContext, SignatureInformation, TextDocument, window, workspace } from 'vscode';
+import { CancellationToken, CompletionContext, CompletionItem, CompletionItemKind, Diagnostic, DiagnosticSeverity, DiagnosticTag, ExtensionContext, Hover, languages, Position, Range, SignatureHelp, SignatureHelpContext, SignatureInformation, TextDocument, window, workspace } from 'vscode';
 import { ExtensionConfig } from './config/extension';
 import { SystemdDiagnosticManager } from './diagnostics';
 import { HintDataManager } from './hint-data/manager';
@@ -94,18 +94,41 @@ export function activate(context: ExtensionContext) {
         diagnostics.set(document.uri, items)
     }
 
-    function provideCompletionItems(document: TextDocument, position: Position): CompletionItem[] {
+    function provideCompletionItems(
+        document: TextDocument,
+        position: Position,
+        token: CancellationToken,
+        context: CompletionContext
+    ): CompletionItem[] {
         const beforeText = document.getText(new Range(zeroPos, position));
         const cursorContext = getCursorInfoFromSystemdConf(beforeText);
+
         switch (cursorContext.type) {
-            case CursorType.directiveKey: return hintData.directives;
+            case CursorType.directiveKey: {
+                const pending = getPendingText();
+
+                let directives = hintData.directives
+                const mtx = pending.match(/^(.+[\.\-])/);
+                if (mtx) {
+                    const prefix = mtx[1].toLowerCase();
+                    directives = directives
+                        .filter(it => it.directiveNameLC.startsWith(prefix));
+                }
+
+                const range = new Range(position.translate(0, -pending.length), position);
+                directives.forEach(it => it.range = range);
+                return directives;
+            }
             case CursorType.section: return completionItemsForSections;
             case CursorType.directiveValue: {
-                const offset = cursorContext.pendingLoc[0];
-                const text = beforeText.slice(offset);
-                if (text.endsWith('%') && !text.endsWith('%%'))
+                const pending = getPendingText();
+                if (pending.endsWith('%') && !pending.endsWith('%%'))
                     return hintData.specifiers;
             }
+        }
+        function getPendingText() {
+            const offset = cursorContext.pendingLoc[0];
+            return beforeText.slice(offset);
         }
     }
 
