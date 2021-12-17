@@ -1,6 +1,6 @@
-import { CancellationToken, CompletionItem, CompletionItemKind, Diagnostic, DiagnosticSeverity, ExtensionContext, Hover, languages, Position, Range, SignatureHelp, SignatureHelpContext, SignatureInformation, TextDocument, window, workspace } from 'vscode';
+import { CancellationToken, CompletionItem, CompletionItemKind, Diagnostic, DiagnosticSeverity, DiagnosticTag, ExtensionContext, Hover, languages, Position, Range, SignatureHelp, SignatureHelpContext, SignatureInformation, TextDocument, window, workspace } from 'vscode';
 import { ExtensionConfig } from './config/extension';
-import { SystemdDiagnostic } from './diagnostics';
+import { SystemdDiagnosticManager } from './diagnostics';
 import { HintDataManager } from './hint-data/manager';
 import { getCursorInfoFromSystemdConf } from './parser';
 import { getDirectiveKeys } from './parser/get-directive-keys';
@@ -21,7 +21,7 @@ export function activate(context: ExtensionContext) {
     const subs = context.subscriptions;
     const selector = [languageId];
     const config = ExtensionConfig.get()
-    const diagnostic = SystemdDiagnostic.get();
+    const diagnostics = SystemdDiagnosticManager.get();
 
     reloadConfig();
     subs.push(workspace.onDidChangeConfiguration(reloadConfig));
@@ -39,9 +39,9 @@ export function activate(context: ExtensionContext) {
         provideHover,
     }));
     subs.push(workspace.onDidOpenTextDocument(document => lintDocument(document)));
-    subs.push(workspace.onDidCloseTextDocument(document => diagnostic.delete(document.uri)))
+    subs.push(workspace.onDidCloseTextDocument(document => diagnostics.delete(document.uri)))
 
-    let timer: any;
+    let timer: NodeJS.Timeout;
     subs.push(workspace.onDidChangeTextDocument(ev => {
         const { document, contentChanges } = ev;
         if (document.languageId !== languageId) return;
@@ -56,7 +56,7 @@ export function activate(context: ExtensionContext) {
         if (config.lintDirectiveKeys)
             window.visibleTextEditors.forEach(editor => lintDocument(editor.document));
         else
-            diagnostic.clear();
+            diagnostics.clear();
     }
     function lintDocument(document: TextDocument) {
         if (!config.lintDirectiveKeys) return;
@@ -64,7 +64,7 @@ export function activate(context: ExtensionContext) {
         if (!document.uri) return;
 
         const dirs = getDirectiveKeys(document.getText());
-        const diagnostics = [];
+        const items = [];
         dirs.forEach(it => {
             const directiveName = it.directiveKey.trim();
             const directiveNameLC = directiveName.toLowerCase();
@@ -75,7 +75,8 @@ export function activate(context: ExtensionContext) {
             if (deprecatedDirectivesSet.has(directiveName)) {
                 const d = new Diagnostic(getRange(), `Deprecated directive "${directiveName}"`)
                 d.severity = DiagnosticSeverity.Warning;
-                diagnostics.push(d);
+                d.tags = [DiagnosticTag.Deprecated]
+                items.push(d);
                 return;
             }
 
@@ -87,9 +88,9 @@ export function activate(context: ExtensionContext) {
 
             const d = new Diagnostic(getRange(), `Unknown directive "${directiveName}"`)
             d.severity = DiagnosticSeverity.Information;
-            diagnostics.push(d);
+            items.push(d);
         })
-        diagnostic.set(document.uri, diagnostics)
+        diagnostics.set(document.uri, items)
     }
 
     function provideCompletionItems(document: TextDocument, position: Position): CompletionItem[] {
@@ -154,8 +155,5 @@ export function activate(context: ExtensionContext) {
 
 export function deactivate() {
     // noop
-}
-function createDiagnosticCollection() {
-    throw new Error('Function not implemented.');
 }
 

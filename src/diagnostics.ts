@@ -1,12 +1,17 @@
 import { Diagnostic, DiagnosticCollection, languages, Uri } from "vscode";
 
-export class SystemdDiagnostic {
+export const enum SystemdDiagnosticType {
+    unknownDirective = 1,
+    deprecatedDirective = 2,
+}
+
+export class SystemdDiagnosticManager {
     private _collection: DiagnosticCollection;
     private static readonly collectionName = 'Systemd';
 
     private getCollection() {
         if (!this._collection)
-            this._collection = languages.createDiagnosticCollection(SystemdDiagnostic.collectionName);
+            this._collection = languages.createDiagnosticCollection(SystemdDiagnosticManager.collectionName);
         return this._collection;
     }
 
@@ -22,9 +27,9 @@ export class SystemdDiagnostic {
         this._collection.clear();
     }
 
-    private static _instance: SystemdDiagnostic;
+    private static _instance: SystemdDiagnosticManager;
     static get() {
-        if (!SystemdDiagnostic._instance) SystemdDiagnostic._instance = new SystemdDiagnostic();
-        return SystemdDiagnostic._instance;
+        if (!SystemdDiagnosticManager._instance) SystemdDiagnosticManager._instance = new SystemdDiagnosticManager();
+        return SystemdDiagnosticManager._instance;
     }
 }
