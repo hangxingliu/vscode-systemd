@@ -29,7 +29,7 @@ export function activate(context: ExtensionContext) {
     subs.push(languages.registerCompletionItemProvider(selector, {
         provideCompletionItems,
         resolveCompletionItem: hintData.resolveDirectiveCompletionItem,
-    }, '[', '=', '\n'));
+    }, '[', '=', '\n', '%'));
 
     subs.push(languages.registerSignatureHelpProvider(selector, {
         provideSignatureHelp,
@@ -99,8 +99,15 @@ export function activate(context: ExtensionContext) {
         switch (cursorContext.type) {
             case CursorType.directiveKey: return hintData.directives;
             case CursorType.section: return completionItemsForSections;
+            case CursorType.directiveValue: {
+                const offset = cursorContext.pendingLoc[0];
+                const text = beforeText.slice(offset);
+                if (text.endsWith('%'))
+                    return hintData.specifiers;
+            }
         }
     }
+
     function provideSignatureHelp(
         document: TextDocument,
         position: Position,
@@ -147,6 +154,21 @@ export function activate(context: ExtensionContext) {
                     if (markdown) markdowns.push(markdown);
                 })
                 return new Hover([Array.from(manPages).join(', '), ...markdowns], range);
+            }
+            case CursorType.directiveValue: {
+                const p0 = new Position(position.line, Math.max(position.character - 2, 0));
+                const p1 = new Position(position.line, position.character + 2);
+                const text = document.getText(new Range(p0, p1));
+                const mtx = text.match(/\%(.)/);
+                if (mtx) {
+                    const ch = mtx[1]
+                    const it = hintData.specifiers.find(it => it.specifierChar === ch);
+                    if (it)
+                        return new Hover([
+                            `Specifier %${ch} (${it.specifierMeaning})`,
+                            it.documentation,
+                        ]);
+                }
             }
         }
         return null;

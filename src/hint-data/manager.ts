@@ -1,7 +1,7 @@
 import { CompletionItem, CompletionItemKind, CompletionItemTag, MarkdownString, Uri } from "vscode";
 import { deprecatedDirectivesSet } from "../syntax/const";
 import { systemdDocsURLs } from "../config/url";
-import { isManifestItemForDirective, isManifestItemForDocsMarkdown, isManifestItemForManPageInfo } from "../utils/types";
+import { isManifestItemForDirective, isManifestItemForDocsMarkdown, isManifestItemForManPageInfo, isManifestItemForSpecifier } from "../utils/types";
 import { MapList } from "../utils/data-types";
 
 export type ManPageInfo = {
@@ -17,6 +17,11 @@ export type DirectiveCompletionItem = CompletionItem & {
     docsMarkdown?: number;
     manPage?: number;
 }
+export type SpecifierCompletionItem = CompletionItem & {
+    specifierChar: string;
+    specifierMeaning: string;
+}
+
 
 export class HintDataManager {
 
@@ -26,6 +31,7 @@ export class HintDataManager {
     directives: Array<DirectiveCompletionItem> = [];
     /** key is lowercase name */
     directivesMap = new MapList<DirectiveCompletionItem>();
+    specifiers: Array<SpecifierCompletionItem> = [];
 
     constructor(items?: unknown[][]) {
         this.manPageBaseUri = Uri.parse(systemdDocsURLs.base);
@@ -68,6 +74,22 @@ export class HintDataManager {
             });
             this.directivesMap.push(directiveNameLC, d);
             this.directives.push(d);
+            return;
+        }
+        if (isManifestItemForSpecifier(item)) {
+            const [, specifier, meaning] = item;
+            const label = `${specifier} (${meaning})`;
+            const ci = new CompletionItem(specifier, CompletionItemKind.Value);
+            ci.label = label;
+            ci.insertText = specifier;
+            ci.detail = meaning;
+            ci.documentation = new MarkdownString(item[3]); // details
+            const s = Object.assign(ci, {
+                specifierChar: specifier,
+                specifierMeaning: meaning,
+            });
+            this.specifiers.push(s);
+            return;
         }
     }
 
