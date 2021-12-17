@@ -13,7 +13,7 @@ const webExtensionConfig = {
         extension: "./src/index.ts", // source of the web extension main file
 	},
 	output: {
-		filename: "webpack.js",
+		filename: "index.js",
         path: path.join(__dirname, "./out"),
 		libraryTarget: "commonjs",
 	},

@@ -5,11 +5,11 @@
         {
             "args": [
                 "--extensionDevelopmentPath=${workspaceFolder}",
-                "${workspaceFolder}/examples"
+                "${workspaceFolder}/test/samples"
             ],
             "name": "Launch Extension",
             "sourceMaps": true,
-            "preLaunchTask": "npm: build:all",
+            "preLaunchTask": "npm: build:debug",
             "request": "launch",
             "type": "pwa-extensionHost"
         }

@@ -3,8 +3,8 @@
 	"displayName": "Systemd Helper",
 	"description": "Help you write Systemd configuration file on Visual Studio Code",
 	"icon": "out/assets/icon.png",
-	"main": "out/webpack.js",
-    "browser": "out/webpack.js",
+	"main": "out/index.js",
+    "browser": "out/index.js",
 	"version": "1.0.0",
 	"publisher": "hangxingliu",
 	"author": "hangxingliu",
@@ -33,9 +33,9 @@
     },
 	"scripts": {
 		"ts": "ts-node",
-		"build:all": "npm run build:syntax && npm run build:desktop && npm run build:webpack",
-		"build:desktop": "tsc -p tsconfig.json && cd src && copyfiles '**/*.{tmLanguage,json,png}' ../out",
-		"build:webpack": "webpack --mode production --devtool hidden-source-map",
+		"build:webpack": "npm run build:syntax && webpack --mode production --devtool hidden-source-map && npm run build:copy",
+		"build:debug": "npm run build:syntax && tsc -p tsconfig.json && npm run build:copy",
+        "build:copy": "cd src && copyfiles '**/*.{tmLanguage,json,png}' ../out",
 		"build:syntax": "ts-node ./src/syntax/generate-tmLanguage.ts",
 		"fetch:directives": "ts-node ./src/utils/fetch-all-directives.ts",
         "clean": "rimraf out"
@@ -86,14 +86,14 @@
 					"systemd.lintDirectiveKeys": {
 						"title": "Enable linter feature for directive keys",
 						"type": "boolean",
-						"default": false,
+						"default": true,
 						"description": "Give you warnings if any directive keys don't exist in the systemd"
 					},
                     "systemd.customDirectiveKeys": {
                         "title": "Custom directive keys",
                         "type": "array",
-                        "default": [],
-                        "examples": ["custom-key", "/^x-(.+)$/i"],
+                        "default": ["/^[A-Z_]+$/"],
+                        "examples": [["/^[A-Z_]+$/"], ["custom-key"]],
                         "description": "An array contains case-sensitive strings or regex expressions. The extension will add them to the completion list and linter."
                     }
                 }

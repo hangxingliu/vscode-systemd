@@ -5,7 +5,8 @@
     "removeComments": false,
     "target": "ES2015",
     "sourceMap": true,
-    "skipLibCheck": true
+    "skipLibCheck": true,
+    "outDir": ".tsc"
   },
   "include": ["src"]
 }
