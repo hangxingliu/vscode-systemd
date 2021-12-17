@@ -135,6 +135,7 @@ export function activate(context: ExtensionContext) {
             }
         }
         function getPendingText() {
+            if (!cursorContext || !cursorContext.pendingLoc) return '';
             const offset = cursorContext.pendingLoc[0];
             return beforeText.slice(offset);
         }
