@@ -7,7 +7,7 @@ artifacts
 out/**/*.js
 out/**/*.js.map
 out/**/*.json
-!out/webpack.js
+!out/index.js
 
 # scripts
 scripts
