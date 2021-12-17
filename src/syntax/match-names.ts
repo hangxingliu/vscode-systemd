@@ -20,9 +20,11 @@ export const names = {
     string: {
         singleQuoted: 'string.quoted.single',
         doubleQuoted: 'string.quoted.double',
+        escape: 'constant.character.escape'
     },
     specifier: 'constant.other.placeholder',
     variable: 'variable.other',
+    parameter: 'variable.parameter',
 
     operator: {
         assignment: 'keyword.operator.assignment',

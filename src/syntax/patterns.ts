@@ -11,7 +11,7 @@ import type { SyntaxPattern } from "./types";
 export const syntaxPatterns: Array<SyntaxPattern | SyntaxPattern[]> = [
     { include: includeRepo.commnets },
 	{
-        begin: '^\\s*(' + deprecatedDirectives.join('|') + ')\\s*(?==)',
+        begin: '^\\s*(' + deprecatedDirectives.join('|') + ')\\s*(=)[ \\t]*',
         end: /(?<!\\)\n/,
         beginCaptures: {
             '1': 'invalid.deprecated',
@@ -28,10 +28,35 @@ export const syntaxPatterns: Array<SyntaxPattern | SyntaxPattern[]> = [
 	},
     {
         name: names.meta.configEntry,
-        begin: /^\s*([\w\-\.]+)\s*(?==)/,
+        begin: /^\s*(Environment)\s*(=)[ \t]*/,
         end: /(?<!\\)\n/,
         beginCaptures: {
             '1': names.entityName.configKey,
+            '2': names.operator.assignment,
+        },
+        patterns: [
+            { include: includeRepo.commnets },
+            {
+                match: /(?<=\G|[\s"'])([A-Za-z0-9\_]+)(=)(?=[^\s"'])/,
+                captures: {
+                    '1': names.parameter,
+                    '2': names.operator.assignment,
+                },
+            },
+            { include: includeRepo.variables },
+            { include: includeRepo.booleans },
+            { include: includeRepo.restartOptions },
+            { include: includeRepo.timeSpans },
+            { include: includeRepo.numbers },
+        ]
+    },
+    {
+        name: names.meta.configEntry,
+        begin: /^\s*([\w\-\.]+)\s*(=)[ \t]*/,
+        end: /(?<!\\)\n/,
+        beginCaptures: {
+            '1': names.entityName.configKey,
+            '2': names.operator.assignment,
         },
         patterns: [
             { include: includeRepo.commnets },

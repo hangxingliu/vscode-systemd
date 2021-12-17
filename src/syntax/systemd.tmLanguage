@@ -12,7 +12,7 @@
     </dict>
     <dict>
       <key>begin</key>
-      <string>^\s*(CPUShares|StartupCPUShares|MemoryLimit|BlockIOAccounting|BlockIOWeight|StartupBlockIOWeight|BlockIODeviceWeight|BlockIOReadBandwidth|BlockIOWriteBandwidth|Capabilities)\s*(?==)</string>
+      <string>^\s*(CPUShares|StartupCPUShares|MemoryLimit|BlockIOAccounting|BlockIOWeight|StartupBlockIOWeight|BlockIODeviceWeight|BlockIOReadBandwidth|BlockIOWriteBandwidth|Capabilities)\s*(=)[ \t]*</string>
       <key>end</key>
       <string>(?&lt;!\\)\n</string>
       <key>beginCaptures</key>
@@ -59,7 +59,7 @@
       <key>name</key>
       <string>meta.config-entry</string>
       <key>begin</key>
-      <string>^\s*([\w\-\.]+)\s*(?==)</string>
+      <string>^\s*(Environment)\s*(=)[ \t]*</string>
       <key>end</key>
       <string>(?&lt;!\\)\n</string>
       <key>beginCaptures</key>
@@ -68,6 +68,76 @@
         <dict>
           <key>name</key>
           <string>entity.name.tag</string>
+        </dict>
+        <key>2</key>
+        <dict>
+          <key>name</key>
+          <string>keyword.operator.assignment</string>
+        </dict>
+      </dict>
+      <key>patterns</key>
+      <array>
+        <dict>
+          <key>include</key>
+          <string>#commnets</string>
+        </dict>
+        <dict>
+          <key>match</key>
+          <string>(?&lt;=\G|[\s"'])([A-Za-z0-9\_]+)(=)(?=[^\s"'])</string>
+          <key>captures</key>
+          <dict>
+            <key>1</key>
+            <dict>
+              <key>name</key>
+              <string>variable.parameter</string>
+            </dict>
+            <key>2</key>
+            <dict>
+              <key>name</key>
+              <string>keyword.operator.assignment</string>
+            </dict>
+          </dict>
+        </dict>
+        <dict>
+          <key>include</key>
+          <string>#variables</string>
+        </dict>
+        <dict>
+          <key>include</key>
+          <string>#booleans</string>
+        </dict>
+        <dict>
+          <key>include</key>
+          <string>#restartOptions</string>
+        </dict>
+        <dict>
+          <key>include</key>
+          <string>#timeSpans</string>
+        </dict>
+        <dict>
+          <key>include</key>
+          <string>#numbers</string>
+        </dict>
+      </array>
+    </dict>
+    <dict>
+      <key>name</key>
+      <string>meta.config-entry</string>
+      <key>begin</key>
+      <string>^\s*([\w\-\.]+)\s*(=)[ \t]*</string>
+      <key>end</key>
+      <string>(?&lt;!\\)\n</string>
+      <key>beginCaptures</key>
+      <dict>
+        <key>1</key>
+        <dict>
+          <key>name</key>
+          <string>entity.name.tag</string>
+        </dict>
+        <key>2</key>
+        <dict>
+          <key>name</key>
+          <string>keyword.operator.assignment</string>
         </dict>
       </dict>
       <key>patterns</key>
@@ -171,17 +241,35 @@
           <key>name</key>
           <string>string.quoted.single</string>
           <key>begin</key>
-          <string>'</string>
+          <string>(?&lt;=\G|\s)'</string>
           <key>end</key>
-          <string>(?:(?&lt;!\\)'|$)</string>
+          <string>(?:(?&lt;!\\)['\n])</string>
+          <key>patterns</key>
+          <array>
+            <dict>
+              <key>name</key>
+              <string>constant.character.escape</string>
+              <key>match</key>
+              <string>\\(?:[abfnrtvs\\"']|x[0-9A-Fa-f]{2}|[0-8]{3}|u[0-9A-Fa-f]{4}|U[0-9A-Fa-f]{8})</string>
+            </dict>
+          </array>
         </dict>
         <dict>
           <key>name</key>
           <string>string.quoted.double</string>
           <key>begin</key>
-          <string>"</string>
+          <string>(?&lt;=\G|\s)"</string>
           <key>end</key>
-          <string>(?:(?&lt;!\\)"|$)</string>
+          <string>(?:(?&lt;!\\)["\n])</string>
+          <key>patterns</key>
+          <array>
+            <dict>
+              <key>name</key>
+              <string>constant.character.escape</string>
+              <key>match</key>
+              <string>\\(?:[abfnrtvs\\"']|x[0-9A-Fa-f]{2}|[0-8]{3}|u[0-9A-Fa-f]{4}|U[0-9A-Fa-f]{8})</string>
+            </dict>
+          </array>
         </dict>
       </array>
     </dict>
