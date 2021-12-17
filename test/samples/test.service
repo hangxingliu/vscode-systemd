@@ -1,0 +1,12 @@
+[Unit]
+Description=Lorem ipsum dolor sit amet, \
+# consectetur adipiscing elit,
+sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+
+[Service]
+Restart=always
+Type=forking
+ExecStart=/usr/sbin/foo-cleanup
+
+[Install]
+WantedBy=multi-user.target

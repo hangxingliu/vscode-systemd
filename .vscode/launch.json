@@ -12,6 +12,15 @@
             "preLaunchTask": "npm: build:debug",
             "request": "launch",
             "type": "pwa-extensionHost"
+        },
+        {
+            "name": "Attach",
+            "port": 9229,
+            "request": "attach",
+            "skipFiles": [
+                "<node_internals>/**"
+            ],
+            "type": "pwa-node"
         }
     ]
 }
