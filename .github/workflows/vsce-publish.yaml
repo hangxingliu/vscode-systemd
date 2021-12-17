@@ -10,7 +10,7 @@ jobs:
       - name: Install and build
         run: |
           yarn install &&
-          yarn run build:all &&
+          yarn run build:webpack &&
           yarn add vsce --dev
       - name: Publish VS Code extension
         env:
