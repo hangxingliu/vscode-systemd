@@ -4,7 +4,7 @@
 
 Help you write systemd configurations in Visual Studio Code
 
-![The screenshot of this extension](https://github.com/hangxingliu/vscode-systemd/blob/7927822df923d9293402eedcbf92b32928e12306/docs/images/screenshot.png)
+![The screenshot of this extension](https://raw.githubusercontent.com/hangxingliu/vscode-systemd/7927822df923d9293402eedcbf92b32928e12306/docs/images/screenshot.png)
 
 ## Features
 

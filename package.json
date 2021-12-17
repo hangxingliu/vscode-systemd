@@ -5,7 +5,7 @@
 	"icon": "out/assets/icon.png",
 	"main": "out/index.js",
     "browser": "out/index.js",
-	"version": "1.0.0",
+	"version": "1.0.1",
 	"publisher": "hangxingliu",
 	"author": "hangxingliu",
 	"license": "MIT",
