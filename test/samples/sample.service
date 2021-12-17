@@ -5,7 +5,7 @@ UnknownOption1 = hoge # 日本語
 UnknownOption2=hoge # no space before and after '='
 WrappedLine = foo bar \
   aaa bbb ccc # not supported
-X-prefixed-options1 = 
+X-prefixed-options1 =
 
 [Unit]
 Description=Service sample Description ; comment
@@ -42,7 +42,7 @@ JobTimeoutRebootArgument
 ConditionArchitecture = x86 !x86 x86-64 !x86-64 arm arm-be arm64 arm64-be native
 ConditionVirtualization = qemu kvm zvm vmware microsoft oracle xen bochs uml openvz lxc-libvirt lxc systemd-nspawn docker
 ConditionHost =
-ConditionKernelCommandLine = 
+ConditionKernelCommandLine =
 ConditionSecurity = selinux apparmor ima smack audit
 ConditionCapability =
 ConditionACPower =
@@ -142,7 +142,7 @@ NoDelay =
 Priority =
 DeferAcceptSec =
 ReceiveBuffer =
-SendBuffer = 
+SendBuffer =
 IPTOS =
 IPTTL =
 Mark =
