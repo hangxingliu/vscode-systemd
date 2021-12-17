@@ -26,6 +26,7 @@ async function main() {
 
     const directiveHeadings = new Map([
         'Unit directives',
+        'Options on the kernel command line',
         'Home Area/User Account directives',
         'UDEV directives',
         'Network directives',

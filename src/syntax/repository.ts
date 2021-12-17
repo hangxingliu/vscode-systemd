@@ -92,9 +92,13 @@ export const syntaxRepository: {
                 },
             },
             {
-                match: /%[aAbBCEfgGhHiIjJlLmMnNopPsStTuUvVwW%]\b/,
+                match: /%%/,
+                name: names.specifier,
+            },
+            {
+                match: /%[aAbBCEfgGhHiIjJlLmMnNopPsStTuUvVwW]\b/,
                 name: names.specifier
-            }
+            },
         ]
     },
 }

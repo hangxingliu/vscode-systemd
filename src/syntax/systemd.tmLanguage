@@ -12,7 +12,7 @@
     </dict>
     <dict>
       <key>begin</key>
-      <string>^\s*(CPUShares|StartupCPUShares|MemoryLimit|BlockIOAccounting|BlockIOWeight|StartupBlockIOWeight|BlockIODeviceWeight|BlockIOReadBandwidth|BlockIOWriteBandwidth)\s*(?==)</string>
+      <string>^\s*(CPUShares|StartupCPUShares|MemoryLimit|BlockIOAccounting|BlockIOWeight|StartupBlockIOWeight|BlockIODeviceWeight|BlockIOReadBandwidth|BlockIOWriteBandwidth|Capabilities)\s*(?==)</string>
       <key>end</key>
       <string>(?&lt;!\\)\n</string>
       <key>beginCaptures</key>
@@ -256,7 +256,13 @@
           <key>name</key>
           <string>constant.other.placeholder</string>
           <key>match</key>
-          <string>%[aAbBCEfgGhHiIjJlLmMnNopPsStTuUvVwW%]\b</string>
+          <string>%%</string>
+        </dict>
+        <dict>
+          <key>name</key>
+          <string>constant.other.placeholder</string>
+          <key>match</key>
+          <string>%[aAbBCEfgGhHiIjJlLmMnNopPsStTuUvVwW]\b</string>
         </dict>
       </array>
     </dict>
