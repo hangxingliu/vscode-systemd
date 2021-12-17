@@ -2,6 +2,7 @@ export const enum ManifestItemType {
     Directive = 2,
     ManPageInfo = 3,
     DocsMarkdown = 4,
+    Specifier = 5,
 }
 
 
@@ -36,4 +37,16 @@ export type ManifestItemForDocsMarkdown = [
 ];
 export function isManifestItemForDocsMarkdown(row: unknown[]): row is ManifestItemForDocsMarkdown {
     return row && row[0] === ManifestItemType.DocsMarkdown;
+}
+
+
+export type ManifestItemForSpecifier = [
+    type: ManifestItemType.Specifier,
+    /** without first '%' */
+    specifier: string,
+    meaning: string,
+    detailsMarkdown: string,
+];
+export function isManifestItemForSpecifier(row: unknown[]): row is ManifestItemForSpecifier {
+    return row && row[0] === ManifestItemType.Specifier;
 }

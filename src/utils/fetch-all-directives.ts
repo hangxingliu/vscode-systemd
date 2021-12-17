@@ -2,9 +2,9 @@
 
 import { directivesDataFile } from '../config/fs';
 import { systemdDocsURLs } from '../config/url';
-import { print, getText, initHttpCache, loadHtml, lengthShouldBeEqual, AssertLevel, lengthShouldBeMoreThanOrEqual, resolveURL, JsonFileWriter, toMarkdown } from './helper';
+import { print, getText, initHttpCache, loadHtml, lengthShouldBeEqual, AssertLevel, lengthShouldBeMoreThanOrEqual, resolveURL, JsonFileWriter, toMarkdown, shouldBeEqual } from './helper';
 import { MapList } from "./data-types"
-import { ManifestItemForDirective, ManifestItemForDocsMarkdown, ManifestItemForManPageInfo, ManifestItemType } from './types';
+import { ManifestItemForDirective, ManifestItemForDocsMarkdown, ManifestItemForManPageInfo, ManifestItemForSpecifier, ManifestItemType } from './types';
 import type { Cheerio, Element } from "cheerio";
 
 const normalizeDirectiveHeadingId = (id: unknown) => String(id || '').trim().replace(/\W/g, '').replace(/\s+/g, ' ').toLowerCase();
@@ -20,13 +20,9 @@ main().catch((error) => print.error(error.stack));
 async function main() {
     initHttpCache();
 
-    const result = [];
-
     const html = await getText("directives docs", systemdDocsURLs.directives);
     const $ = loadHtml(html);
     print.start("processing directives document");
-
-    const allDirectives: Element[] = [];
 
     const directiveHeadings = new Map([
         'Unit directives',
@@ -126,6 +122,9 @@ async function main() {
 
     let docsMarkdownIndex = 1;
     const jsonFile = new JsonFileWriter(directivesDataFile);
+
+    await fetchSpecifiers(jsonFile);
+
     for (let manPageIndex = 1; manPageIndex < manPages.length; manPageIndex++) {
         const { docsUri, docsName, directiveNames } = manPages[manPageIndex];
         const manPageURL = resolveURL(systemdDocsURLs.directives, docsUri);
@@ -208,7 +207,7 @@ async function main() {
                 if (index >= 0) {
                     const mtx = text
                         .slice(index + directiveName.length + 1)
-                        .match(/(.+?)(?=,|$)/);
+                        .match(/([^=]+?)(?=,|$)/);
                     if (mtx) signature = mtx[1];
                 }
                 jsonFile.writeItem([
@@ -222,5 +221,45 @@ async function main() {
         }
     } // end of loop for man pages
     jsonFile.close();
+
+    if (print.warnings > 0) print.warning(`Total warnings: ${print.warnings}`);
     print.done();
+}
+
+async function fetchSpecifiers(writer: JsonFileWriter) {
+    const html = await getText("specifiers docs", systemdDocsURLs.specifiers);
+    const $ = loadHtml(html);
+    print.start("processing specifiers document");
+    const $table = $('#Specifiers+p+.table table');
+    lengthShouldBeEqual(`specifiers table`, $table, 1);
+
+    const $thead = $table.find('thead');
+    shouldBeEqual(`thead of specifiers table`,
+        $thead.text().replace(/\s+/g, ''),
+        ['Specifier', 'Meaning', 'Details'].join('')
+    );
+
+    const trArray = $table.find('tbody tr').toArray();
+    lengthShouldBeEqual('tbody tr', trArray, 35, AssertLevel.WARNING);
+
+    for (let i = 0; i < trArray.length; i++) {
+        const $tr = $(trArray[i]);
+        const $td = $tr.find('td');
+        lengthShouldBeEqual(`tr[${i}] td`, $td, 3);
+
+        const rawSpecifier = $td.eq(0).text();
+        const mtx = rawSpecifier.match(/\"\%(.)\"/);
+        if (!mtx) throw new Error(`Invalid specifier text "${rawSpecifier}"`);
+        const meaning = $td.eq(1).text();
+        const html = $td.eq(2).html();
+        const markdown = toMarkdown(html);
+        writer.writeItem([
+            ManifestItemType.Specifier,
+            mtx[1],
+            meaning,
+            markdown
+        ] as ManifestItemForSpecifier)
+
+    }
+
 }
