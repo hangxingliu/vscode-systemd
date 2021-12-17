@@ -1,13 +1,43 @@
-import { Diagnostic, DiagnosticCollection, languages, Uri } from "vscode";
+import {
+    Range,
+    Diagnostic,
+    DiagnosticCollection,
+    languages,
+    Uri,
+    Selection,
+    DiagnosticSeverity,
+    DiagnosticTag,
+} from "vscode";
 
 export const enum SystemdDiagnosticType {
     unknownDirective = 1,
     deprecatedDirective = 2,
 }
+export type SystemdDiagnostic = Diagnostic & {
+    type?: SystemdDiagnosticType;
+    directive?: string;
+};
+
+export function getDiagnosticForDeprecated(range: Range, directiveName: string): SystemdDiagnostic {
+    const d: SystemdDiagnostic = new Diagnostic(range, `Deprecated directive "${directiveName}"`);
+    d.severity = DiagnosticSeverity.Warning;
+    d.tags = [DiagnosticTag.Deprecated];
+    d.type = SystemdDiagnosticType.deprecatedDirective;
+    d.directive = directiveName;
+    return d;
+}
+
+export function getDiagnosticForUnknown(range: Range, directiveName: string): SystemdDiagnostic {
+    const d: SystemdDiagnostic = new Diagnostic(range, `Unknown directive "${directiveName}"`);
+    d.severity = DiagnosticSeverity.Information;
+    d.type = SystemdDiagnosticType.unknownDirective;
+    d.directive = directiveName;
+    return d;
+}
 
 export class SystemdDiagnosticManager {
     private _collection: DiagnosticCollection;
-    private static readonly collectionName = 'Systemd';
+    private static readonly collectionName = "Systemd";
 
     private getCollection() {
         if (!this._collection)
@@ -15,8 +45,14 @@ export class SystemdDiagnosticManager {
         return this._collection;
     }
 
-    set(uri: Uri, diagnostics: Diagnostic[]) {
+    set(uri: Uri, diagnostics: SystemdDiagnostic[]) {
         this.getCollection().set(uri, diagnostics);
+    }
+    get(uri: Uri, range: Range | Selection): readonly SystemdDiagnostic[] {
+        if (!uri || !this._collection) return [];
+        const ds: readonly Diagnostic[] = this._collection.get(uri);
+        if (!ds) return [];
+        return ds.filter((it) => it.range.contains(range) || range.contains(it.range));
     }
     delete(uri: Uri) {
         if (!this._collection) return;

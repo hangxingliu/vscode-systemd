@@ -1,14 +1,19 @@
-import { CompletionItem, CompletionItemKind, CompletionItemTag, MarkdownString, Uri } from "vscode";
+import { CompletionItem, CompletionItemKind, CompletionItemLabel, CompletionItemTag, MarkdownString, Uri } from "vscode";
 import { CustomSystemdDirective, deprecatedDirectivesSet } from "../syntax/const";
 import { systemdDocsURLs } from "../config/url";
-import { isManifestItemForDirective, isManifestItemForDocsMarkdown, isManifestItemForManPageInfo, isManifestItemForSpecifier } from "../utils/types";
+import {
+    isManifestItemForDirective,
+    isManifestItemForDocsMarkdown,
+    isManifestItemForManPageInfo,
+    isManifestItemForSpecifier,
+} from "../utils/types";
 import { MapList } from "../utils/data-types";
 
 export type ManPageInfo = {
     title: string;
     desc: MarkdownString;
     url: Uri;
-}
+};
 export type MarkdownHelp = MarkdownString;
 export type DirectiveCompletionItem = CompletionItem & {
     directiveNameLC?: string;
@@ -16,15 +21,13 @@ export type DirectiveCompletionItem = CompletionItem & {
     signature?: string;
     docsMarkdown?: number;
     manPage?: number;
-}
+};
 export type SpecifierCompletionItem = CompletionItem & {
     specifierChar: string;
     specifierMeaning: string;
-}
-
+};
 
 export class HintDataManager {
-
     manPageBaseUri: Uri;
     manPages: Array<ManPageInfo> = [];
     docsMarkdown: Array<MarkdownHelp> = [];
@@ -38,7 +41,7 @@ export class HintDataManager {
         if (items) this.addItems(items);
     }
     addItems(items: unknown[][]) {
-        items.forEach(it => this.addItem(it))
+        items.forEach((it) => this.addItem(it));
     }
     addItem(item: unknown[]) {
         if (isManifestItemForManPageInfo(item)) {
@@ -55,11 +58,14 @@ export class HintDataManager {
         }
         if (isManifestItemForDirective(item)) {
             const directiveName = item[1];
-            const ci = new CompletionItem(directiveName, CompletionItemKind.Property);
-            if (deprecatedDirectivesSet.has(directiveName))
-                ci.tags = [CompletionItemTag.Deprecated];
+            const signature = item[2];
+            const label: CompletionItemLabel = { label: directiveName };
+            if (signature) label.detail = ' ' + signature;
+
+            const ci = new CompletionItem(label, CompletionItemKind.Property);
+            if (deprecatedDirectivesSet.has(directiveName)) ci.tags = [CompletionItemTag.Deprecated];
             let docsMarkdown: number;
-            if (typeof item[3] === 'string') {
+            if (typeof item[3] === "string") {
                 docsMarkdown = this.docsMarkdown.push(new MarkdownString(item[3])) - 1;
             } else {
                 docsMarkdown = item[3];
@@ -93,7 +99,7 @@ export class HintDataManager {
         }
     }
     addFallbackItems(items: CustomSystemdDirective[]) {
-        items.forEach(it => this.addFallbackItem(it))
+        items.forEach((it) => this.addFallbackItem(it));
     }
     addFallbackItem(item: CustomSystemdDirective) {
         if (!item) return;
@@ -108,7 +114,7 @@ export class HintDataManager {
             namesLC.push(nameLC);
         }
         let docsMarkdown: number;
-        if (typeof item.description === 'string') {
+        if (typeof item.description === "string") {
             docsMarkdown = this.docsMarkdown.push(new MarkdownString(item.description)) - 1;
         }
         for (let i = 0; i < names.length; i++) {
@@ -127,16 +133,13 @@ export class HintDataManager {
 
     resolveDirectiveCompletionItem = (item: DirectiveCompletionItem) => {
         if (item.manPage) {
-            const manPage = this.manPages[item.manPage]
-            if (manPage)
-                item.detail = manPage.title;
+            const manPage = this.manPages[item.manPage];
+            if (manPage) item.detail = manPage.title;
         }
         if (item.docsMarkdown) {
             const docs = this.docsMarkdown[item.docsMarkdown];
-            if (docs)
-                item.documentation = docs;
+            if (docs) item.documentation = docs;
         }
         return item;
-    }
-
+    };
 }

@@ -1,11 +1,11 @@
-import { CancellationToken, CompletionContext, CompletionItem, CompletionItemKind, Diagnostic, DiagnosticSeverity, DiagnosticTag, ExtensionContext, Hover, languages, Position, Range, SignatureHelp, SignatureHelpContext, SignatureInformation, TextDocument, window, workspace } from 'vscode';
+import { CancellationToken, CodeAction, CodeActionContext, CodeActionKind, commands, CompletionContext, CompletionItem, CompletionItemKind, ConfigurationTarget, ExtensionContext, Hover, languages, Position, Range, Selection,SignatureHelp, SignatureHelpContext, SignatureInformation, TextDocument, window, workspace } from 'vscode';
 import { ExtensionConfig } from './config/extension';
-import { SystemdDiagnosticManager } from './diagnostics';
+import { getDiagnosticForDeprecated, getDiagnosticForUnknown, SystemdDiagnostic, SystemdDiagnosticManager, SystemdDiagnosticType } from './diagnostics';
 import { HintDataManager } from './hint-data/manager';
 import { getCursorInfoFromSystemdConf } from './parser';
 import { getDirectiveKeys } from './parser/get-directive-keys';
 import { CursorType } from './parser/types';
-import { customDirectives, deprecatedDirectivesSet, directivePrefixes, knownSections, languageId } from "./syntax/const";
+import { customDirectives, deprecatedDirectivesSet, directivePrefixes, knownSections, languageId, optionsForServiceRestart, optionsForServiceType } from "./syntax/const";
 
 const hintData = new HintDataManager();
 const zeroPos = new Position(0, 0);
@@ -23,6 +23,9 @@ export function activate(context: ExtensionContext) {
     const selector = [languageId];
     const config = ExtensionConfig.get()
     const diagnostics = SystemdDiagnosticManager.get();
+    const commandNames = {
+        addUnknownDirective: 'systemd.addUnknownDirective',
+    }
 
     reloadConfig();
     subs.push(workspace.onDidChangeConfiguration(reloadConfig));
@@ -36,9 +39,9 @@ export function activate(context: ExtensionContext) {
         provideSignatureHelp,
     }, "="));
 
-    subs.push(languages.registerHoverProvider(selector, {
-        provideHover,
-    }));
+    subs.push(languages.registerHoverProvider(selector, { provideHover }));
+    subs.push(languages.registerCodeActionsProvider(selector, { provideCodeActions }));
+    subs.push(commands.registerCommand(commandNames.addUnknownDirective, addUnknownDirective));
     subs.push(workspace.onDidOpenTextDocument(document => lintDocument(document)));
     subs.push(workspace.onDidCloseTextDocument(document => diagnostics.delete(document.uri)))
 
@@ -65,7 +68,7 @@ export function activate(context: ExtensionContext) {
         if (!document.uri) return;
 
         const dirs = getDirectiveKeys(document.getText());
-        const items = [];
+        const items: SystemdDiagnostic[] = [];
         dirs.forEach(it => {
             const directiveName = it.directiveKey.trim();
             const directiveNameLC = directiveName.toLowerCase();
@@ -74,11 +77,8 @@ export function activate(context: ExtensionContext) {
                 new Position(it.loc2[1], it.loc2[2]),
             );
             if (deprecatedDirectivesSet.has(directiveName)) {
-                const d = new Diagnostic(getRange(), `Deprecated directive "${directiveName}"`)
-                d.severity = DiagnosticSeverity.Warning;
-                d.tags = [DiagnosticTag.Deprecated]
-                items.push(d);
-                return;
+                items.push(getDiagnosticForDeprecated(getRange(), directiveName));
+                return
             }
 
             if (hintData.directivesMap.has(directiveNameLC)) return;
@@ -87,9 +87,8 @@ export function activate(context: ExtensionContext) {
             if (config.customDirectiveRegexps.findIndex(it => it.test(directiveName)) >= 0)
                 return;
 
-            const d = new Diagnostic(getRange(), `Unknown directive "${directiveName}"`)
-            d.severity = DiagnosticSeverity.Information;
-            items.push(d);
+            items.push(getDiagnosticForUnknown(getRange(), directiveName));
+            return;
         })
         diagnostics.set(document.uri, items)
     }
@@ -124,6 +123,15 @@ export function activate(context: ExtensionContext) {
                 const pending = getPendingText();
                 if (pending.endsWith('%') && !pending.endsWith('%%'))
                     return hintData.specifiers;
+                if (cursorContext.section === '[Service]') {
+                    const directiveNameLC = cursorContext.directiveKey.trim().toLowerCase();
+                    switch (directiveNameLC) {
+                        case 'type':
+                            return optionsForServiceType.map(it => new CompletionItem(it, CompletionItemKind.Enum));
+                        case 'restart':
+                            return optionsForServiceRestart.map(it => new CompletionItem(it, CompletionItemKind.Enum));
+                    }
+                }
             }
         }
         function getPendingText() {
@@ -196,6 +204,45 @@ export function activate(context: ExtensionContext) {
             }
         }
         return null;
+    }
+
+    function provideCodeActions(document: TextDocument, range: Range | Selection, context: CodeActionContext, token: CancellationToken): CodeAction[] {
+        const ds = diagnostics.get(document?.uri, range);
+        const result: CodeAction[] = [];
+        for (let i = 0; i < ds.length; i++) {
+            const { type, directive } = ds[i];
+            if (type === SystemdDiagnosticType.unknownDirective) {
+                const title1 = `Mark "${directive}" as a known directive globally`
+                const title2 = `Mark "${directive}" as a known directive for this workspace`
+                const action1 = new CodeAction(title1, CodeActionKind.QuickFix);
+                const action2 = new CodeAction(title2, CodeActionKind.QuickFix);
+                action1.command = {
+                    title: title1,
+                    command: commandNames.addUnknownDirective,
+                    arguments: [directive, 'Global']
+                };
+                action2.command = {
+                    title: title2,
+                    command: commandNames.addUnknownDirective,
+                    arguments: [directive, 'Workspace']
+                };
+                result.push(action2, action1)
+            }
+        }
+        return result;
+    }
+
+    async function addUnknownDirective(directive: string, scope: 'Global' | 'Workspace' | 'WorkspaceFolder') {
+        const key = 'systemd.customDirectiveKeys'.split('.')
+
+        const conf = workspace.getConfiguration(key[0]);
+        const value = new Set(conf.get(key[1], []));
+        value.add(directive);
+
+        let scopeValue = ConfigurationTarget[scope];
+        if (typeof scopeValue !== 'number') scopeValue = ConfigurationTarget.Global;
+
+        conf.update(key[1], Array.from(value), scopeValue);
     }
 }
 

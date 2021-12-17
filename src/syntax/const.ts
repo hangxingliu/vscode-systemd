@@ -160,3 +160,7 @@ for (let i = 0; i < customDirectives.length; i++) {
 export const deprecatedDirectivesSet = new Set(deprecatedDirectives);
 
 export const directivePrefixes = ["x-", "X-", "-"];
+
+export const optionsForServiceType = ['simple', 'exec', 'forking', 'oneshot', 'dbus', 'notify', 'idle'];
+
+export const optionsForServiceRestart = ['no', 'on-success', 'on-failure', 'on-abnormal', 'on-watchdog', 'on-abort', 'always'];
