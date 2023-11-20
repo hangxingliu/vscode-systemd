@@ -13,6 +13,12 @@ Help you write systemd configurations in Visual Studio Code
 - Lint directive names
 - Provide document for directives and specifiers
 
+## Installation
+
+1. Click `Extension` button in left side of VSCode. (Shortcut: <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>X</kbd> or <kbd>Command</kbd>+<kbd>Shift</kbd>+<kbd>X</kbd>)
+2. Search for `hangxingliu.vscode-systemd-support` and click the `Install` button.
+
+
 ## Changelog
 
 ### 1.0.0 (2021-12-18)
@@ -28,9 +34,10 @@ Help you write systemd configurations in Visual Studio Code
 
 See [CHANGELOG.md](docs/CHANGELOG.md)
 
-## Build by Yourself & Contributing
+## Build & Contributing
 
-See [CONTRIBUTING.md](docs/CONTRIBUTING.md)
+Please check out the document [CONTRIBUTING.md](docs/CONTRIBUTING.md) for information 
+about building/contributing this project
 
 ## License
 
