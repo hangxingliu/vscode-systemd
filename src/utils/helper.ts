@@ -4,7 +4,7 @@ export { load as loadHtml } from "cheerio";
 import { Agent as HttpsAgent } from "https";
 import { existsSync, writeFile, mkdirSync, readFileSync, writeFileSync, createWriteStream, WriteStream } from "fs";
 import { resolve as resolvePath } from "path";
-import { yellow, bold as _bold, green, red, blue, dim } from "colors/safe";
+import { yellow, bold as _bold, green, red, blue, dim } from "./terminal-colors";
 import { cacheDir } from "../config/fs";
 
 import Turndown = require("turndown");
