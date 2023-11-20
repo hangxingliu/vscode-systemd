@@ -3,7 +3,7 @@
     "module": "commonjs",
     "declaration": false,
     "removeComments": false,
-    "target": "ES2015",
+    "target": "ES2022",
     "sourceMap": true,
     "skipLibCheck": true,
     "outDir": ".tsc"
