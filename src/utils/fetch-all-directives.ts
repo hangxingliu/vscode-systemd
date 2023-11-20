@@ -1,8 +1,8 @@
 #!/usr/bin/env node
 
-import { directivesDataFile } from '../config/fs';
+import { cacheDir, directivesDataFile } from '../config/fs';
 import { systemdDocsURLs } from '../config/url';
-import { print, getText, initHttpCache, loadHtml, lengthShouldBeEqual, AssertLevel, lengthShouldBeMoreThanOrEqual, resolveURL, JsonFileWriter, toMarkdown, shouldBeEqual } from './helper';
+import { print, getText, SimpleHttpCache, loadHtml, assertLength, AssertLevel, resolveURL, JsonFileWriter, toMarkdown, assert } from './crawler-utils';
 import { MapList } from "./data-types"
 import { ManifestItemForDirective, ManifestItemForDocsMarkdown, ManifestItemForManPageInfo, ManifestItemForSpecifier, ManifestItemType } from './types';
 import type { Cheerio, Element } from "cheerio";
@@ -18,7 +18,7 @@ const parseManPageLink = (link: string) => {
 
 main().catch((error) => print.error(error.stack));
 async function main() {
-    initHttpCache();
+    SimpleHttpCache.init(cacheDir);
 
     const html = await getText("directives docs", systemdDocsURLs.directives);
     const $ = loadHtml(html);
@@ -41,8 +41,8 @@ async function main() {
 
     print.debug(`searching "h2" ...`);
     const allH2 = $('h2').toArray();
-    // console.log(allH2.map(it=>it.attribs.id), allH2.length)
-    lengthShouldBeEqual('all <h2>', allH2, 24, AssertLevel.WARNING);
+    // console.log(allH2.map(it => it.attribs.id), allH2.length)
+    assertLength('all <h2>', allH2, 24, AssertLevel.WARNING);
 
     const directivesH2: typeof allH2 = [];
     for (const h2 of allH2) {
@@ -54,7 +54,7 @@ async function main() {
         directiveHeadings.set(id, existed + 1);
         directivesH2.push(h2);
     }
-    lengthShouldBeEqual('<h2> about directives', directivesH2, directiveHeadings.size);
+    assertLength('<h2> about directives', directivesH2, directiveHeadings.size);
 
     type RawDirectiveInfo = {
         name: string,
@@ -85,7 +85,7 @@ async function main() {
             if (!dt.attribs.id) throw new Error(`The id attribute of dt "${elText}" is empty`);
 
             const $term = $el.find('span.term');
-            lengthShouldBeEqual(`span.term of dt "${elText}"`, $term, 1);
+            assertLength(`span.term of dt "${elText}"`, $term, 1);
 
             const termText = $term.text().trim();
             if (!termText.match(/^([\w\s\$\%\{\}\-\.\+"']+)=?$/))
@@ -102,7 +102,7 @@ async function main() {
                 throw new Error(`can't find dd element after directive "${termText}" (found=${$linkContainer.length})`);
 
             const $links = $linkContainer.find('a');
-            lengthShouldBeMoreThanOrEqual(`links for "${termText}"`, $links, 1);
+            assertLength(`links for "${termText}"`, $links, '>=1');
 
             $links.toArray().forEach(it => {
                 const docsName = $(it).text();
@@ -136,7 +136,7 @@ async function main() {
         print.debug(`start processing man page "${docsName}" for ${directiveNames.length} directives ...`);
 
         const $nameH2 = $('.refnamediv h2');
-        lengthShouldBeEqual(`name h2 of man page "${docsName}"`, $nameH2, 1);
+        assertLength(`name h2 of man page "${docsName}"`, $nameH2, 1);
 
         const description = $nameH2.next('p').text().trim();
         if (!description) throw new Error(`description of man page "${docsName}" is empty!`);
@@ -164,8 +164,8 @@ async function main() {
                 throw new Error(`duplicated dt element id "${id}"`);
 
             const $dd = $($el.next('dd'));
-            lengthShouldBeEqual(`description of directive "${text}"`, $dd, 1);
-            const docsMarkdown = toMarkdown($dd.html());
+            assertLength(`description of directive "${text}"`, $dd, 1);
+            const docsMarkdown = toMarkdown($dd.html() || '');
 
             jsonFile.writeItem([
                 ManifestItemType.DocsMarkdown,
@@ -190,7 +190,7 @@ async function main() {
         print.debug(`found ${idMap.size} dt elements`);
 
         for (const directiveName of directiveNames) {
-            const directives = directivesMap.get(directiveName);
+            const directives = directivesMap.get(directiveName) || [];
             const matchedDirectives = directives.filter(it => it.manPageIndex === manPageIndex);
             for (const directive of matchedDirectives) {
                 let $dt = idMap.get(directive.itemId);
@@ -232,28 +232,28 @@ async function fetchSpecifiers(writer: JsonFileWriter) {
     const $ = loadHtml(html);
     print.start("processing specifiers document");
     const $table = $('#Specifiers+p+.table table');
-    lengthShouldBeEqual(`specifiers table`, $table, 1);
+    assertLength(`specifiers table`, $table, 1);
 
     const $thead = $table.find('thead');
-    shouldBeEqual(`thead of specifiers table`,
+    assert(`thead of specifiers table`,
         $thead.text().replace(/\s+/g, ''),
         ['Specifier', 'Meaning', 'Details'].join('')
     );
 
     const trArray = $table.find('tbody tr').toArray();
-    lengthShouldBeEqual('tbody tr', trArray, 35, AssertLevel.WARNING);
+    assertLength('tbody tr', trArray, 35, AssertLevel.WARNING);
 
     for (let i = 0; i < trArray.length; i++) {
         const $tr = $(trArray[i]);
         const $td = $tr.find('td');
-        lengthShouldBeEqual(`tr[${i}] td`, $td, 3);
+        assertLength(`tr[${i}] td`, $td, 3);
 
         const rawSpecifier = $td.eq(0).text();
         const mtx = rawSpecifier.match(/\"\%(.)\"/);
         if (!mtx) throw new Error(`Invalid specifier text "${rawSpecifier}"`);
         const meaning = $td.eq(1).text();
         const html = $td.eq(2).html();
-        const markdown = toMarkdown(html);
+        const markdown = toMarkdown(html || '');
         writer.writeItem([
             ManifestItemType.Specifier,
             mtx[1],
