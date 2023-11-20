@@ -39,7 +39,7 @@
 		"build:syntax": "ts-node ./src/syntax/generate-tmLanguage.ts",
 		"fetch:directives": "ts-node ./src/utils/fetch-all-directives.ts",
         "lint": "eslint src",
-        "clean": "rimraf out"
+        "clean": "rimraf out .tsc"
 	},
 	"activationEvents": [
 		"onLanguage:systemd-conf"

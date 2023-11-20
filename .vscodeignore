@@ -4,10 +4,10 @@ node_modules
 
 # output files
 artifacts
-out/**/*.js
-out/**/*.js.map
-out/**/*.json
-!out/index.js
+.tsc
+
+# cached content
+cache
 
 # scripts
 scripts

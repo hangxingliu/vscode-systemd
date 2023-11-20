@@ -3,7 +3,9 @@
 # output files
 artifacts
 out
+.tsc
 
+# cached content
 cache
 
 # archive files

@@ -6,7 +6,7 @@
     "target": "ES2022",
     "sourceMap": true,
     "skipLibCheck": true,
-    "outDir": "out"
+    "outDir": ".tsc"
   },
   "include": ["src"]
 }
