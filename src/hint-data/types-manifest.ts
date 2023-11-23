@@ -4,49 +4,49 @@ export const enum ManifestItemType {
     DocsMarkdown = 4,
     Specifier = 5,
 }
-
+export type ManifestItem =
+    | ManifestItemForDirective
+    | ManifestItemForManPageInfo
+    | ManifestItemForDocsMarkdown
+    | ManifestItemForSpecifier;
 
 export type ManifestItemForDirective = [
     type: ManifestItemType.Directive,
     directiveName: string,
-    signature: string,
+    signature: string | string[],
     docsMarkdown: string | number,
     manPageIndex: number,
+    sectionName?: string,
 ];
-export function isManifestItemForDirective(row: unknown[]): row is ManifestItemForDirective {
-    return row && row[0] === ManifestItemType.Directive;
-}
-
-
 export type ManifestItemForManPageInfo = [
     type: ManifestItemType.ManPageInfo,
     manPageIndex: number,
     manPageName: string,
     manPageDescMarkdown: string,
-    manPageURI: string,
+    manPageURI: string
 ];
-export function isManifestItemForManPageInfo(row: unknown[]): row is ManifestItemForManPageInfo {
-    return row && row[0] === ManifestItemType.ManPageInfo;
-}
-
-
 export type ManifestItemForDocsMarkdown = [
     type: ManifestItemType.DocsMarkdown,
     markdownIndex: number,
-    markdown: string,
+    markdown: string
 ];
-export function isManifestItemForDocsMarkdown(row: unknown[]): row is ManifestItemForDocsMarkdown {
-    return row && row[0] === ManifestItemType.DocsMarkdown;
-}
-
-
 export type ManifestItemForSpecifier = [
     type: ManifestItemType.Specifier,
     /** without first '%' */
     specifier: string,
     meaning: string,
-    detailsMarkdown: string,
+    detailsMarkdown: string
 ];
+
+export function isManifestItemForDirective(row: unknown[]): row is ManifestItemForDirective {
+    return row && row[0] === ManifestItemType.Directive;
+}
+export function isManifestItemForManPageInfo(row: unknown[]): row is ManifestItemForManPageInfo {
+    return row && row[0] === ManifestItemType.ManPageInfo;
+}
+export function isManifestItemForDocsMarkdown(row: unknown[]): row is ManifestItemForDocsMarkdown {
+    return row && row[0] === ManifestItemType.DocsMarkdown;
+}
 export function isManifestItemForSpecifier(row: unknown[]): row is ManifestItemForSpecifier {
     return row && row[0] === ManifestItemType.Specifier;
 }

@@ -29,7 +29,7 @@ export class ExtensionConfig {
 
         this.init();
         this.lintDirectiveKeys = config.get('lintDirectiveKeys', false);
-        const customKeys = config.get('customDirectiveKeys', []);
+        const customKeys = config.get<string[]>('customDirectiveKeys', []);
         for (let i = 0; i < customKeys.length; i++) {
             const key = customKeys[i];
             if (typeof key !== 'string') continue;

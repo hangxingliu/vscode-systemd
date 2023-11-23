@@ -6,4 +6,5 @@ export const cacheDir = resolve(projectDir, 'cache');
 export const hintDataDir = resolve(srcDir, 'hint-data');
 
 export const directivesDataFile = resolve(hintDataDir, 'directives.json');
+export const tmLanguageFile = resolve(srcDir, 'syntax/systemd.tmLanguage');
 

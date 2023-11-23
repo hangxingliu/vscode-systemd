@@ -1,9 +1,9 @@
 import { createWriteStream } from "fs";
 import { Writable } from "stream";
-import { resolve as resolvePath } from "path";
 
 import { syntax } from "./syntax";
 import type { SyntaxPattern } from "./types";
+import { tmLanguageFile } from "../config/fs";
 
 const tab = '  ';
 const escapeMap = {
@@ -19,14 +19,12 @@ const captureKeys: Array<keyof SyntaxPattern> = [
 	'endCaptures',
 ]
 
-export const targetFile = resolvePath(__dirname, 'systemd.tmLanguage');
-
 main();
 export function main() {
-	const stream = createWriteStream(targetFile);
+	const stream = createWriteStream(tmLanguageFile);
 	generate(stream);
 	stream.close();
-	console.log(`created '${targetFile}'`);
+	console.log(`created '${tmLanguageFile}'`);
 }
 
 export function generate(file: Writable) {
@@ -110,7 +108,7 @@ export function generate(file: Writable) {
 				if (!pattern[key]) return;
 				write(tag('key', key))
 				write('<dict>', 1)
-				const captures = pattern[key];
+				const captures = pattern[key]!;
 				const capKeys = Object.keys(captures);
 				for (let j = 0; j < capKeys.length; j++) {
 					const capKey = capKeys[j];
