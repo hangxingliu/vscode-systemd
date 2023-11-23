@@ -50,7 +50,7 @@ export class SystemdDiagnosticManager {
     }
     get(uri: Uri, range: Range | Selection): readonly SystemdDiagnostic[] {
         if (!uri || !this._collection) return [];
-        const ds: readonly Diagnostic[] = this._collection.get(uri);
+        const ds: readonly Diagnostic[] | undefined = this._collection.get(uri);
         if (!ds) return [];
         return ds.filter((it) => it.range.contains(range) || range.contains(it.range));
     }

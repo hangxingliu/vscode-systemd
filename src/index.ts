@@ -98,7 +98,7 @@ export function activate(context: ExtensionContext) {
         position: Position,
         token: CancellationToken,
         context: CompletionContext
-    ): CompletionItem[] {
+    ): CompletionItem[] | undefined {
         const beforeText = document.getText(new Range(zeroPos, position));
         const cursorContext = getCursorInfoFromSystemdConf(beforeText);
 
@@ -146,7 +146,7 @@ export function activate(context: ExtensionContext) {
         position: Position,
         token: CancellationToken,
         context: SignatureHelpContext
-    ): SignatureHelp {
+    ): SignatureHelp | null {
         const beforeText = document.getText(new Range(zeroPos, position));
         const cursor = getCursorInfoFromSystemdConf(beforeText);
         if (cursor.type !== CursorType.directiveValue) return null;
@@ -237,7 +237,7 @@ export function activate(context: ExtensionContext) {
         const key = 'systemd.customDirectiveKeys'.split('.')
 
         const conf = workspace.getConfiguration(key[0]);
-        const value = new Set(conf.get(key[1], []));
+        const value = new Set<string>(conf.get(key[1], []));
         value.add(directive);
 
         let scopeValue = ConfigurationTarget[scope];

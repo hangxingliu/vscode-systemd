@@ -9,7 +9,7 @@ export type SystemdDirectiveWithLocation = {
 
 export function getDirectiveKeys(conf: string) {
     const loc = new TextLocationUtils();
-    let currentSection: string;
+    let currentSection: string | undefined;
 
     const results: SystemdDirectiveWithLocation[] = [];
     for (loc.offset = 0; loc.offset < conf.length; loc.offset++) {
@@ -62,7 +62,7 @@ export function getDirectiveKeys(conf: string) {
                     const ch2 = conf[loc.offset];
                     if (ch2 === '=') {
                         results.push({
-                            section: currentSection,
+                            section: currentSection!,
                             directiveKey: conf.slice(loc1[0], loc.offset),
                             loc1,
                             loc2: loc.get(),

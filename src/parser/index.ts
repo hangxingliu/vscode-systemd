@@ -4,17 +4,17 @@ export class CursorInfo {
     type: CursorType;
     cursorLoc: LocationInfo;
 
-    pendingLoc: LocationInfo;
+    pendingLoc?: LocationInfo;
     resetPending = (newType: CursorType) => {
         this.type = newType;
         delete this.pendingLoc;
     }
 
-    section: string;
+    section?: string;
     sectionLoc1: LocationInfo;
     sectionLoc2: LocationInfo;
 
-    directiveKey: string;
+    directiveKey?: string;
     directiveKeyLoc1: LocationInfo;
     directiveKeyLoc2: LocationInfo;
 }
