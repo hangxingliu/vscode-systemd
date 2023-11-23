@@ -1,43 +1,33 @@
-import { CompletionItem, CompletionItemKind, CompletionItemLabel, CompletionItemTag, MarkdownString, Uri } from "vscode";
+import {
+    CompletionItem,
+    CompletionItemKind,
+    CompletionItemLabel,
+    CompletionItemTag,
+    MarkdownString,
+    Uri,
+} from "vscode";
 import { CustomSystemdDirective, deprecatedDirectivesSet } from "../syntax/const";
-import { systemdDocsURLs } from "../config/url";
+import { manpageURLs } from "./manpage-url";
 import {
     isManifestItemForDirective,
     isManifestItemForDocsMarkdown,
     isManifestItemForManPageInfo,
     isManifestItemForSpecifier,
-} from "../utils/types";
+} from "./types-manifest";
 import { MapList } from "../utils/data-types";
-
-export type ManPageInfo = {
-    title: string;
-    desc: MarkdownString;
-    url: Uri;
-};
-export type MarkdownHelp = MarkdownString;
-export type DirectiveCompletionItem = CompletionItem & {
-    directiveNameLC?: string;
-    directiveName?: string;
-    signature?: string;
-    docsMarkdown?: number;
-    manPage?: number;
-};
-export type SpecifierCompletionItem = CompletionItem & {
-    specifierChar: string;
-    specifierMeaning: string;
-};
+import { DirectiveCompletionItem, ManPageInfo, SpecifierCompletionItem } from "./types-runtime";
 
 export class HintDataManager {
     manPageBaseUri: Uri;
     manPages: Array<ManPageInfo> = [];
-    docsMarkdown: Array<MarkdownHelp> = [];
+    docsMarkdown: Array<MarkdownString> = [];
     directives: Array<DirectiveCompletionItem> = [];
     /** key is lowercase name */
     directivesMap = new MapList<DirectiveCompletionItem>();
     specifiers: Array<SpecifierCompletionItem> = [];
 
     constructor(items?: unknown[][]) {
-        this.manPageBaseUri = Uri.parse(systemdDocsURLs.base);
+        this.manPageBaseUri = Uri.parse(manpageURLs.base);
         if (items) this.addItems(items);
     }
     addItems(items: unknown[][]) {
@@ -57,29 +47,30 @@ export class HintDataManager {
             return;
         }
         if (isManifestItemForDirective(item)) {
-            const directiveName = item[1];
-            const signature = item[2];
+            const [, directiveName, signature] = item;
             const label: CompletionItemLabel = { label: directiveName };
-            if (signature) label.detail = ' ' + signature;
+            if (signature) label.detail = " " + signature;
 
             const ci = new CompletionItem(label, CompletionItemKind.Property);
             if (deprecatedDirectivesSet.has(directiveName)) ci.tags = [CompletionItemTag.Deprecated];
             let docsMarkdown: number;
             if (typeof item[3] === "string") {
+                // todo: bug in here:
                 docsMarkdown = this.docsMarkdown.push(new MarkdownString(item[3])) - 1;
             } else {
                 docsMarkdown = item[3];
             }
+
             const directiveNameLC = directiveName.toLowerCase();
-            const d = Object.assign(ci, {
+            const completionItem: DirectiveCompletionItem = Object.assign(ci, {
                 directiveNameLC,
                 directiveName,
                 docsMarkdown,
-                signature: item[2],
+                signatures: Array.isArray(signature) ? signature : [signature],
                 manPage: item[4],
             });
-            this.directivesMap.push(directiveNameLC, d);
-            this.directives.push(d);
+            this.directivesMap.push(directiveNameLC, completionItem);
+            this.directives.push(completionItem);
             return;
         }
         if (isManifestItemForSpecifier(item)) {
@@ -113,7 +104,7 @@ export class HintDataManager {
             names.push(name);
             namesLC.push(nameLC);
         }
-        let docsMarkdown: number;
+        let docsMarkdown: number | undefined;
         if (typeof item.description === "string") {
             docsMarkdown = this.docsMarkdown.push(new MarkdownString(item.description)) - 1;
         }
