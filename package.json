@@ -1,132 +1,147 @@
 {
-	"name": "vscode-systemd-support",
-	"displayName": "Systemd Helper",
-	"description": "Help you write Systemd configuration file on Visual Studio Code",
-	"icon": "out/assets/icon.png",
-	"main": "out/index.js",
+    "name": "vscode-systemd-support",
+    "displayName": "Systemd Helper",
+    "description": "A Visual Studio Code extension that helps you read and write Systemd unit files",
+    "icon": "out/assets/icon.png",
+    "main": "out/index.js",
     "browser": "out/index.js",
-	"version": "1.0.1",
-	"publisher": "hangxingliu",
-	"author": "hangxingliu",
-	"license": "MIT",
-	"engines": {
-		"vscode": "^1.64.0"
-	},
-	"categories": [
-		"Programming Languages",
-		"Snippets"
-	],
-	"keywords": [
-		"Linux",
-		"Systemd",
-		"Configurations"
-	],
-	"extensionKind": [
-		"ui",
-		"workspace"
-	],
+    "version": "1.1.0",
+    "publisher": "hangxingliu",
+    "author": "hangxingliu",
+    "license": "MIT",
+    "engines": {
+        "vscode": "^1.64.0"
+    },
+    "categories": [
+        "Programming Languages",
+        "Snippets"
+    ],
+    "keywords": [
+        "Linux",
+        "Systemd",
+        "Configurations"
+    ],
+    "extensionKind": [
+        "ui",
+        "workspace"
+    ],
     "capabilities": {
         "untrustedWorkspaces": {
             "supported": true
         },
         "virtualWorkspaces": true
     },
-	"scripts": {
-		"ts": "ts-node",
-		"build:webpack": "npm run build:syntax && webpack --mode production --devtool hidden-source-map && npm run build:copy",
-		"build:debug": "npm run build:syntax && tsc -p tsconfig.json && npm run build:copy",
-        "build:copy": "cd src && copyfiles '**/*.{tmLanguage,json,png}' ../out",
-		"build:syntax": "ts-node ./src/syntax/generate-tmLanguage.ts",
-		"fetch:directives": "ts-node ./src/utils/fetch-all-directives.ts",
+    "scripts": {
+        "release": "node scripts/run scripts build && ./scripts/build-vscode-artifact.sh",
+        "bundle": "webpack --mode production --devtool hidden-source-map",
+        "build": "node scripts/run scripts clean bundle build:assets",
+        "build:ts": "swc -d out src",
+        "build:dev": "node scripts/run scripts --parallel build:ts build:assets",
+        "build:assets": "cd src && copyfiles '**/*.{tmLanguage,json,png}' ../out",
+        "build:syntax": "node --enable-source-maps out/syntax/generate-tmLanguage",
+        "fetch": "swc -d out src && node --enable-source-maps out/hint-data/fetch-all",
+        "analyze": "swc -d out src && node --enable-source-maps out/hint-data/analyze-value-enum",
+        "test": "tsc --project tsconfig.json --outDir .tsc",
         "lint": "eslint src",
         "clean": "rimraf out .tsc"
-	},
-	"activationEvents": [
-		"onLanguage:systemd-conf"
-	],
-	"contributes": {
-		"languages": [
-			{
-				"id": "systemd-conf",
-				"aliases": [
-					"Systemd Configuration",
+    },
+    "activationEvents": [
+        "onLanguage:systemd-conf"
+    ],
+    "contributes": {
+        "languages": [
+            {
+                "id": "systemd-conf",
+                "aliases": [
+                    "Systemd Configuration",
                     "systemd-conf",
-					"systemd-unit-file"
-				],
-				"extensions": [
-					".link",
-					".netdev",
-					".network",
-					".service",
-					".socket",
-					".device",
-					".mount",
-					".automount",
-					".swap",
-					".target",
-					".path",
-					".timer",
-					".snapshot",
-					".slice",
-					".scope"
-				],
-				"configuration": "./language-configuration.json"
-			}
-		],
-		"grammars": [
-			{
-				"language": "systemd-conf",
-				"scopeName": "source.systemd",
-				"path": "./out/syntax/systemd.tmLanguage"
-			}
-		],
-		"configuration": [
+                    "systemd-unit-file"
+                ],
+                "extensions": [
+                    ".link",
+                    ".netdev",
+                    ".network",
+                    ".service",
+                    ".socket",
+                    ".device",
+                    ".mount",
+                    ".automount",
+                    ".swap",
+                    ".target",
+                    ".path",
+                    ".timer",
+                    ".snapshot",
+                    ".slice",
+                    ".scope"
+                ],
+                "configuration": "./language-configuration.json"
+            }
+        ],
+        "grammars": [
+            {
+                "language": "systemd-conf",
+                "scopeName": "source.systemd",
+                "path": "./out/syntax/systemd.tmLanguage"
+            }
+        ],
+        "configuration": [
             {
                 "title": "Systemd",
                 "properties": {
-					"systemd.lintDirectiveKeys": {
-						"title": "Enable linter feature for directive keys",
-						"type": "boolean",
-						"default": true,
-						"description": "Give you warnings if any directive keys don't exist in the systemd"
-					},
+                    "systemd.lintDirectiveKeys": {
+                        "title": "Enable linter feature for directive keys",
+                        "type": "boolean",
+                        "default": true,
+                        "description": "Give you warnings if any directive keys don't exist in the systemd"
+                    },
                     "systemd.customDirectiveKeys": {
                         "title": "Custom directive keys",
                         "type": "array",
-                        "default": ["/^[A-Z_]+$/"],
-                        "examples": [["/^[A-Z_]+$/"], ["custom-key"]],
+                        "default": [
+                            "/^[A-Z_]+$/"
+                        ],
+                        "examples": [
+                            [
+                                "/^[A-Z_]+$/"
+                            ],
+                            [
+                                "custom-key"
+                            ]
+                        ],
                         "description": "An array contains case-sensitive strings or regex expressions. The extension will add them to the completion list and linter."
                     }
                 }
             }
         ]
-	},
-	"devDependencies": {
-		"@types/node": "latest",
-		"@types/vscode": "^1.64.0",
-		"axios": "^1",
-		"cheerio": "1.0.0-rc.12",
-		"copyfiles": "^2.4.1",
-		"https-proxy-agent": "^7",
-		"rimraf": "^5",
-		"ts-loader": "^9",
-		"ts-node": "^10",
-		"turndown": "^7.1.2",
-		"typescript": "^5",
-		"webpack": "^5",
-		"webpack-cli": "^5"
-	},
-	"optionalDependencies": {
-		"@typescript-eslint/eslint-plugin": "^6",
-		"@typescript-eslint/parser": "^6",
-		"eslint": "^8"
-	},
-	"repository": {
-		"type": "git",
-		"url": "https://github.com/hangxingliu/vscode-systemd"
-	},
-	"bugs": {
-		"url": "https://github.com/hangxingliu/vscode-systemd/issues"
-	},
-	"homepage": "https://github.com/hangxingliu/vscode-systemd"
+    },
+    "devDependencies": {
+        "@swc/cli": "^0.1.63",
+        "@swc/core": "^1.3.99",
+        "@types/node": "^20.9.3",
+        "@types/vscode": "^1.64.0",
+        "axios": "^1",
+        "cheerio": "1.0.0-rc.12",
+        "copyfiles": "^2.4.1",
+        "https-proxy-agent": "^7",
+        "rimraf": "^5",
+        "swc-loader": "^0.2.3",
+        "turndown": "^7.1.2",
+        "typescript": "^5",
+        "webpack": "^5",
+        "webpack-cli": "^5"
+    },
+    "optionalDependencies": {
+        "@typescript-eslint/eslint-plugin": "^6",
+        "@typescript-eslint/parser": "^6",
+        "eslint": "^8",
+        "vsce": "^2.15.0"
+    },
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/hangxingliu/vscode-systemd"
+    },
+    "bugs": {
+        "url": "https://github.com/hangxingliu/vscode-systemd/issues"
+    },
+    "homepage": "https://github.com/hangxingliu/vscode-systemd"
 }

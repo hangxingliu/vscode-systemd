@@ -2,54 +2,64 @@
 # if I don't ignore node_modules, `vsce` will pack optional dependencies into the extension
 node_modules
 
+#
+#region main
+# template:  .vscodeignore
+# author:    hangxingliu
+# license:   MIT
+# version:   2023-11-23
+#
+
 # output files
 artifacts
 .tsc
 
-# cached content
+# cache directory
 cache
 
 # scripts
 scripts
+
+# config for building/bundling
 tsconfig*.json
+.swcrc
 
 # documents
 docs
-*.md
 
-# sources
+# source files
 src
+*.d.ts
+*.spec.*
 test
 
 # github files
 .github
 
-# cache
-cache
-
-# vscode package
+# built vscode package
 .vsix
 
-# vscode configuartion
-.vscode/**
+# vscode configuartion and test files
+.vscode
+.vscode-test
 
-# vscode test files
-.vscode-test/**
-
-# ignore gitignore fuke
+# ignore gitignore
 .gitignore
 
-# cache
-utils/request-cache/**
-
 # example files
-examples/**
+examples
 
-# utils scripts
-utils/*.js
-
-# archive files
+# archived files
 *.tgz
 *.vsix
 *.zip
+*.7z
 *.tar
+
+# macos files
+.DS_Store
+._*
+
+# logs
+*.log
+#endregion main

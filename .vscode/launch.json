@@ -1,26 +1,26 @@
 // A launch configuration that launches the extension inside a new window
 {
-    "version": "0.1.0",
+    "version": "0.2.0",
     "configurations": [
         {
+            "type": "extensionHost",
             "args": [
                 "--extensionDevelopmentPath=${workspaceFolder}",
                 "${workspaceFolder}/test/samples"
             ],
             "name": "Launch Extension",
             "sourceMaps": true,
-            "preLaunchTask": "npm: build:debug",
+            "preLaunchTask": "npm: build:dev",
             "request": "launch",
-            "type": "pwa-extensionHost"
         },
         {
+            "type": "node",
             "name": "Attach",
             "port": 9229,
             "request": "attach",
             "skipFiles": [
                 "<node_internals>/**"
             ],
-            "type": "pwa-node"
         }
     ]
 }

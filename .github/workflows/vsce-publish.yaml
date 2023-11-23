@@ -8,10 +8,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Install and build
-        run: |
-          yarn install &&
-          yarn run build:webpack &&
-          yarn add vsce --dev
+        run: yarn install && yarn run build
       - name: Publish VS Code extension
         env:
           VSCE_PAT: ${{ secrets.VSCE_PAT }}

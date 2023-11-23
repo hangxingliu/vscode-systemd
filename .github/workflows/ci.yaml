@@ -16,17 +16,16 @@ jobs:
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v4
-      - name: Install and build
-        run: |
-          yarn install &&
-          yarn run build:debug &&
-          yarn run clean &&
-          yarn run build:webpack &&
-          yarn run lint
-      - name: Build packages
-        run: |
-          yarn add --dev vsce &&
-          bash ./scripts/build-vscode-artifact.sh
+      - name: Install
+        run: yarn install
+      - name: Test
+        run: yarn test && yarn build:syntax
+      - name: Lint
+        run: yarn lint
+      - name: Bundle
+        run: yarn run bundle
+      - name: Pack Packages
+        run: bash ./scripts/build-vscode-artifact.sh
       - uses: actions/upload-artifact@v3
         with:
           name: vscode-extension
