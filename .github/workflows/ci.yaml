@@ -19,13 +19,11 @@ jobs:
       - name: Install
         run: yarn install
       - name: Test
-        run: yarn test && yarn build:syntax
+        run: yarn test && yarn build:ts && yarn build:syntax
       - name: Lint
         run: yarn lint
-      - name: Bundle
-        run: yarn run bundle
-      - name: Pack Packages
-        run: bash ./scripts/build-vscode-artifact.sh
+      - name: Bundle and Pack Package
+        run: yarn run release
       - uses: actions/upload-artifact@v3
         with:
           name: vscode-extension
