@@ -39,6 +39,7 @@
         "build:dev": "node scripts/run scripts --parallel build:ts build:assets",
         "build:assets": "cd src && copyfiles '**/*.{tmLanguage,json,png}' ../out",
         "build:syntax": "node --enable-source-maps out/syntax/generate-tmLanguage",
+        "build:pkgjson": "node --enable-source-maps out/build-contributes",
         "fetch": "swc -d out src && node --enable-source-maps out/hint-data/fetch-all",
         "analyze": "swc -d out src && node --enable-source-maps out/hint-data/analyze-value-enum",
         "test": "tsc --project tsconfig.json --outDir .tsc",
