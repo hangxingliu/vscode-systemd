@@ -3,20 +3,22 @@ export const enum ManifestItemType {
     ManPageInfo = 3,
     DocsMarkdown = 4,
     Specifier = 5,
+    Section = 6,
 }
 export type ManifestItem =
     | ManifestItemForDirective
     | ManifestItemForManPageInfo
     | ManifestItemForDocsMarkdown
-    | ManifestItemForSpecifier;
+    | ManifestItemForSpecifier
+    | ManifestItemForSection;
 
 export type ManifestItemForDirective = [
     type: ManifestItemType.Directive,
     directiveName: string,
     signature: string | string[],
-    docsMarkdown: string | number,
+    docsMarkdown: number,
     manPageIndex: number,
-    sectionName?: string,
+    sectionIndex?: number
 ];
 export type ManifestItemForManPageInfo = [
     type: ManifestItemType.ManPageInfo,
@@ -37,6 +39,12 @@ export type ManifestItemForSpecifier = [
     meaning: string,
     detailsMarkdown: string
 ];
+export type ManifestItemForSection = [
+    //
+    type: ManifestItemType.Section,
+    sectionIndex: number,
+    sectionName: string
+];
 
 export function isManifestItemForDirective(row: unknown[]): row is ManifestItemForDirective {
     return row && row[0] === ManifestItemType.Directive;
@@ -49,4 +57,7 @@ export function isManifestItemForDocsMarkdown(row: unknown[]): row is ManifestIt
 }
 export function isManifestItemForSpecifier(row: unknown[]): row is ManifestItemForSpecifier {
     return row && row[0] === ManifestItemType.Specifier;
+}
+export function isManifestItemForSection(row: unknown[]): row is ManifestItemForSection {
+    return row && row[0] === ManifestItemType.Section;
 }

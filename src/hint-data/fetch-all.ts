@@ -25,19 +25,20 @@ async function main() {
     const jsonFile = new JsonFileWriter<ManifestItem>(directivesDataFile);
     specifiers.forEach((it) => jsonFile.writeItem(it));
 
-    let nextDocsId = 1;
+    let nextIds = { docs: 1, sections: 1 };
     for (const manPage of manPages) {
         const manPageURL = resolveURL(manpageURLs.directives, manPage.pageUri);
         const manPageResult = await fetchDirectiveDetailsFromManPage(
             Object.assign(manPage, { manPageURL }),
-            nextDocsId
+            nextIds,
         );
         if (manPageResult.directives.length > 0) {
             jsonFile.writeItem(manPageResult.manPage[0]);
+            jsonFile.writeItems(manPageResult.sections);
             jsonFile.writeItems(manPageResult.docs);
             jsonFile.writeItems(manPageResult.directives);
         }
-        nextDocsId = manPageResult.nextDocsId;
+        nextIds = manPageResult.nextIds;
     }
 
     // if (print.warnings > 0) print.warning(`Total warnings: ${print.warnings}`);

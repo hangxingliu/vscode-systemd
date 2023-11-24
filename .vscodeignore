@@ -1,6 +1,7 @@
 # this extension doesn't need any node modules
 # if I don't ignore node_modules, `vsce` will pack optional dependencies into the extension
 node_modules
+out/**/*.json
 
 #
 #region main

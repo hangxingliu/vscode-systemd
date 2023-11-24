@@ -14,6 +14,7 @@ import {
     ManifestItemForDirective,
     ManifestItemForDocsMarkdown,
     ManifestItemForManPageInfo,
+    ManifestItemForSection,
     ManifestItemType,
 } from "./types-manifest";
 import { similarSections } from "../syntax/systemd-sections";
@@ -39,15 +40,16 @@ const ignoredH2Sections: string[] = [
 
 export async function fetchDirectiveDetailsFromManPage(
     manPage: RawManPageInfo & { manPageURL: string },
-    nextDocsId: number
+    nextIds: { docs: number, sections: number }
 ) {
     // const manPageURL = resolveURL(manpageURLs.directives, pageUri);
     const { id: manPageId, pageName, pageUri, manPageURL } = manPage;
     const debugName = `man page "${pageName}"`;
 
     const result = {
-        nextDocsId,
+        nextIds,
         manPage: [] as ManifestItemForManPageInfo[],
+        sections: [] as ManifestItemForSection[],
         docs: [] as ManifestItemForDocsMarkdown[],
         directives: [] as ManifestItemForDirective[],
     };
@@ -70,7 +72,7 @@ export async function fetchDirectiveDetailsFromManPage(
     pushResult([ManifestItemType.ManPageInfo, manPageId, pageName, toMarkdown(description), pageUri]);
 
     const $h2List = findElements($, ".refsect1 h2", ">0");
-    const dtList: Array<[Element, sectionName?: string]> = [];
+    const dtList: Array<[Element, sectionIndex?: number, sectionName?: string]> = [];
     for (const h2 of $h2List) {
         const $h2 = $(h2);
         const h2text = getText($h2);
@@ -96,6 +98,11 @@ export async function fetchDirectiveDetailsFromManPage(
             else if (pageName === 'homed.conf(5)') sectionName = "Home";
         }
         // print.debug(h2text);
+        let sectionIndex: number | undefined;
+        if (sectionName) {
+            sectionIndex = nextIds.sections++;
+            result.sections.push([ManifestItemType.Section,sectionIndex,  sectionName]);
+        }
 
         const mustContainItems = sectionName && !similarSections.has(sectionName);
         const $dt = findElements($h2.parent(), "dt", mustContainItems ? ">0" : undefined, `h2"${h2text}"`);
@@ -104,12 +111,12 @@ export async function fetchDirectiveDetailsFromManPage(
             if ($(dt).parents("dd").length > 0) continue;
 
             // console.log('>', getText($(dt)), sectionName);
-            dtList.push([dt, sectionName]);
+            dtList.push([dt, sectionIndex, sectionName]);
         }
     }
 
     const duplicate = new DuplicateChecker();
-    for (const [el, sectionName] of dtList) {
+    for (const [el, sectionIndex, sectionName] of dtList) {
         const $el = $(el);
         const id = el.attribs.id;
         const text = getText($el);
@@ -125,7 +132,7 @@ export async function fetchDirectiveDetailsFromManPage(
             const docsMarkdown = toMarkdown($dd.html() || "");
             if (!docsMarkdown) throw new Error(`No description for the directive "${text}"`);
 
-            currentDocsIndex = result.nextDocsId++;
+            currentDocsIndex = nextIds.docs++;
             pushResult([ManifestItemType.DocsMarkdown, currentDocsIndex, docsMarkdown]);
             return currentDocsIndex;
         };
@@ -141,7 +148,7 @@ export async function fetchDirectiveDetailsFromManPage(
                 directive.params,
                 getCurrentDocsIndex(),
                 manPageId,
-                sectionName
+                sectionIndex,
             ]);
         }
     }

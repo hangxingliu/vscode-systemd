@@ -51,6 +51,7 @@ async function main() {
         url,
     ]);
     let nextDocsId = 1;
+    let nextSectionId = 1;
 
     for (const h1 of matchedH1) {
         const $h1 = $(h1);
@@ -58,6 +59,8 @@ async function main() {
         const sectionNameMtx = h1text.match(/units\s+\[(\w+)\]/);
         if (!sectionNameMtx) throw new Error(`Unknown header "${h1text}"`);
         const [, sectionName] = sectionNameMtx;
+        const sectionId = nextSectionId++;
+        jsonFile.writeItem([ManifestItemType.Section, sectionId, sectionName]);
         print.start(`processing "${h1text}" ...`);
 
         const $allCode = findElements($h1.parent(), "section > h2 > code", ">0");
@@ -87,7 +90,7 @@ async function main() {
                 sign.params,
                 currentDocsIndex,
                 manPageIndex,
-                sectionName,
+                sectionId,
             ]);
         }
         allDirectives.sort((a, b) => (a[1] > b[1] ? 1 : -1));
