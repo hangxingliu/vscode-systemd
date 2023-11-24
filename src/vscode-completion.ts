@@ -17,6 +17,7 @@ import { HintDataManagers } from "./hint-data/manager/multiple";
 import { RequiredDirectiveCompletionItem } from "./hint-data/types-runtime";
 import { SystemdFileType, parseSystemdFilePath } from "./parser/file-info";
 import { getSectionCompletionItems } from "./hint-data/get-section-completion";
+import { getUnitNameCompletionItems } from "./hint-data/get-unit-name-completion";
 
 const zeroPos = new Position(0, 0);
 
@@ -73,6 +74,11 @@ export class SystemdCompletionProvider implements CompletionItemProvider {
             case CursorType.directiveValue: {
                 const pending = getPendingText();
                 if (pending.endsWith("%") && !pending.endsWith("%%")) return this.managers.getSpecifiers();
+                const directive = cursorContext.directiveKey;
+                if (directive) {
+                    const units = getUnitNameCompletionItems(directive);
+                    if (units) return units;
+                }
                 return this.managers.filterValueEnum(cursorContext);
             }
         }
