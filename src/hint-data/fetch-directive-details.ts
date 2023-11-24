@@ -89,6 +89,8 @@ export async function fetchDirectiveDetailsFromManPage(
         if (!sectionName && h2text === 'Options') {
             if (pageName === "systemd.service(5)") sectionName = "Service";
             else if (pageName === 'systemd.socket(5)') sectionName = "Socket";
+            else if (pageName === 'systemd.automount(5)') sectionName = "Automount";
+            else if (pageName === 'systemd.timer(5)') sectionName = "Timer";
             else if (pageName === 'journal-remote.conf(5)') sectionName = "Remote";
             else if (pageName === 'coredump.conf(5)') sectionName = "Coredump";
             else if (pageName === 'resolved.conf(5)') sectionName = "Resolve";

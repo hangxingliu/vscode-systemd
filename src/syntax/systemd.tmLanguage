@@ -199,7 +199,7 @@
           <key>name</key>
           <string>entity.name.section</string>
           <key>match</key>
-          <string>^\s*\[(Automount|Bridge|DHCPServer|Distribution|Install|Link|Match|Mount|NetDev|Network|Output|Path|Partitions|Packages|Peer|Resolve|Service|Socket|Swap|Timer|Tunnel|Unit|UKI|VLAN)\]</string>
+          <string>^\s*\[(Address|Automount|BFIFO|BareUDP|BatmanAdvanced|Bond|Bridge|BridgeFDB|BridgeMDB|BridgeVLAN|CAKE|CAN|Container|ControlledDelay|DHCPPrefixDelegation|DHCPServer|DHCPServerStaticLease|DHCPv4|DHCPv6|DeficitRoundRobinScheduler|DeficitRoundRobinSchedulerClass|Distribution|EnhancedTransmissionSelection|Exec|FairQueueing|FairQueueingControlledDelay|Files|FlowQueuePIE|FooOverUDP|GENEVE|GenericRandomEarlyDetection|HeavyHitterFilter|HierarchyTokenBucket|HierarchyTokenBucketClass|Home|IPVLAN|IPVTAP|IPoIB|IPv6AcceptRA|IPv6AddressLabel|IPv6PREF64Prefix|IPv6Prefix|IPv6RoutePrefix|IPv6SendRA|Image|Install|Journal|Kube|L2TP|L2TPSession|LLDP|Link|Login|MACVLAN|MACVTAP|MACsec|MACsecReceiveAssociation|MACsecReceiveChannel|MACsecTransmitAssociation|Match|Mount|Neighbor|NetDev|Network|NetworkEmulator|NextHop|OOM|Output|PFIFO|PFIFOFast|PFIFOHeadDrop|PIE|PStore|Packages|Partition|Partitions|Path|Peer|QDisc|QuickFairQueueing|QuickFairQueueingClass|Remote|Resolve|Route|RoutingPolicyRule|SR-IOV|Service|Socket|Source|StochasticFairBlue|StochasticFairnessQueueing|Swap|Tap|Target|Timer|TokenBucketFilter|Transfer|TrivialLinkEqualizer|Tun|Tunnel|UKI|Unit|VLAN|VRF|VXCAN|VXLAN|Volume|WLAN|WireGuard|WireGuardPeer|Xfrm)\]</string>
         </dict>
         <dict>
           <key>name</key>

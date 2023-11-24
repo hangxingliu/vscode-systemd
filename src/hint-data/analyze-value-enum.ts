@@ -6,6 +6,7 @@ import {
     isManifestItemForDirective,
     isManifestItemForDocsMarkdown,
     isManifestItemForManPageInfo,
+    isManifestItemForSection,
 } from "./types-manifest";
 
 main().catch((error) => {
@@ -17,6 +18,7 @@ async function main() {
     let index = 0;
 
     const items: unknown[][] = require("../../src/hint-data/directives.json");
+    const sectionNames: string[] = [];
     const allDocs: string[] = [];
     const allManPages: ManifestItemForManPageInfo[] = [];
     const handledDocsIndex: boolean[] = [];
@@ -40,11 +42,19 @@ async function main() {
             allDocs[markdownIndex] = markdown;
             continue;
         }
+        if (isManifestItemForSection(item)) {
+            const [, sectionIndex, sectionName] = item;
+            sectionNames[sectionIndex] = sectionName;
+            continue;
+        }
         if (isManifestItemForDirective(item)) {
             // eslint-disable-next-line @typescript-eslint/no-unused-vars
-            const [, directiveName, signature, docsIndex, manPageIndex, sectionName] = item;
+            const [, directiveName, signature, docsIndex, manPageIndex, sectionIndex] = item;
             if (typeof docsIndex !== "number") continue;
             if (handledDocsIndex[docsIndex]) continue;
+
+            let sectionName: string | undefined;
+            if (sectionIndex) sectionName = sectionNames[sectionIndex];
 
             // ignore
             if (directiveName === "PollLimitIntervalSec") continue;

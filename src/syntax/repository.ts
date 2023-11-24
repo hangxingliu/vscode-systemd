@@ -1,8 +1,40 @@
 import { names } from "./match-names";
-import { knownSections, podmanSections } from "./const";
+import {
+    commonSections,
+    internalSections,
+    knownSections,
+    serviceSections,
+    timerSections,
+    linkSections,
+    netdevSections,
+    networkSections,
+    podmanSections,
+    SectionsDefinition,
+} from "./const-sections";
 import type { SyntaxPattern } from "./types";
 
-const allSectionNames = new Set([...knownSections, podmanSections]);
+function pickSectionNames(sections: SectionsDefinition) {
+    return sections.map((it) => (typeof it === "string" ? it : it[0]));
+}
+function mergeAllSectionNames(...allSections: Array<SectionsDefinition>) {
+    const allSectionNames = new Set<string>();
+    for (const sections of allSections) {
+        const names = pickSectionNames(sections);
+        for (const name of names) allSectionNames.add(name);
+    }
+    return Array.from(allSectionNames).sort();
+}
+const allSectionNames = mergeAllSectionNames(
+    commonSections,
+    internalSections,
+    knownSections,
+    serviceSections,
+    timerSections,
+    linkSections,
+    netdevSections,
+    networkSections,
+    podmanSections
+);
 
 export const includeRepo = {
     commnets: "#commnets",
@@ -64,7 +96,7 @@ export const syntaxRepository: {
     sections: {
         patterns: [
             {
-                match: "^\\s*\\[(" + Array.from(allSectionNames).join("|") + ")\\]",
+                match: "^\\s*\\[(" + allSectionNames.join("|") + ")\\]",
                 name: names.entityName.section,
             },
             {
