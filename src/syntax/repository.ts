@@ -1,6 +1,8 @@
 import { names } from "./match-names";
-import { knownSections } from "./const";
+import { knownSections, podmanSections } from "./const";
 import type { SyntaxPattern } from "./types";
+
+const allSectionNames = new Set([...knownSections, podmanSections]);
 
 export const includeRepo = {
     commnets: "#commnets",
@@ -62,7 +64,7 @@ export const syntaxRepository: {
     sections: {
         patterns: [
             {
-                match: "^\\s*\\[(" + knownSections.join("|") + ")\\]",
+                match: "^\\s*\\[(" + Array.from(allSectionNames).join("|") + ")\\]",
                 name: names.entityName.section,
             },
             {

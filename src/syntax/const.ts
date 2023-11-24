@@ -1,6 +1,6 @@
 export const languageId = "systemd-conf";
 
-export const knownSections = [
+export const knownSections: ReadonlyArray<string> = [
     "Automount",
     "Bridge",
     "DHCPServer",
@@ -26,6 +26,7 @@ export const knownSections = [
     "UKI",
     "VLAN",
 ];
+export const podmanSections: ReadonlyArray<string> = ["Container", "Kube", "Network", "Volume", "Image"];
 
 export type CustomSystemdDirective = {
     name: string | string[];

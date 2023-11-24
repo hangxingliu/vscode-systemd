@@ -1,0 +1,25 @@
+[Unit]
+Description=A minimal container
+
+[Container]
+# Use the centos image
+Image=quay.io/centos/centos:latest
+
+# Use volume and network defined below
+Volume=test.volume:/data
+Network=test.network
+
+# In the container we just run sleep
+Exec=sleep 60
+
+[Service]
+# Restart service when sleep finishes
+Restart=always
+# Extend Timeout to allow time to pull the image
+TimeoutStartSec=900
+# ExecStartPre flag and other systemd commands can go here, see systemd.unit(5) man page.
+ExecStartPre=/usr/share/mincontainer/setup.sh
+
+[Install]
+# Start by default on boot
+WantedBy=multi-user.target default.target

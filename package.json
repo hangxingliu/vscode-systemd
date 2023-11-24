@@ -109,6 +109,12 @@
                             ]
                         ],
                         "description": "An array contains case-sensitive strings or regex expressions. The extension will add them to the completion list and linter."
+                    },
+                    "systemd.enablePodman": {
+                        "title": "Enable Podman Systemd Directives/Sections",
+                        "type": "boolean",
+                        "default": false,
+                        "markdownDescription": "[Podman](https://docs.podman.io/en/latest/index.html) is a daemonless, open source, Linux native tool designed to make it easy to find, run, build, share and deploy applications using Open Containers Initiative (OCI) Containers and Container Images.   \nEnable this config to tell this extension to activate the following features:\n1. Treat \"*.container\"/\"*.volume\"/\"*.kube\" as systemd configuration\n2. Highlight and hint all Podman sections/directives during editing of systemd configuration"
                     }
                 }
             }

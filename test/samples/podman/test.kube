@@ -1,0 +1,10 @@
+[Unit]
+Description=A kubernetes yaml based service
+Before=local-fs.target
+
+[Kube]
+Yaml=/opt/k8s/deployment.yml
+
+[Install]
+# Start by default on boot
+WantedBy=multi-user.target default.target

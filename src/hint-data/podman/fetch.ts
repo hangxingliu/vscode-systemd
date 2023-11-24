@@ -1,0 +1,104 @@
+import { resolve } from "path";
+import { hintDataDir } from "../../config/fs";
+import {
+    JsonFileWriter,
+    assertLength,
+    findElements,
+    getHTMLDoc,
+    matchElementsByText,
+    print,
+    toMarkdown,
+} from "../../utils/crawler-utils";
+import {
+    ManifestItem,
+    ManifestItemForDirective,
+    ManifestItemForDocsMarkdown,
+    ManifestItemType,
+} from "../types-manifest";
+import { Cheerio, Element } from "cheerio";
+import { extractDirectiveSignature } from "../extract-directive-signature";
+
+const url = "https://docs.podman.io/en/latest/markdown/podman-systemd.unit.5.html";
+const targetFile = resolve(hintDataDir, "podman/directives.json");
+
+let jsonFile: JsonFileWriter<ManifestItem> | undefined;
+main().catch((error) => {
+    if (jsonFile) jsonFile.close();
+    console.error(error.stack);
+});
+async function main() {
+    const $ = await getHTMLDoc("podman-systemd.unit", url);
+    const $allH1 = findElements($, "h1", ">9");
+    const matchedH1 = matchElementsByText(
+        $allH1,
+        [
+            "Container units [Container]",
+            "Kube units [Kube]",
+            "Network units [Network]",
+            "Volume units [Volume]",
+            "Image units [Image]",
+        ],
+        {}
+    );
+
+    const manPageIndex = 1;
+    const jsonFile = new JsonFileWriter<ManifestItem>(targetFile);
+    jsonFile.writeItem([
+        ManifestItemType.ManPageInfo,
+        manPageIndex,
+        "podman-systemd.unit(5)",
+        "systemd units using Podman Quadlet",
+        url,
+    ]);
+    let nextDocsId = 1;
+
+    for (const h1 of matchedH1) {
+        const $h1 = $(h1);
+        const h1text = getText($h1);
+        const sectionNameMtx = h1text.match(/units\s+\[(\w+)\]/);
+        if (!sectionNameMtx) throw new Error(`Unknown header "${h1text}"`);
+        const [, sectionName] = sectionNameMtx;
+        print.start(`processing "${h1text}" ...`);
+
+        const $allCode = findElements($h1.parent(), "section > h2 > code", ">0");
+
+        const allDocs: ManifestItemForDocsMarkdown[] = [];
+        const allDirectives: ManifestItemForDirective[] = [];
+        for (const code of $allCode) {
+            const $code = $(code);
+            const title = getText($code);
+            const signs = extractDirectiveSignature(title);
+            assertLength("signatures in the header", signs, 1);
+
+            const section = $code.parent("h2").parent("section");
+            assertLength("the section of h2", section, 1);
+
+            const cloned = section.clone();
+            cloned.find(" > h2").remove();
+
+            const markdown = toMarkdown(cloned.html() || "");
+            const currentDocsIndex = nextDocsId++;
+            allDocs.push([ManifestItemType.DocsMarkdown, currentDocsIndex, markdown]);
+
+            const [sign] = signs;
+            allDirectives.push([
+                ManifestItemType.Directive,
+                sign.name,
+                sign.params,
+                currentDocsIndex,
+                manPageIndex,
+                sectionName,
+            ]);
+        }
+        allDirectives.sort((a, b) => (a[1] > b[1] ? 1 : -1));
+        jsonFile.writeItems(allDocs);
+        jsonFile.writeItems(allDirectives);
+    }
+    jsonFile.close();
+
+    function getText(el: Cheerio<Element>) {
+        el = el.clone();
+        el.find("a.headerlink").remove();
+        return el.text().trim();
+    }
+}

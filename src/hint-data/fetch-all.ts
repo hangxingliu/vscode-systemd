@@ -8,7 +8,7 @@ import { ManifestItem } from "./types-manifest";
 import { fetchDirectivesList } from "../hint-data/fetch-directive-list";
 import { fetchDirectiveDetailsFromManPage } from "../hint-data/fetch-directive-details";
 
-let jsonFile: JsonFileWriter | undefined;
+let jsonFile: JsonFileWriter<ManifestItem> | undefined;
 main().catch((error) => {
     if (jsonFile) jsonFile.close();
     console.error(error.stack);
