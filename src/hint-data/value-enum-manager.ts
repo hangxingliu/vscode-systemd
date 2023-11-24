@@ -1,13 +1,13 @@
 import { CursorInfo } from "../parser";
-import { SystemdValueEnum, systemdValueEnum } from "./value-enum";
+import { SystemdValueEnum } from "./value-enum";
 import { CompletionItem, CompletionItemKind } from "vscode";
 
 export class ValueEnumManager {
     private byName = new Map<string, SystemdValueEnum[]>();
 
-    constructor() {
+    constructor(allValueEnum: ReadonlyArray<SystemdValueEnum>) {
         const byName = this.byName;
-        for (const valueEnum of systemdValueEnum) {
+        for (const valueEnum of allValueEnum) {
             const lc = valueEnum.directive.toLowerCase();
             const list = byName.get(lc);
             if (!list) byName.set(lc, [valueEnum]);
@@ -29,8 +29,7 @@ export class ValueEnumManager {
 
         for (const valueEnum of enums) {
             if (valueEnum.section && valueEnum.section !== section) continue;
-            for (const value of valueEnum.values)
-                resultText.add(value);
+            for (const value of valueEnum.values) resultText.add(value);
         }
 
         return Array.from(resultText).map((it) => new CompletionItem(it, CompletionItemKind.Enum));
