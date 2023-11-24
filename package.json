@@ -60,6 +60,10 @@
                     "systemd-unit-file"
                 ],
                 "extensions": [
+                    ".container",
+                    ".volume",
+                    ".kube",
+                    ".image",
                     ".link",
                     ".netdev",
                     ".network",

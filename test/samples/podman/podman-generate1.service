@@ -5,6 +5,7 @@
 [Unit]
 Description=Podman container-busy_moser.service
 Documentation=man:podman-generate-systemd(1)
+StandardInput=socket
 Wants=network-online.target
 After=network-online.target
 RequiresMountsFor=/var/run/container/storage
