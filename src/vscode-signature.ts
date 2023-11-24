@@ -56,11 +56,19 @@ export class SystemdSignatureProvider implements SignatureHelpProvider, HoverPro
             const docsInfo = managers.getDirectiveDocs(directive);
             if (!docsInfo) continue;
 
-            const signStrings = isNonEmptyArray(directive.signatures) ? directive.signatures : [""];
-            for (let signString of signStrings) {
-                if (docsInfo.manPage) signString += " " + docsInfo.manPage.title;
-                signatures.push(new SignatureInformation(signString, docsInfo.docs || ""));
+            const { manPage, section, docs } = docsInfo;
+            let docsMarkdown = "";
+            if (manPage) docsMarkdown = `[${manPage.title}](${manPage.url.toString()}) `;
+            docsMarkdown += docs ? docs.value : "";
+
+            const signStrings = isNonEmptyArray(directive.signatures) ? directive.signatures : [];
+            if (!signStrings[0]) {
+                let defaultSign = `${directive.directiveName}=`;
+                if (section) defaultSign = `[${section.name}] ${defaultSign}`;
+                signStrings[0] = defaultSign;
             }
+            for (const signString of signStrings)
+                signatures.push(new SignatureInformation(signString, new MarkdownString(docsMarkdown)));
         }
         help.activeSignature = 0;
         help.signatures = signatures;
@@ -87,11 +95,16 @@ export class SystemdSignatureProvider implements SignatureHelpProvider, HoverPro
                 dirs.forEach((it) => {
                     const docsInfo = managers.getDirectiveDocs(it);
                     if (!docsInfo) return;
-                    const { manPage, docs } = docsInfo;
-                    if (manPage) manPages.add(manPage.title);
+                    const { manPage, docs, section } = docsInfo;
+                    if (manPage) {
+                        let help = section ? `[${section.name}] in ` : "";
+                        help += `[${manPage.title}](${manPage.url.toString()})`;
+                        manPages.add(help);
+                    }
                     if (docs) markdowns.push(docs);
                 });
-                return new Hover([Array.from(manPages).join(", "), ...markdowns], range);
+                const helpText1 = new MarkdownString(Array.from(manPages).join("; "));
+                return new Hover([helpText1, ...markdowns], range);
             }
             case CursorType.directiveValue: {
                 const p0 = new Position(position.line, Math.max(position.character - 2, 0));

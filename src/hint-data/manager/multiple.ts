@@ -105,10 +105,8 @@ export class HintDataManagers {
             if (!list) continue;
             if (sectionNameLC) {
                 const ids = it.sectionIdMap.get(sectionNameLC);
-                if (ids) {
-                    const sectionIds = new Set(ids);
-                    list = list.filter((it) => filterBySectionIds(sectionIds, it));
-                }
+                const sectionIds = new Set(ids);
+                list = list.filter((it) => filterBySectionIds(sectionIds, it));
             }
             directives = mergeItems(directives, list);
         }
@@ -121,12 +119,15 @@ export class HintDataManagers {
         return items;
     }
 
-    getDirectiveDocs(item: Pick<RequiredDirectiveCompletionItem, "category" | "manPage" | "docsIndex">) {
+    getDirectiveDocs(
+        item: Pick<RequiredDirectiveCompletionItem, "category" | "manPage" | "docsIndex" | "sectionIndex">
+    ) {
         const manager = this.managers[item.category];
         if (!manager) return;
         const manPage = isValidArrayIndex(item.manPage) && manager.manPages[item.manPage];
         const docs = isValidArrayIndex(item.docsIndex) && manager.docsMarkdown[item.docsIndex];
-        return { manPage, docs };
+        const section = isValidArrayIndex(item.sectionIndex) && manager.sections[item.sectionIndex];
+        return { manPage, docs, section };
     }
 
     resolveCompletionItem(item: RequiredDirectiveCompletionItem): CompletionItem {
