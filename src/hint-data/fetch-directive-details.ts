@@ -5,6 +5,7 @@ import {
     findElements,
     getElementInfo,
     getHTMLDoc,
+    getMarkdownHelpFromElement,
     print,
     toMarkdown,
 } from "../utils/crawler-utils";
@@ -40,7 +41,7 @@ const ignoredH2Sections: string[] = [
 
 export async function fetchDirectiveDetailsFromManPage(
     manPage: RawManPageInfo & { manPageURL: string },
-    nextIds: { docs: number, sections: number }
+    nextIds: { docs: number; sections: number }
 ) {
     // const manPageURL = resolveURL(manpageURLs.directives, pageUri);
     const { id: manPageId, pageName, pageUri, manPageURL } = manPage;
@@ -86,24 +87,24 @@ export async function fetchDirectiveDetailsFromManPage(
                 throw new Error(`Invalid section name in "${h2text}"`);
         }
         // patch
-        if (!sectionName && h2text === 'Options') {
+        if (!sectionName && h2text === "Options") {
             if (pageName === "systemd.service(5)") sectionName = "Service";
-            else if (pageName === 'systemd.socket(5)') sectionName = "Socket";
-            else if (pageName === 'systemd.automount(5)') sectionName = "Automount";
-            else if (pageName === 'systemd.timer(5)') sectionName = "Timer";
-            else if (pageName === 'journal-remote.conf(5)') sectionName = "Remote";
-            else if (pageName === 'coredump.conf(5)') sectionName = "Coredump";
-            else if (pageName === 'resolved.conf(5)') sectionName = "Resolve";
-            else if (pageName === 'logind.conf(5)') sectionName = "Login";
-            else if (pageName === 'pstore.conf(5)') sectionName = "PStore";
-            else if (pageName === 'journald.conf(5)') sectionName = "Journal";
-            else if (pageName === 'homed.conf(5)') sectionName = "Home";
+            else if (pageName === "systemd.socket(5)") sectionName = "Socket";
+            else if (pageName === "systemd.automount(5)") sectionName = "Automount";
+            else if (pageName === "systemd.timer(5)") sectionName = "Timer";
+            else if (pageName === "journal-remote.conf(5)") sectionName = "Remote";
+            else if (pageName === "coredump.conf(5)") sectionName = "Coredump";
+            else if (pageName === "resolved.conf(5)") sectionName = "Resolve";
+            else if (pageName === "logind.conf(5)") sectionName = "Login";
+            else if (pageName === "pstore.conf(5)") sectionName = "PStore";
+            else if (pageName === "journald.conf(5)") sectionName = "Journal";
+            else if (pageName === "homed.conf(5)") sectionName = "Home";
         }
         // print.debug(h2text);
         let sectionIndex: number | undefined;
         if (sectionName) {
             sectionIndex = nextIds.sections++;
-            result.sections.push([ManifestItemType.Section,sectionIndex,  sectionName]);
+            result.sections.push([ManifestItemType.Section, sectionIndex, sectionName]);
         }
 
         const mustContainItems = sectionName && !similarSections.has(sectionName);
@@ -131,7 +132,7 @@ export async function fetchDirectiveDetailsFromManPage(
 
             const $dd = $el.next("dd");
             assertLength(`description of the directive "${text}"`, $dd, 1);
-            const docsMarkdown = toMarkdown($dd.html() || "");
+            const docsMarkdown = getMarkdownHelpFromElement($dd);
             if (!docsMarkdown) throw new Error(`No description for the directive "${text}"`);
 
             currentDocsIndex = nextIds.docs++;

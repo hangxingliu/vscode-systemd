@@ -5,8 +5,8 @@ import {
     assertLength,
     findElements,
     getHTMLDoc,
+    getMarkdownHelpFromElement,
     print,
-    toMarkdown,
 } from "../utils/crawler-utils";
 import { ManifestItemForSpecifier, ManifestItemType } from "./types-manifest";
 
@@ -32,9 +32,7 @@ export async function fetchSpecifiersList() {
         if (!mtx) throw new Error(`Invalid specifier text "${rawSpecifier}"`);
 
         const meaning = $td.eq(1).text();
-        const html = $td.eq(2).html();
-        const markdown = toMarkdown(html || "");
-
+        const markdown = getMarkdownHelpFromElement($td.eq(2));
         result.push([ManifestItemType.Specifier, mtx[1], meaning, markdown]);
     }
     return result;

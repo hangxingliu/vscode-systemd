@@ -5,9 +5,9 @@ import {
     assertLength,
     findElements,
     getHTMLDoc,
+    getMarkdownHelpFromElement,
     matchElementsByText,
     print,
-    toMarkdown,
 } from "../../utils/crawler-utils";
 import {
     ManifestItem,
@@ -79,7 +79,7 @@ async function main() {
             const cloned = section.clone();
             cloned.find(" > h2").remove();
 
-            const markdown = toMarkdown(cloned.html() || "");
+            const markdown = getMarkdownHelpFromElement(cloned);
             const currentDocsIndex = nextDocsId++;
             allDocs.push([ManifestItemType.DocsMarkdown, currentDocsIndex, markdown]);
 

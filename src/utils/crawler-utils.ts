@@ -435,6 +435,16 @@ export function toMarkdown(html: string): string {
     }
     return turndownService.turndown(html);
 }
+export function getMarkdownHelpFromElement($el: Cheerio<Element>): string {
+    const $links = $el.find("a");
+    for (let i = 0; i < $links.length; i++) {
+        const $link = $links.eq(i);
+        const href = $link.attr("href");
+        if (href && href.endsWith("#")) $link.attr("href", href.replace(/#$/, ""));
+    }
+    const html = $el.html();
+    return toMarkdown(html || '');
+}
 //#endregion html to markdown
 //
 

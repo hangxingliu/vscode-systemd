@@ -59,16 +59,18 @@ export class HintDataManager {
     }
     addItem(item: unknown[]) {
         if (isManifestItemForManPageInfo(item)) {
-            this.manPages[item[1]] = {
-                title: item[2],
-                desc: new MarkdownString(item[3]),
-                url: Uri.joinPath(this.manPageBaseUri, item[4]),
-            };
+            const base = this.manPageBaseUri;
+            const desc = new MarkdownString(item[3]);
+            desc.baseUri = base;
+            this.manPages[item[1]] = { title: item[2], desc, url: Uri.joinPath(base, item[4]) };
             return;
         }
 
         if (isManifestItemForDocsMarkdown(item)) {
-            this.docsMarkdown[item[1]] = new MarkdownString(item[2]);
+            const base = this.manPageBaseUri;
+            const desc = new MarkdownString(item[2]);
+            desc.baseUri = base;
+            this.docsMarkdown[item[1]] = desc;
             return;
         }
 
