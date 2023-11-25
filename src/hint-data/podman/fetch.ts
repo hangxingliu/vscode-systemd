@@ -1,7 +1,8 @@
 import { resolve } from "path";
-import { hintDataDir } from "../../config/fs";
+import { cacheDir, manifestDir } from "../../config/fs";
 import {
     JsonFileWriter,
+    SimpleHttpCache,
     assertLength,
     findElements,
     getHTMLDoc,
@@ -19,7 +20,7 @@ import { Cheerio, Element } from "cheerio";
 import { extractDirectiveSignature } from "../extract-directive-signature";
 
 const url = "https://docs.podman.io/en/latest/markdown/podman-systemd.unit.5.html";
-const targetFile = resolve(hintDataDir, "podman/directives.json");
+const targetFile = resolve(manifestDir, "podman.json");
 
 let jsonFile: JsonFileWriter<ManifestItem> | undefined;
 main().catch((error) => {
@@ -27,6 +28,7 @@ main().catch((error) => {
     console.error(error.stack);
 });
 async function main() {
+    SimpleHttpCache.init(cacheDir);
     const $ = await getHTMLDoc("podman-systemd.unit", url);
     const $allH1 = findElements($, "h1", ">9");
     const matchedH1 = matchElementsByText(

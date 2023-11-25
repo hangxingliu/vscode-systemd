@@ -25,7 +25,7 @@ export type ManifestItemForManPageInfo = [
     manPageIndex: number,
     manPageName: string,
     manPageDescMarkdown: string,
-    manPageURI: string
+    manPageURI: string,
 ];
 export type ManifestItemForDocsMarkdown = [
     type: ManifestItemType.DocsMarkdown,

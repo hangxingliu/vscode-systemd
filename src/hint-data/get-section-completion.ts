@@ -6,9 +6,11 @@ import {
     serviceSections,
     timerSections,
     linkSections,
+    dnssdSections,
     netdevSections,
     networkSections,
     podmanSections,
+    socketSections,
 } from "../syntax/const-sections";
 
 export function getSectionCompletionItems(fileType: SystemdFileType) {
@@ -25,6 +27,12 @@ export function getSectionCompletionItems(fileType: SystemdFileType) {
             break;
         case SystemdFileType.link:
             linkSections.forEach((it) => items.add(it));
+            break;
+        case SystemdFileType.socket:
+            socketSections.forEach((it) => items.add(it));
+            break;
+        case SystemdFileType.dnssd:
+            dnssdSections.forEach((it) => items.add(it));
             break;
         case SystemdFileType.network:
             networkSections.forEach((it) => items.add(it));
