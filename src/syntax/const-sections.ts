@@ -28,14 +28,15 @@ export const knownSections: Sections = [
     "Packages",
     "Remote",
     "Resolve",
-    "Socket",
     "Swap",
     "Source",
     "Transfer",
 ];
 export const serviceSections: Sections = ["Service"];
+export const socketSections: Sections = ["Socket"];
 export const timerSections: Sections = ["Timer"];
 export const linkSections: Sections = ["Link", "Match", "SR-IOV"];
+export const dnssdSections: Sections = ["Service"];
 export const netdevSections: Sections = [
     "BareUDP",
     "BatmanAdvanced",

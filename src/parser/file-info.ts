@@ -17,6 +17,8 @@ export enum SystemdFileType {
     socket = 5,
     /** https://www.freedesktop.org/software/systemd/man/latest/systemd.link.html */
     link = 6,
+    /** https://www.freedesktop.org/software/systemd/man/latest/systemd.dnssd.html */
+    dnssd = 7,
     /** https://docs.podman.io/en/latest/markdown/podman-systemd.unit.5.html */
     podman = 20,
     /** https://docs.podman.io/en/latest/markdown/podman-systemd.unit.5.html */
@@ -39,6 +41,8 @@ export function parseSystemdFilePath(filePath: string | undefined | null, enable
             return SystemdFileType.timer;
         case "link":
             return SystemdFileType.link;
+        case "dnssd":
+            return SystemdFileType.dnssd;
         case "network":
             return enablePodman ? SystemdFileType.podman_network : SystemdFileType.network;
     }

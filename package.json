@@ -65,6 +65,7 @@
                     ".kube",
                     ".image",
                     ".link",
+                    ".dnssd",
                     ".netdev",
                     ".network",
                     ".service",

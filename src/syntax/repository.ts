@@ -4,12 +4,14 @@ import {
     internalSections,
     knownSections,
     serviceSections,
+    socketSections,
     timerSections,
     linkSections,
     netdevSections,
     networkSections,
     podmanSections,
     SectionsDefinition,
+    dnssdSections,
 } from "./const-sections";
 import type { SyntaxPattern } from "./types";
 
@@ -31,6 +33,8 @@ const allSectionNames = mergeAllSectionNames(
     serviceSections,
     timerSections,
     linkSections,
+    dnssdSections,
+    socketSections,
     netdevSections,
     networkSections,
     podmanSections
