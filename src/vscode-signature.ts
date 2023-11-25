@@ -44,8 +44,7 @@ export class SystemdSignatureProvider implements SignatureHelpProvider, HoverPro
 
         const { managers } = this;
         const directive = (cursor.directiveKey || "").trim();
-        const directiveNameLC = directive.toLowerCase();
-        const dirs = managers.getDirectiveList(directiveNameLC, {
+        const dirs = managers.getDirectiveList(directive, {
             section: cursor.section,
         });
         if (!isNonEmptyArray(dirs)) return null;
@@ -84,8 +83,7 @@ export class SystemdSignatureProvider implements SignatureHelpProvider, HoverPro
         switch (cursor.type) {
             case CursorType.directiveKey: {
                 const directive = document.getText(range);
-                const directiveNameLC = directive.toLowerCase();
-                const dirs = managers.getDirectiveList(directiveNameLC, {
+                const dirs = managers.getDirectiveList(directive, {
                     section: cursor.section,
                 });
                 if (!isNonEmptyArray(dirs)) return null;

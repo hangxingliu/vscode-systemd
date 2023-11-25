@@ -93,11 +93,12 @@ export class HintDataManagers {
         return directives;
     }
 
-    getDirectiveList(directiveNameLC: string, filter: HintDataFilterRule) {
+    getDirectiveList(directiveName: string, filter: HintDataFilterRule) {
         let sectionNameLC: string | undefined;
         if (filter.section) sectionNameLC = filter.section.replace(/[\[\]]/g, "").toLowerCase();
 
         const { managers } = this;
+        const directiveNameLC = directiveName.toLowerCase();
         let directives: RequiredDirectiveCompletionItem[] | undefined;
         for (const it of managers) {
             if (!it) continue;
@@ -110,6 +111,10 @@ export class HintDataManagers {
             }
             directives = mergeItems(directives, list);
         }
+        if (!directives) return;
+
+        const exactMatch = directives.filter(it => it.directiveName === directiveName);
+        if (exactMatch.length > 0) return exactMatch;
         return directives;
     }
 
