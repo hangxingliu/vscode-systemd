@@ -2,22 +2,31 @@
 
 [![.github/workflows/ci.yaml](https://github.com/hangxingliu/vscode-systemd/actions/workflows/ci.yaml/badge.svg)](https://github.com/hangxingliu/vscode-systemd/actions/workflows/ci.yaml)
 
-Help you write systemd configurations in Visual Studio Code
+A Visual Studio Code extension that helps you read and write Systemd unit files
 
 ![The screenshot of this extension](https://raw.githubusercontent.com/hangxingliu/vscode-systemd/7927822df923d9293402eedcbf92b32928e12306/docs/images/screenshot.png)
 
 ## Features
 
-- Syntax highlights
-- Autocomplete directive and specifiers
-- Lint directive names
-- Provide document for directives and specifiers
+- Syntax highlighting and completion for variant systemd unit(configuration) files
+- Support for Podman systemd unit
+- Lint for systemd directive names
+- Document and help information for directives and specifiers in the editor
 
 ## Installation
 
 1. Click `Extension` button in left side of VSCode. (Shortcut: <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>X</kbd> or <kbd>Command</kbd>+<kbd>Shift</kbd>+<kbd>X</kbd>)
 2. Search for `hangxingliu.vscode-systemd-support` and click the `Install` button.
 
+### via Command Line
+
+You can replace the `code` command to `codium` in following scripts if you are using [VSCodium](https://vscodium.com/)
+
+``` bash
+code --install-extension hangxingliu.vscode-systemd-support
+# Or install from a downloaded VSIX file:
+code --install-extension vscode-systemd-support-${version}.vsix
+```
 
 ## Changelog
 
@@ -48,6 +57,8 @@ about building/contributing this project
 
 ## References
 
+- [Systemd](https://github.com/systemd/systemd)
+- [Podman](https://github.com/containers/podman)
 - [TextMate Language Grammars](https://macromates.com/manual/en/language_grammars)
 - [Systemd Syntax](https://www.freedesktop.org/software/systemd/man/systemd.syntax.html#)
 - [Icon resources](https://github.com/edent/SuperTinyIcons)
