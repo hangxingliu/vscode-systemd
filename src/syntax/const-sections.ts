@@ -8,7 +8,7 @@ export const commonSections: Sections = [
         "[Install] carries installation information for the unit. This section is not interpreted by [systemd(1)](https://www.freedesktop.org/software/systemd/man/latest/systemd.html#) during runtime; it is used by the enable and disable commands of the [systemctl(1)](https://www.freedesktop.org/software/systemd/man/latest/systemctl.html#) tool during installation of a unit.",
     ],
 ];
-export const internalSections: Sections = ["Target", "UKI"];
+export const internalSections: Sections = ["Target", "UKI", "D-BUS Service"];
 export const knownSections: Sections = [
     "Automount",
     "Distribution",
