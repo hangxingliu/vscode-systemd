@@ -1,3 +1,4 @@
+# from https://github.com/Unitech/pm2/blob/master/lib/templates/init-scripts/systemd.tpl
 [Unit]
 Description=PM2 process manager
 Documentation=https://pm2.keymetrics.io/
