@@ -70,7 +70,7 @@ export class SystemdLint implements CodeActionProvider {
         const { customDirectiveKeys, customDirectiveRegexps } = config;
         const fileType = parseSystemdFilePath(document.fileName);
 
-        const managers = getSubsetOfManagers(this.managers, fileType);
+        const managers = this.managers.subset(fileType);
         dirs.forEach((it) => {
             const directiveName = it.directiveKey.trim();
             const directiveNameLC = directiveName.toLowerCase();

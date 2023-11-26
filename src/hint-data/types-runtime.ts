@@ -2,10 +2,18 @@ import type { CompletionItem, MarkdownString, Uri } from "vscode";
 
 type PartialRequired<T, Keys extends keyof T> = Omit<T, Keys> & { [P in Keys]-?: T[P] };
 
+// the value of this enum represents priority and array index
 export const enum DirectiveCategory {
-    default = 0,
-    podman = 1,
-    fallback = 2,
+    service = 0,
+    timer = 1,
+    socket = 2,
+    network = 3,
+    netdev = 4,
+    podman = 5,
+    link = 6,
+    dnssd = 7,
+    default = 8,
+    fallback = 9,
 }
 
 export type ManPageInfo = {

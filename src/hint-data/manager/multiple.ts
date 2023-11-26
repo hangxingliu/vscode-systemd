@@ -7,6 +7,8 @@ import { CursorInfo } from "../../parser";
 import { isValidArrayIndex } from "../../utils/data-types";
 import { systemdValueEnum } from "../value-enum";
 import { podmanValueEnum } from "../podman/value-enum";
+import { SystemdFileType } from "../../parser/file-info";
+import { getSubsetOfManagers } from "./subset";
 
 function mergeItems<T>(base: T[] | undefined, newItems: T[] | undefined): T[] | undefined {
     if (newItems && newItems.length > 0) return base ? base.concat(newItems) : newItems;
@@ -21,34 +23,55 @@ function filterBySectionIds(sectionIds: Set<number> | undefined, it: RequiredDir
 
 export type HintDataFilterRule = {
     section?: string;
+    file?: SystemdFileType;
 };
 
 export class HintDataManagers {
     private readonly managers: Array<HintDataManager | undefined> = [];
-    private setManager(manager: HintDataManager) {
+    private initManager(manager: HintDataManager, items?: unknown[][]) {
+        if (items) manager.addItems(items);
         this.managers[manager.category] = manager;
     }
-
-    subset(filter: (manager: HintDataManager) => boolean) {
-        const newManagers = new HintDataManagers();
-        newManagers.managers.push(...this.managers.filter(filter));
-        return newManagers;
+    subset(fileType?: SystemdFileType) {
+        if (typeof fileType !== "number") return this;
+        const result = new HintDataManagers();
+        for (const it of getSubsetOfManagers(this.managers, fileType)) result.managers[it.category] = it;
+        return result;
     }
 
     init() {
-        const defaultManager = new HintDataManager(DirectiveCategory.default, manpageURLs.base);
-        defaultManager.addItems(require("../directives.json"));
-        defaultManager.bindValueEnum(systemdValueEnum);
-        this.setManager(defaultManager);
+        const service = new HintDataManager(DirectiveCategory.service, manpageURLs.base);
+        this.initManager(service, require("../manifests/service.json"));
 
-        const fallbackManager = new HintDataManager(DirectiveCategory.fallback, manpageURLs.base);
-        for (const directive of customDirectives) fallbackManager.addCustomDirective(directive);
-        this.setManager(fallbackManager);
+        const timer = new HintDataManager(DirectiveCategory.timer, manpageURLs.base);
+        this.initManager(timer, require("../manifests/timer.json"));
 
-        const podmanManager = new HintDataManager(DirectiveCategory.podman, manpageURLs.podmanBase);
-        podmanManager.addItems(require("../podman/directives.json"));
-        podmanManager.bindValueEnum(podmanValueEnum);
-        this.setManager(podmanManager);
+        const socket = new HintDataManager(DirectiveCategory.socket, manpageURLs.base);
+        this.initManager(socket, require("../manifests/socket.json"));
+
+        const network = new HintDataManager(DirectiveCategory.network, manpageURLs.base);
+        this.initManager(network, require("../manifests/network.json"));
+
+        const netdev = new HintDataManager(DirectiveCategory.netdev, manpageURLs.base);
+        this.initManager(netdev, require("../manifests/netdev.json"));
+
+        const podman = new HintDataManager(DirectiveCategory.podman, manpageURLs.podmanBase);
+        podman.bindValueEnum(podmanValueEnum);
+        this.initManager(podman, require("../manifests/podman.json"));
+
+        const link = new HintDataManager(DirectiveCategory.link, manpageURLs.base);
+        this.initManager(link, require("../manifests/link.json"));
+
+        const dnssd = new HintDataManager(DirectiveCategory.dnssd, manpageURLs.base);
+        this.initManager(dnssd, require("../manifests/dnssd.json"));
+
+        const defaults = new HintDataManager(DirectiveCategory.default, manpageURLs.base);
+        defaults.bindValueEnum(systemdValueEnum);
+        this.initManager(defaults, require("../manifests/default.json"));
+
+        const fallback = new HintDataManager(DirectiveCategory.fallback, manpageURLs.base);
+        for (const directive of customDirectives) fallback.addCustomDirective(directive);
+        this.initManager(fallback);
     }
 
     getSpecifiers() {
@@ -73,7 +96,10 @@ export class HintDataManagers {
 
         let sectionNameLC: string | undefined;
         if (filter.section) sectionNameLC = filter.section.replace(/[\[\]]/g, "").toLowerCase();
-        for (const manager of this.managers) {
+
+        const managers =
+            typeof filter.file === "number" ? getSubsetOfManagers(this.managers, filter.file) : this.managers;
+        for (const manager of managers) {
             if (!manager) continue;
             let sectionIds: Set<number> | undefined;
             if (sectionNameLC) {
@@ -97,9 +123,11 @@ export class HintDataManagers {
         let sectionNameLC: string | undefined;
         if (filter.section) sectionNameLC = filter.section.replace(/[\[\]]/g, "").toLowerCase();
 
-        const { managers } = this;
         const directiveNameLC = directiveName.toLowerCase();
         let directives: RequiredDirectiveCompletionItem[] | undefined;
+
+        const managers =
+            typeof filter.file === "number" ? getSubsetOfManagers(this.managers, filter.file) : this.managers;
         for (const it of managers) {
             if (!it) continue;
             let list = it.directivesMap.get(directiveNameLC);
@@ -113,14 +141,15 @@ export class HintDataManagers {
         }
         if (!directives) return;
 
-        const exactMatch = directives.filter(it => it.directiveName === directiveName);
+        const exactMatch = directives.filter((it) => it.directiveName === directiveName);
         if (exactMatch.length > 0) return exactMatch;
         return directives;
     }
 
-    filterValueEnum(cursorContext: CursorInfo) {
+    filterValueEnum(cursorContext: CursorInfo, fileType: SystemdFileType) {
         let items: Array<CompletionItem> | undefined;
-        for (const it of this.managers) if (it) items = mergeItems(items, it.resolveEnum(cursorContext));
+        for (const it of this.managers)
+            if (it && it.resolveEnum) items = mergeItems(items, it.resolveEnum(cursorContext, fileType));
         return items;
     }
 
