@@ -33,9 +33,13 @@ export class ValueEnumManager {
         const exactMatch = enums.filter((it) => it.directive === key);
         if (exactMatch.length > 0) enums = exactMatch;
 
+        const files: boolean[] = [];
+        files[file] = true;
+        if (file === SystemdFileType.podman_network) files[SystemdFileType.network] = true;
+        if (file === SystemdFileType.podman) files[SystemdFileType.service] = true;
         for (const valueEnum of enums) {
             if (valueEnum.section && valueEnum.section !== section) continue;
-            if (typeof valueEnum.file === "number" && valueEnum.file !== file) continue;
+            if (typeof valueEnum.file === "number" && !files[valueEnum.file]) continue;
             for (const value of valueEnum.values) resultText.add(value);
             if (valueEnum.desc) Object.assign(desc, valueEnum.desc);
         }

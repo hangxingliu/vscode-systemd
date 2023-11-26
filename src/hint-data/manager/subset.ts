@@ -54,6 +54,7 @@ function _getSubsetOfManagers(
             break;
         }
         case SystemdFileType.podman: {
+            filters[DirectiveCategory.service] = true;
             filters[DirectiveCategory.podman] = true;
             break;
         }

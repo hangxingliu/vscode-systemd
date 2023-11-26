@@ -11,6 +11,7 @@ import {
     networkSections,
     podmanSections,
     socketSections,
+    knownSections,
 } from "../syntax/const-sections";
 
 export function getSectionCompletionItems(fileType: SystemdFileType) {
@@ -38,6 +39,7 @@ export function getSectionCompletionItems(fileType: SystemdFileType) {
             networkSections.forEach((it) => items.add(it));
             break;
         case SystemdFileType.podman:
+            serviceSections.forEach((it) => items.add(it));
             podmanSections.forEach((it) => items.add(it));
             break;
         case SystemdFileType.podman_network:
@@ -51,6 +53,9 @@ export function getSectionCompletionItems(fileType: SystemdFileType) {
             linkSections.forEach((it) => items.add(it));
             podmanSections.forEach((it) => items.add(it));
             networkSections.forEach((it) => items.add(it));
+            dnssdSections.forEach((it) => items.add(it));
+            socketSections.forEach((it) => items.add(it));
+            knownSections.forEach((it) => items.add(it));
     }
 
     return Array.from(items).map((it) => {
