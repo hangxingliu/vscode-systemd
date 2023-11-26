@@ -1,6 +1,7 @@
-const podmanExts = new Set(["container", "volume", "network", "kube", "image"]);
+/** internal use, excluding `network` */
+const _podmanExts = new Set(["container", "volume", "kube", "image"]);
 
-export enum SystemdFileType {
+export const enum SystemdFileType {
     unknown = 0,
     /** https://www.freedesktop.org/software/systemd/man/latest/systemd.service.html# */
     service = 1,
@@ -46,7 +47,7 @@ export function parseSystemdFilePath(filePath: string | undefined | null, enable
         case "network":
             return enablePodman ? SystemdFileType.podman_network : SystemdFileType.network;
     }
-    if (enablePodman && podmanExts.has(ext)) return SystemdFileType.podman;
+    if (enablePodman && _podmanExts.has(ext)) return SystemdFileType.podman;
     if (ext === "conf") {
         if (filePath.indexOf("networkd.conf") >= 0) return SystemdFileType.network;
     }

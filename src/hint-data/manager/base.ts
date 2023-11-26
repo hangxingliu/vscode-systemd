@@ -26,7 +26,6 @@ import {
 import { CustomSystemdDirective, deprecatedDirectivesSet } from "../../syntax/const";
 
 type ExtraProps<T extends CompletionItem> = Omit<T, keyof CompletionItem>;
-const fallbackResolveEnum: ValueEnumManager["resolve"] = () => undefined;
 
 export class HintDataManager {
     readonly manPageBaseUri: Uri;
@@ -43,7 +42,7 @@ export class HintDataManager {
     readonly specifiers: Array<SpecifierCompletionItem> = [];
 
     private enumManager: ValueEnumManager | undefined;
-    resolveEnum = fallbackResolveEnum;
+    resolveEnum?: ValueEnumManager["resolve"];
 
     constructor(readonly category: DirectiveCategory, manPageBaseUri: string) {
         this.manPageBaseUri = Uri.parse(manPageBaseUri);

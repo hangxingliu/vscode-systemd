@@ -62,6 +62,7 @@ export class SystemdCompletionProvider implements CompletionItemProvider {
 
                 const directives = this.managers.filterDirectives(pending, {
                     section: cursorContext.section,
+                    file: fileType,
                 });
                 if (!directives) return;
                 const range = new Range(position.translate(0, -pending.length), position);
@@ -79,7 +80,7 @@ export class SystemdCompletionProvider implements CompletionItemProvider {
                     const units = getUnitNameCompletionItems(directive);
                     if (units) return units;
                 }
-                return this.managers.filterValueEnum(cursorContext);
+                return this.managers.filterValueEnum(cursorContext, fileType);
             }
         }
 
