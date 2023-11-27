@@ -43,10 +43,6 @@
         </dict>
         <dict>
           <key>include</key>
-          <string>#restartOptions</string>
-        </dict>
-        <dict>
-          <key>include</key>
           <string>#timeSpans</string>
         </dict>
         <dict>
@@ -108,15 +104,119 @@
         </dict>
         <dict>
           <key>include</key>
-          <string>#restartOptions</string>
+          <string>#numbers</string>
+        </dict>
+      </array>
+    </dict>
+    <dict>
+      <key>name</key>
+      <string>meta.config-entry</string>
+      <key>begin</key>
+      <string>^\s*(OnCalendar)\s*(=)[ \t]*</string>
+      <key>end</key>
+      <string>(?&lt;!\\)\n</string>
+      <key>beginCaptures</key>
+      <dict>
+        <key>1</key>
+        <dict>
+          <key>name</key>
+          <string>entity.name.tag</string>
+        </dict>
+        <key>2</key>
+        <dict>
+          <key>name</key>
+          <string>keyword.operator.assignment</string>
+        </dict>
+      </dict>
+      <key>patterns</key>
+      <array>
+        <dict>
+          <key>include</key>
+          <string>#commnets</string>
         </dict>
         <dict>
           <key>include</key>
-          <string>#timeSpans</string>
+          <string>#variables</string>
+        </dict>
+        <dict>
+          <key>include</key>
+          <string>#calendarShorthands</string>
         </dict>
         <dict>
           <key>include</key>
           <string>#numbers</string>
+        </dict>
+      </array>
+    </dict>
+    <dict>
+      <key>name</key>
+      <string>meta.config-entry</string>
+      <key>begin</key>
+      <string>^\s*(Restart)\s*(=)[ \t]*</string>
+      <key>end</key>
+      <string>(?&lt;!\\)\n</string>
+      <key>beginCaptures</key>
+      <dict>
+        <key>1</key>
+        <dict>
+          <key>name</key>
+          <string>entity.name.tag</string>
+        </dict>
+        <key>2</key>
+        <dict>
+          <key>name</key>
+          <string>keyword.operator.assignment</string>
+        </dict>
+      </dict>
+      <key>patterns</key>
+      <array>
+        <dict>
+          <key>include</key>
+          <string>#commnets</string>
+        </dict>
+        <dict>
+          <key>include</key>
+          <string>#variables</string>
+        </dict>
+        <dict>
+          <key>include</key>
+          <string>#restartOptions</string>
+        </dict>
+      </array>
+    </dict>
+    <dict>
+      <key>name</key>
+      <string>meta.config-entry</string>
+      <key>begin</key>
+      <string>^\s*(Type)\s*(=)[ \t]*</string>
+      <key>end</key>
+      <string>(?&lt;!\\)\n</string>
+      <key>beginCaptures</key>
+      <dict>
+        <key>1</key>
+        <dict>
+          <key>name</key>
+          <string>entity.name.tag</string>
+        </dict>
+        <key>2</key>
+        <dict>
+          <key>name</key>
+          <string>keyword.operator.assignment</string>
+        </dict>
+      </dict>
+      <key>patterns</key>
+      <array>
+        <dict>
+          <key>include</key>
+          <string>#commnets</string>
+        </dict>
+        <dict>
+          <key>include</key>
+          <string>#variables</string>
+        </dict>
+        <dict>
+          <key>include</key>
+          <string>#typeOptions</string>
         </dict>
       </array>
     </dict>
@@ -160,10 +260,6 @@
         </dict>
         <dict>
           <key>include</key>
-          <string>#restartOptions</string>
-        </dict>
-        <dict>
-          <key>include</key>
           <string>#timeSpans</string>
         </dict>
         <dict>
@@ -199,7 +295,7 @@
           <key>name</key>
           <string>entity.name.section</string>
           <key>match</key>
-          <string>^\s*\[(Address|Automount|BFIFO|BareUDP|BatmanAdvanced|Bond|Bridge|BridgeFDB|BridgeMDB|BridgeVLAN|CAKE|CAN|Container|ControlledDelay|DHCPPrefixDelegation|DHCPServer|DHCPServerStaticLease|DHCPv4|DHCPv6|DeficitRoundRobinScheduler|DeficitRoundRobinSchedulerClass|Distribution|EnhancedTransmissionSelection|Exec|FairQueueing|FairQueueingControlledDelay|Files|FlowQueuePIE|FooOverUDP|GENEVE|GenericRandomEarlyDetection|HeavyHitterFilter|HierarchyTokenBucket|HierarchyTokenBucketClass|Home|IPVLAN|IPVTAP|IPoIB|IPv6AcceptRA|IPv6AddressLabel|IPv6PREF64Prefix|IPv6Prefix|IPv6RoutePrefix|IPv6SendRA|Image|Install|Journal|Kube|L2TP|L2TPSession|LLDP|Link|Login|MACVLAN|MACVTAP|MACsec|MACsecReceiveAssociation|MACsecReceiveChannel|MACsecTransmitAssociation|Match|Mount|Neighbor|NetDev|Network|NetworkEmulator|NextHop|OOM|Output|PFIFO|PFIFOFast|PFIFOHeadDrop|PIE|PStore|Packages|Partition|Partitions|Path|Peer|QDisc|QuickFairQueueing|QuickFairQueueingClass|Remote|Resolve|Route|RoutingPolicyRule|SR-IOV|Service|Socket|Source|StochasticFairBlue|StochasticFairnessQueueing|Swap|Tap|Target|Timer|TokenBucketFilter|Transfer|TrivialLinkEqualizer|Tun|Tunnel|UKI|Unit|VLAN|VRF|VXCAN|VXLAN|Volume|WLAN|WireGuard|WireGuardPeer|Xfrm)\]</string>
+          <string>^\s*\[(Address|Automount|BFIFO|BareUDP|BatmanAdvanced|Bond|Bridge|BridgeFDB|BridgeMDB|BridgeVLAN|CAKE|CAN|Container|ControlledDelay|D-BUS Service|DHCPPrefixDelegation|DHCPServer|DHCPServerStaticLease|DHCPv4|DHCPv6|DeficitRoundRobinScheduler|DeficitRoundRobinSchedulerClass|Distribution|EnhancedTransmissionSelection|Exec|FairQueueing|FairQueueingControlledDelay|Files|FlowQueuePIE|FooOverUDP|GENEVE|GenericRandomEarlyDetection|HeavyHitterFilter|HierarchyTokenBucket|HierarchyTokenBucketClass|Home|IPVLAN|IPVTAP|IPoIB|IPv6AcceptRA|IPv6AddressLabel|IPv6PREF64Prefix|IPv6Prefix|IPv6RoutePrefix|IPv6SendRA|Image|Install|Journal|Kube|L2TP|L2TPSession|LLDP|Link|Login|MACVLAN|MACVTAP|MACsec|MACsecReceiveAssociation|MACsecReceiveChannel|MACsecTransmitAssociation|Match|Mount|Neighbor|NetDev|Network|NetworkEmulator|NextHop|OOM|Output|PFIFO|PFIFOFast|PFIFOHeadDrop|PIE|PStore|Packages|Partition|Partitions|Path|Peer|QDisc|QuickFairQueueing|QuickFairQueueingClass|Remote|Resolve|Route|RoutingPolicyRule|SR-IOV|Service|Socket|Source|StochasticFairBlue|StochasticFairnessQueueing|Swap|Tap|Target|Timer|TokenBucketFilter|Transfer|TrivialLinkEqualizer|Tun|Tunnel|UKI|Unit|VLAN|VRF|VXCAN|VXLAN|Volume|WLAN|WireGuard|WireGuardPeer|Xfrm)\]</string>
         </dict>
         <dict>
           <key>name</key>
@@ -217,7 +313,19 @@
           <key>name</key>
           <string>constant.numeric</string>
           <key>match</key>
-          <string>\b(?:\d+(?:us(?:ec)?|ms(?:ec)?|s(?:ec|econds?)?|m(?:in|inutes?)?|h(?:r|ours?)?|d(?:ays?)?|w(?:eeks)?|M|months?|y(?:ears?)?)){1,}\b</string>
+          <string>\b(?:\d+(?:[uμ]s(?:ec)?|ms(?:ec)?|s(?:ec|econds?)?|m(?:in|inutes?)?|h(?:r|ours?)?|d(?:ays?)?|w(?:eeks)?|M|months?|y(?:ears?)?)){1,}\b</string>
+        </dict>
+      </array>
+    </dict>
+    <key>calendarShorthands</key>
+    <dict>
+      <key>patterns</key>
+      <array>
+        <dict>
+          <key>name</key>
+          <string>constant.language</string>
+          <key>match</key>
+          <string>\b(?:minute|hour|dai|month|week|quarter|semiannual)ly\b</string>
         </dict>
       </array>
     </dict>
@@ -293,7 +401,19 @@
           <key>name</key>
           <string>constant.language</string>
           <key>match</key>
-          <string>\b(?&lt;![-\/\.])(no|always|on\-(?:success|failure|abnormal|abort|watchdog))(?![-\/\.])\b</string>
+          <string>\b(no|always|on\-(?:success|failure|abnormal|abort|watchdog))\b</string>
+        </dict>
+      </array>
+    </dict>
+    <key>typeOptions</key>
+    <dict>
+      <key>patterns</key>
+      <array>
+        <dict>
+          <key>name</key>
+          <string>constant.language</string>
+          <key>match</key>
+          <string>\b(?:simple|exec|forking|oneshot|dbus|notify(?:-reload)?|idle|unicast|local|broadcast|anycast|multicast|blackhole|unreachable|prohibit|throw|nat|xresolve|blackhole|unreachable|prohibit|ad-hoc|station|ap(?:-vlan)?|wds|monitor|mesh-point|p2p-(?:client|go|device)|ocb|nan)\b</string>
         </dict>
       </array>
     </dict>

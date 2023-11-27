@@ -21,7 +21,6 @@ export const syntaxPatterns: Array<SyntaxPattern | SyntaxPattern[]> = [
             { include: includeRepo.variables },
             { include: includeRepo.quotedString },
             { include: includeRepo.booleans },
-            { include: includeRepo.restartOptions },
             { include: includeRepo.timeSpans },
             { include: includeRepo.numbers },
         ]
@@ -45,9 +44,50 @@ export const syntaxPatterns: Array<SyntaxPattern | SyntaxPattern[]> = [
             },
             { include: includeRepo.variables },
             { include: includeRepo.booleans },
-            { include: includeRepo.restartOptions },
-            { include: includeRepo.timeSpans },
             { include: includeRepo.numbers },
+        ]
+    },
+    {
+        name: names.meta.configEntry,
+        begin: /^\s*(OnCalendar)\s*(=)[ \t]*/,
+        end: /(?<!\\)\n/,
+        beginCaptures: {
+            '1': names.entityName.configKey,
+            '2': names.operator.assignment,
+        },
+        patterns: [
+            { include: includeRepo.commnets },
+            { include: includeRepo.variables },
+            { include: includeRepo.calendarShorthands },
+            { include: includeRepo.numbers },
+        ]
+    },
+    {
+        name: names.meta.configEntry,
+        begin: /^\s*(Restart)\s*(=)[ \t]*/,
+        end: /(?<!\\)\n/,
+        beginCaptures: {
+            '1': names.entityName.configKey,
+            '2': names.operator.assignment,
+        },
+        patterns: [
+            { include: includeRepo.commnets },
+            { include: includeRepo.variables },
+            { include: includeRepo.restartOptions },
+        ]
+    },
+    {
+        name: names.meta.configEntry,
+        begin: /^\s*(Type)\s*(=)[ \t]*/,
+        end: /(?<!\\)\n/,
+        beginCaptures: {
+            '1': names.entityName.configKey,
+            '2': names.operator.assignment,
+        },
+        patterns: [
+            { include: includeRepo.commnets },
+            { include: includeRepo.variables },
+            { include: includeRepo.typeOptions },
         ]
     },
     {
@@ -63,7 +103,6 @@ export const syntaxPatterns: Array<SyntaxPattern | SyntaxPattern[]> = [
             { include: includeRepo.variables },
             { include: includeRepo.quotedString },
             { include: includeRepo.booleans },
-            { include: includeRepo.restartOptions },
             { include: includeRepo.timeSpans },
             { include: includeRepo.numbers },
         ]

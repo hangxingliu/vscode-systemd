@@ -44,9 +44,11 @@ export const includeRepo = {
     commnets: "#commnets",
     sections: "#sections",
     timeSpans: "#timeSpans",
+    calendarShorthands: "#calendarShorthands",
     numbers: "#numbers",
     booleans: "#booleans",
     restartOptions: "#restartOptions",
+    typeOptions: "#typeOptions",
     variables: "#variables",
     quotedString: "#quotedString",
 };
@@ -115,10 +117,18 @@ export const syntaxRepository: {
     timeSpans: {
         patterns: [
             {
-                match: /\b(?:\d+(?:us(?:ec)?|ms(?:ec)?|s(?:ec|econds?)?|m(?:in|inutes?)?|h(?:r|ours?)?|d(?:ays?)?|w(?:eeks)?|M|months?|y(?:ears?)?)){1,}\b/,
+                match: /\b(?:\d+(?:[uμ]s(?:ec)?|ms(?:ec)?|s(?:ec|econds?)?|m(?:in|inutes?)?|h(?:r|ours?)?|d(?:ays?)?|w(?:eeks)?|M|months?|y(?:ears?)?)){1,}\b/,
                 name: names.numeric,
             },
         ],
+    },
+    calendarShorthands: {
+        patterns: [
+            {
+                match: /\b(?:minute|hour|dai|month|week|quarter|semiannual)ly\b/,
+                name: names.languageConstant
+            }
+        ]
     },
     numbers: {
         patterns: [
@@ -140,7 +150,15 @@ export const syntaxRepository: {
     restartOptions: {
         patterns: [
             {
-                match: /\b(?<![-\/\.])(no|always|on\-(?:success|failure|abnormal|abort|watchdog))(?![-\/\.])\b/,
+                match: /\b(no|always|on\-(?:success|failure|abnormal|abort|watchdog))\b/,
+                name: names.languageConstant,
+            },
+        ],
+    },
+    typeOptions: {
+        patterns: [
+            {
+                match: /\b(?:simple|exec|forking|oneshot|dbus|notify(?:-reload)?|idle|unicast|local|broadcast|anycast|multicast|blackhole|unreachable|prohibit|throw|nat|xresolve|blackhole|unreachable|prohibit|ad-hoc|station|ap(?:-vlan)?|wds|monitor|mesh-point|p2p-(?:client|go|device)|ocb|nan)\b/,
                 name: names.languageConstant,
             },
         ],
