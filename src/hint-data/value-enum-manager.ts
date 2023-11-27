@@ -1,7 +1,7 @@
 import { CursorInfo } from "../parser";
 import { SystemdFileType } from "../parser/file-info";
 import { SystemdValueEnum } from "./value-enum";
-import { CompletionItem, CompletionItemKind, MarkdownString } from "vscode";
+import { CompletionItem, CompletionItemKind, MarkdownString, SnippetString } from "vscode";
 
 export class ValueEnumManager {
     private byName = new Map<string, SystemdValueEnum[]>();
@@ -47,6 +47,10 @@ export class ValueEnumManager {
         return Array.from(resultText).map((it) => {
             const ci = new CompletionItem(it, CompletionItemKind.Enum);
             const docs = desc[it];
+            if (it.match(/\$\{/)) {
+                let i = 1;
+                ci.insertText = new SnippetString(it.replace(/\$\{(\w+)\}/g, (_, key) => `\${${i++}:${key}}`));
+            }
             if (docs) ci.documentation = new MarkdownString(docs);
             return ci;
         });
