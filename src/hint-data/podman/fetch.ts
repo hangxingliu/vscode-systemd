@@ -75,6 +75,10 @@ async function main() {
             const signs = extractDirectiveSignature(title);
             assertLength("signatures in the header", signs, 1);
 
+            const $link = findElements($code.parent(), "a.headerlink", '=1');
+            const urlRefId = $link.attr("href");
+            if (!urlRefId || !urlRefId.startsWith("#")) throw new Error(`Invalid link "${urlRefId}" to directive "${title}"`);
+
             const section = $code.parent("h2").parent("section");
             assertLength("the section of h2", section, 1);
 
@@ -83,7 +87,7 @@ async function main() {
 
             const markdown = getMarkdownHelpFromElement(cloned);
             const currentDocsIndex = nextDocsId++;
-            allDocs.push([ManifestItemType.DocsMarkdown, currentDocsIndex, markdown]);
+            allDocs.push([ManifestItemType.DocsMarkdown, currentDocsIndex, markdown, urlRefId]);
 
             const [sign] = signs;
             allDirectives.push([

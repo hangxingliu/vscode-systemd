@@ -120,24 +120,28 @@ export async function fetchDirectiveDetailsFromManPage(
     }
 
     const duplicate = new DuplicateChecker();
-    for (const [el, sectionIndex, sectionName] of dtList) {
-        const $el = $(el);
-        const id = el.attribs.id;
-        const text = getText($el);
+    for (const [dt, sectionIndex, sectionName] of dtList) {
+        const $dt = $(dt);
+        const id = dt.attribs.id;
+        const text = getText($dt);
         if (!id) throw new Error(`No id in dt"${text}"`);
-        if (text.length <= 0) throw new Error(`No text in ${getElementInfo(el)}`);
+        if (text.length <= 0) throw new Error(`No text in ${getElementInfo(dt)}`);
+
+        const $link = findElements($dt, "a.headerlink", "=1");
+        const urlRefId = $link.attr("href");
+        if (!urlRefId || !urlRefId.startsWith("#")) throw new Error(`Invalid link "${urlRefId}" to directive`);
 
         let currentDocsIndex: number | undefined;
         const getCurrentDocsIndex = () => {
             if (typeof currentDocsIndex === "number") return currentDocsIndex;
 
-            const $dd = $el.next("dd");
+            const $dd = $dt.next("dd");
             assertLength(`description of the directive "${text}"`, $dd, 1);
             const docsMarkdown = getMarkdownHelpFromElement($dd);
             if (!docsMarkdown) throw new Error(`No description for the directive "${text}"`);
 
             currentDocsIndex = nextIds.docs++;
-            pushResult([ManifestItemType.DocsMarkdown, currentDocsIndex, docsMarkdown]);
+            pushResult([ManifestItemType.DocsMarkdown, currentDocsIndex, docsMarkdown, urlRefId]);
             return currentDocsIndex;
         };
 

@@ -25,12 +25,14 @@ export type ManifestItemForManPageInfo = [
     manPageIndex: number,
     manPageName: string,
     manPageDescMarkdown: string,
-    manPageURI: string,
+    manPageURI: string
 ];
 export type ManifestItemForDocsMarkdown = [
     type: ManifestItemType.DocsMarkdown,
     markdownIndex: number,
-    markdown: string
+    markdown: string,
+    /** Example: "Type=" in "...html#Type=" */
+    urlRefId: string
 ];
 export type ManifestItemForSpecifier = [
     type: ManifestItemType.Specifier,

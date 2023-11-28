@@ -21,6 +21,12 @@ export type ManPageInfo = {
     desc: MarkdownString;
     url: Uri;
 };
+export type DocsContext = {
+    /** Eg: "#XXXX=" */
+    ref: string;
+    /** Markdown */
+    str: MarkdownString;
+}
 
 export type DirectiveCompletionItem = CompletionItem & {
     category?: DirectiveCategory;
