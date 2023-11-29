@@ -8,6 +8,7 @@ import {
 } from "vscode";
 import {
     DirectiveCategory,
+    DocsContext,
     ManPageInfo,
     RequiredDirectiveCompletionItem,
     SectionInfo,
@@ -31,7 +32,7 @@ export class HintDataManager {
     readonly manPageBaseUri: Uri;
 
     readonly manPages: Array<ManPageInfo> = [];
-    readonly docsMarkdown: Array<MarkdownString> = [];
+    readonly docsMarkdown: Array<DocsContext> = [];
     /** key is lowercase name of the section */
     readonly sectionIdMap = new MapList<number>();
     readonly sections: Array<SectionInfo> = [];
@@ -69,7 +70,7 @@ export class HintDataManager {
             const base = this.manPageBaseUri;
             const desc = new MarkdownString(item[2]);
             desc.baseUri = base;
-            this.docsMarkdown[item[1]] = desc;
+            this.docsMarkdown[item[1]] = { ref: item[3], str: desc };
             return;
         }
 
@@ -138,7 +139,7 @@ export class HintDataManager {
         }
         let docsIndex: number | undefined;
         if (typeof item.description === "string") {
-            docsIndex = this.docsMarkdown.push(new MarkdownString(item.description)) - 1;
+            docsIndex = this.docsMarkdown.push({ str: new MarkdownString(item.description), ref: "" }) - 1;
         }
         for (let i = 0; i < names.length; i++) {
             const directiveName = names[i];

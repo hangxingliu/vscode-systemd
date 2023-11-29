@@ -34,6 +34,13 @@ export class SystemdSignatureProvider implements SignatureHelpProvider, HoverPro
         );
     }
 
+    private getManPageLink(manPage: ManPageInfo, docs?: DocsContext | false) {
+        let url = manPage.url.toString();
+        if (docs && docs.ref) url += docs.ref;
+        const markdown = `[${manPage.title}](${url})`;
+        return markdown
+    }
+
     provideSignatureHelp(
         document: TextDocument,
         position: Position,
@@ -61,8 +68,8 @@ export class SystemdSignatureProvider implements SignatureHelpProvider, HoverPro
 
             const { manPage, section, docs } = docsInfo;
             let docsMarkdown = "";
-            if (manPage) docsMarkdown = `[${manPage.title}](${manPage.url.toString()}) `;
-            docsMarkdown += docs ? docs.value : "";
+            if (manPage) docsMarkdown = this.getManPageLink(manPage, docs);
+            docsMarkdown += docs ? docs.str.value : "";
 
             const signStrings = isNonEmptyArray(directive.signatures) ? directive.signatures : [];
             if (!signStrings[0]) {
@@ -103,10 +110,10 @@ export class SystemdSignatureProvider implements SignatureHelpProvider, HoverPro
                     const { manPage, docs, section } = docsInfo;
                     if (manPage) {
                         let help = section ? `[${section.name}] in ` : "";
-                        help += `[${manPage.title}](${manPage.url.toString()})`;
+                        help += this.getManPageLink(manPage, docs);
                         manPages.add(help);
                     }
-                    if (docs) markdowns.push(docs);
+                    if (docs) markdowns.push(docs.str);
                 });
                 const helpText1 = new MarkdownString(Array.from(manPages).join("; "));
                 return new Hover([helpText1, ...markdowns], range);

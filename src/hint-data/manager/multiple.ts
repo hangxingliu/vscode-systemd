@@ -175,7 +175,7 @@ export class HintDataManagers {
 
         if (item.docsIndex) {
             const docs = src.docsMarkdown[item.docsIndex];
-            if (docs) item.documentation = docs;
+            if (docs) item.documentation = docs.str;
         }
         return item;
     }
