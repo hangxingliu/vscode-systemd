@@ -17,7 +17,8 @@ import { getCursorInfoFromSystemdConf } from "./parser";
 import { CursorType } from "./parser/types";
 import { HintDataManagers } from "./hint-data/manager/multiple";
 import { languageId } from "./syntax/const";
-import { parseSystemdFilePath } from "./parser/file-info";
+import { DocsContext, ManPageInfo } from "./hint-data/types-runtime";
+import { SystemdDocumentManager } from "./vscode-documents";
 
 const zeroPos = new Position(0, 0);
 export class SystemdSignatureProvider implements SignatureHelpProvider, HoverProvider {
@@ -43,7 +44,7 @@ export class SystemdSignatureProvider implements SignatureHelpProvider, HoverPro
         const cursor = getCursorInfoFromSystemdConf(beforeText);
         if (cursor.type !== CursorType.directiveValue) return null;
 
-        const fileType = parseSystemdFilePath(document.fileName);
+        const fileType = SystemdDocumentManager.instance.getType(document);
         const { managers } = this;
         const directive = (cursor.directiveKey || "").trim();
         const dirs = managers.getDirectiveList(directive, {
@@ -81,7 +82,7 @@ export class SystemdSignatureProvider implements SignatureHelpProvider, HoverPro
         const beforeText = document.getText(new Range(zeroPos, position));
         const cursor = getCursorInfoFromSystemdConf(beforeText);
 
-        const fileType = parseSystemdFilePath(document.fileName);
+        const fileType = SystemdDocumentManager.instance.getType(document);
 
         const { managers } = this;
         const range = document.getWordRangeAtPosition(position);

@@ -15,9 +15,10 @@ import { languageId } from "./syntax/const";
 import { ExtensionConfig } from "./config/vscode-config-loader";
 import { HintDataManagers } from "./hint-data/manager/multiple";
 import { RequiredDirectiveCompletionItem } from "./hint-data/types-runtime";
-import { SystemdFileType, parseSystemdFilePath } from "./parser/file-info";
+import { SystemdFileType } from "./parser/file-info";
 import { getSectionCompletionItems } from "./hint-data/get-section-completion";
 import { getUnitNameCompletionItems } from "./hint-data/get-unit-name-completion";
+import { SystemdDocumentManager } from "./vscode-documents";
 
 const zeroPos = new Position(0, 0);
 
@@ -54,7 +55,7 @@ export class SystemdCompletionProvider implements CompletionItemProvider {
     ): CompletionItem[] | undefined {
         const beforeText = document.getText(new Range(zeroPos, position));
         const cursorContext = getCursorInfoFromSystemdConf(beforeText);
-        const fileType = parseSystemdFilePath(document.fileName);
+        const fileType = SystemdDocumentManager.instance.getType(document);
 
         switch (cursorContext.type) {
             case CursorType.directiveKey: {

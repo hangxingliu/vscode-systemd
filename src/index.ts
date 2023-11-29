@@ -8,6 +8,7 @@ import { vscodeConfigNS } from "./config/vscode-config";
 import { HintDataManagers } from "./hint-data/manager/multiple";
 import { SystemdLint } from "./vscode-lint";
 import { SystemdCommands } from "./vscode-commands";
+import { SystemdDocumentManager } from "./vscode-documents";
 
 export function activate(context: ExtensionContext) {
     const hintDataManager = new HintDataManagers();
@@ -18,6 +19,7 @@ export function activate(context: ExtensionContext) {
     const selector = [languageId];
     const diagnostics = SystemdDiagnosticManager.get();
 
+    const docs = SystemdDocumentManager.init();
     const completion = new SystemdCompletionProvider(config, hintDataManager);
     const signature = new SystemdSignatureProvider(hintDataManager);
     const lint = new SystemdLint(config, hintDataManager);
@@ -36,7 +38,11 @@ export function activate(context: ExtensionContext) {
     subs.push(signature.register());
     subs.push(languages.registerHoverProvider(selector, signature));
     subs.push(languages.registerCodeActionsProvider(selector, lint));
-    subs.push(workspace.onDidOpenTextDocument(lint.onDidOpenTextDocument));
+    subs.push(
+        workspace.onDidOpenTextDocument((doc) => {
+            if (docs.onDidOpenTextDocument(doc)) lint.onDidOpenTextDocument(doc);
+        })
+    );
     subs.push(workspace.onDidCloseTextDocument((document) => diagnostics.delete(document.uri)));
     subs.push(workspace.onDidChangeTextDocument(lint.onDidChangeTextDocument));
 

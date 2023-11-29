@@ -23,8 +23,7 @@ import { deprecatedDirectivesSet, directivePrefixes, languageId } from "./syntax
 import { ExtensionConfig } from "./config/vscode-config-loader";
 import { HintDataManagers } from "./hint-data/manager/multiple";
 import { SystemdCommands } from "./vscode-commands";
-import { parseSystemdFilePath } from "./parser/file-info";
-import { getSubsetOfManagers } from "./hint-data/manager/subset";
+import { SystemdDocumentManager } from "./vscode-documents";
 
 export class SystemdLint implements CodeActionProvider {
     // NodeJS.Timer or number
@@ -68,14 +67,17 @@ export class SystemdLint implements CodeActionProvider {
         const dirs = getDirectiveKeys(document.getText());
         const { config } = this;
         const { customDirectiveKeys, customDirectiveRegexps } = config;
-        const fileType = parseSystemdFilePath(document.fileName);
+        const fileType = SystemdDocumentManager.instance.getType(document);
 
         const managers = this.managers.subset(fileType);
         dirs.forEach((it) => {
             const directiveName = it.directiveKey.trim();
             const directiveNameLC = directiveName.toLowerCase();
-            const getRange = () =>
-                new Range(new Position(it.loc1[1], it.loc1[2]), new Position(it.loc2[1], it.loc2[2]));
+            const getRange = (addOffset?: number) =>
+                new Range(
+                    new Position(it.loc1[1], it.loc1[2]),
+                    new Position(it.loc2[1], it.loc2[2] + (addOffset || 0))
+                );
             if (deprecatedDirectivesSet.has(directiveName)) {
                 items.push(getDiagnosticForDeprecated(getRange(), directiveName));
                 return;
