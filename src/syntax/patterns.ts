@@ -22,6 +22,7 @@ export const syntaxPatterns: Array<SyntaxPattern | SyntaxPattern[]> = [
             { include: includeRepo.quotedString },
             { include: includeRepo.booleans },
             { include: includeRepo.timeSpans },
+            { include: includeRepo.sizes },
             { include: includeRepo.numbers },
         ]
 	},
@@ -104,6 +105,7 @@ export const syntaxPatterns: Array<SyntaxPattern | SyntaxPattern[]> = [
             { include: includeRepo.quotedString },
             { include: includeRepo.booleans },
             { include: includeRepo.timeSpans },
+            { include: includeRepo.sizes },
             { include: includeRepo.numbers },
         ]
     },

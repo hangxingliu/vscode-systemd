@@ -46,6 +46,7 @@ export const includeRepo = {
     timeSpans: "#timeSpans",
     calendarShorthands: "#calendarShorthands",
     numbers: "#numbers",
+    sizes: "#sizes",
     booleans: "#booleans",
     restartOptions: "#restartOptions",
     typeOptions: "#typeOptions",
@@ -126,14 +127,26 @@ export const syntaxRepository: {
         patterns: [
             {
                 match: /\b(?:minute|hour|dai|month|week|quarter|semiannual)ly\b/,
-                name: names.languageConstant
-            }
-        ]
+                name: names.languageConstant,
+            },
+        ],
     },
     numbers: {
         patterns: [
             {
                 match: /(?<=\s|=)\d+(?:\.\d+)?(?=\s|$)/,
+                name: names.numeric,
+            },
+        ],
+    },
+    sizes: {
+        patterns: [
+            {
+                match: /(?<=\s|=)\d+(?:\.\d+)?[KMGT](?=\s|$)/,
+                name: names.numeric,
+            },
+            {
+                match: /(?<==)infinity(?=\s|$)/,
                 name: names.numeric,
             },
         ],

@@ -12,7 +12,7 @@ export const names = {
     meta: {
         configEntry: `meta.config-entry`,
 	},
-	comment: 'comment.line.number-sign',
+    comment: 'comment.line.number-sign',
 
     languageConstant: 'constant.language',
     boolean: 'constant.language',

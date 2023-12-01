@@ -47,6 +47,10 @@
         </dict>
         <dict>
           <key>include</key>
+          <string>#sizes</string>
+        </dict>
+        <dict>
+          <key>include</key>
           <string>#numbers</string>
         </dict>
       </array>
@@ -264,6 +268,10 @@
         </dict>
         <dict>
           <key>include</key>
+          <string>#sizes</string>
+        </dict>
+        <dict>
+          <key>include</key>
           <string>#numbers</string>
         </dict>
       </array>
@@ -338,6 +346,24 @@
           <string>constant.numeric</string>
           <key>match</key>
           <string>(?&lt;=\s|=)\d+(?:\.\d+)?(?=\s|$)</string>
+        </dict>
+      </array>
+    </dict>
+    <key>sizes</key>
+    <dict>
+      <key>patterns</key>
+      <array>
+        <dict>
+          <key>name</key>
+          <string>constant.numeric</string>
+          <key>match</key>
+          <string>(?&lt;=\s|=)\d+(?:\.\d+)?[KMGT](?=\s|$)</string>
+        </dict>
+        <dict>
+          <key>name</key>
+          <string>constant.numeric</string>
+          <key>match</key>
+          <string>(?&lt;==)infinity(?=\s|$)</string>
         </dict>
       </array>
     </dict>
