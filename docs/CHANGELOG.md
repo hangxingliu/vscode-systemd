@@ -1,5 +1,13 @@
 # CHANGELOG
 
+### 2.1.0 (2024-03-XX)
+
+- Fix Links
+- Add completion on calendar
+- Update syntax
+
+If there is nobody report issues of the extension
+
 ### 2.0.0-preview (2023-11-26)
 
 - Add [Podman](https://docs.podman.io/en/latest/markdown/podman-systemd.unit.5.html) into the support

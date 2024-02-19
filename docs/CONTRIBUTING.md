@@ -81,5 +81,6 @@ Target file:
 ## Update Hint Data
 
 ``` bash
+yarn build:dev
 yarn fetch:directives
 ```
