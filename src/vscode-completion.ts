@@ -18,6 +18,7 @@ import { RequiredDirectiveCompletionItem } from "./hint-data/types-runtime";
 import { SystemdFileType } from "./parser/file-info";
 import { getSectionCompletionItems } from "./hint-data/get-section-completion";
 import { getUnitNameCompletionItems } from "./hint-data/get-unit-name-completion";
+import { getCalendarCompletion } from "./hint-data/get-calendar-completion";
 import { SystemdDocumentManager } from "./vscode-documents";
 
 const zeroPos = new Position(0, 0);
@@ -80,6 +81,8 @@ export class SystemdCompletionProvider implements CompletionItemProvider {
                 if (directive) {
                     const units = getUnitNameCompletionItems(directive);
                     if (units) return units;
+                    const calendarWords = getCalendarCompletion(directive, pending);
+                    if (calendarWords) return calendarWords;
                 }
                 return this.managers.filterValueEnum(cursorContext, fileType);
             }
