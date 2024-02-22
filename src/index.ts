@@ -47,6 +47,7 @@ export function activate(context: ExtensionContext) {
     subs.push(workspace.onDidChangeTextDocument(lint.onDidChangeTextDocument));
 
     subs.push(commands.register("addUnknownDirective"));
+    subs.push(commands.register("changeUnitFileType"));
     if (config.lintDirectiveKeys) lint.lintAll();
 }
 

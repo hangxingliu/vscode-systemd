@@ -26,6 +26,19 @@ export const enum SystemdFileType {
     podman_network = 21,
 }
 
+export const systemdFileTypeNames: { [type in SystemdFileType]: string } = {
+    [SystemdFileType.unknown]: "Unspecified",
+    [SystemdFileType.service]: "Service unit configuration (*.service)",
+    [SystemdFileType.timer]: "Timer unit configuration (*.timer)",
+    [SystemdFileType.network]: "Network configuration (*.network)",
+    [SystemdFileType.netdev]: "Virtual Network Device configuration (*.netdev)",
+    [SystemdFileType.socket]: "Socket unit configuration (*.socket)",
+    [SystemdFileType.link]: "Network device configuration (*.link)",
+    [SystemdFileType.dnssd]: "DNS-SD configuration (*.dnssd)",
+    [SystemdFileType.podman]: "Systemd Unit Using Podman Quadlet",
+    [SystemdFileType.podman_network]: "Systemd Unit Using Podman Quadlet or Network configuration",
+};
+
 export function parseSystemdFilePath(filePath: string | undefined | null, enablePodman = true): SystemdFileType {
     if (!filePath) return SystemdFileType.unknown;
     const mtx = filePath.match(/\.([\w-]+)$/);

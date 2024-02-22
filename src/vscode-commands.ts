@@ -1,4 +1,6 @@
-import { workspace, ConfigurationTarget, commands, Command } from "vscode";
+import { workspace, ConfigurationTarget, commands, Command, TextDocument, window, QuickPickItem } from "vscode";
+import { SystemdFileType, systemdFileTypeNames } from "./parser/file-info";
+import { SystemdDocumentManager } from "./vscode-documents";
 
 export const vscodeCommandNS = "systemd";
 export type CmdFullName = `${typeof vscodeCommandNS}.${CmdName}`;
@@ -26,5 +28,33 @@ export class SystemdCommands {
         if (typeof scopeValue !== "number") scopeValue = ConfigurationTarget.Global;
 
         conf.update(key[1], Array.from(value), scopeValue);
+    }
+
+    async changeUnitFileType(document?: TextDocument) {
+        if (!document) {
+            document = window.activeTextEditor?.document;
+            if (!document) return;
+        }
+
+        const manager = SystemdDocumentManager.instance;
+        const currentType = String(manager.getType(document)!);
+        const entries = Object.entries(systemdFileTypeNames);
+
+        type ItemType = QuickPickItem & { typeStr: string };
+        const items: Array<ItemType> = entries.map(([typeStr, typeName]) => {
+            return {
+                label: typeName,
+                typeStr,
+                picked: currentType === typeStr,
+            };
+        });
+        const selected = await window.showQuickPick(items, {
+            title: "Please select a type:",
+        });
+        if (!selected) return;
+
+        const newType = parseInt(selected.typeStr, 10) as SystemdFileType;
+        manager.setType(document, newType);
+        workspace.openTextDocument(document.uri);
     }
 }
