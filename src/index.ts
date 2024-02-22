@@ -8,6 +8,7 @@ import { vscodeConfigNS } from "./config/vscode-config";
 import { HintDataManagers } from "./hint-data/manager/multiple";
 import { SystemdLint } from "./vscode-lint";
 import { SystemdCommands } from "./vscode-commands";
+import { SystemdCodeLens } from "./vscode-codelens";
 import { SystemdDocumentManager } from "./vscode-documents";
 
 export function activate(context: ExtensionContext) {
@@ -23,6 +24,7 @@ export function activate(context: ExtensionContext) {
     const completion = new SystemdCompletionProvider(config, hintDataManager);
     const signature = new SystemdSignatureProvider(hintDataManager);
     const lint = new SystemdLint(config, hintDataManager);
+    const codeLens = new SystemdCodeLens(config, hintDataManager);
     const commands = new SystemdCommands();
 
     subs.push(
@@ -38,6 +40,7 @@ export function activate(context: ExtensionContext) {
     subs.push(signature.register());
     subs.push(languages.registerHoverProvider(selector, signature));
     subs.push(languages.registerCodeActionsProvider(selector, lint));
+    subs.push(languages.registerCodeLensProvider(selector, codeLens));
     subs.push(
         workspace.onDidOpenTextDocument((doc) => {
             if (docs.onDidOpenTextDocument(doc)) lint.onDidOpenTextDocument(doc);
