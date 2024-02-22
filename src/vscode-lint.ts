@@ -16,6 +16,7 @@ import {
     SystemdDiagnosticManager,
     SystemdDiagnosticType,
     getDiagnosticForDeprecated,
+    getDiagnosticForValue,
     getDiagnosticForUnknown,
 } from "./diagnostics";
 import { getDirectiveKeys } from "./parser/get-directive-keys";
@@ -81,6 +82,20 @@ export class SystemdLint implements CodeActionProvider {
             if (deprecatedDirectivesSet.has(directiveName)) {
                 items.push(getDiagnosticForDeprecated(getRange(), directiveName));
                 return;
+            }
+            // example lint:
+            // https://github.com/systemd/systemd/blob/effefa30de46f25d0f50a36210a9835097381c2b/src/core/load-fragment.c#L665
+            if (directiveName === "KillMode") {
+                if (it.value.toLowerCase() === "none") {
+                    const msg =
+                        "Unit uses KillMode=none. " +
+                        "This is unsafe, as it disables systemd's process lifecycle management for the service. " +
+                        "Please update the service to use a safer KillMode=, such as 'mixed' or 'control-group'. " +
+                        "Support for KillMode=none is deprecated and will eventually be removed.";
+                    const d = getDiagnosticForValue(getRange(it.value.length + 1), directiveName, msg);
+                    items.push(d);
+                    return;
+                }
             }
 
             if (directivePrefixes.find((p) => directiveName.startsWith(p))) return;

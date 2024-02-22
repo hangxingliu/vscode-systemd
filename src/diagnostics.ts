@@ -12,6 +12,7 @@ import {
 export const enum SystemdDiagnosticType {
     unknownDirective = 1,
     deprecatedDirective = 2,
+    deprecatedValue = 3,
 }
 export type SystemdDiagnostic = Diagnostic & {
     type?: SystemdDiagnosticType;
@@ -31,6 +32,14 @@ export function getDiagnosticForUnknown(range: Range, directiveName: string): Sy
     const d: SystemdDiagnostic = new Diagnostic(range, `Unknown directive "${directiveName}"`);
     d.severity = DiagnosticSeverity.Information;
     d.type = SystemdDiagnosticType.unknownDirective;
+    d.directive = directiveName;
+    return d;
+}
+
+export function getDiagnosticForValue(range: Range, directiveName: string, help: string): SystemdDiagnostic {
+    const d: SystemdDiagnostic = new Diagnostic(range, help);
+    d.severity = DiagnosticSeverity.Warning;
+    d.type = SystemdDiagnosticType.deprecatedValue;
     d.directive = directiveName;
     return d;
 }
