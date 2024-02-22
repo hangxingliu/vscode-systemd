@@ -4,8 +4,6 @@ export const vscodeCommandNS = "systemd";
 export type CmdFullName = `${typeof vscodeCommandNS}.${CmdName}`;
 export type CmdName = keyof Omit<SystemdCommands, "register">;
 
-export type AddUnknownDirectiveCmdArgs = Parameters<SystemdCommands["addUnknownDirective"]>;
-
 export class SystemdCommands {
     static get<Name extends CmdName>(name: Name, title: string, args?: Parameters<SystemdCommands[Name]>): Command {
         const fullName: CmdFullName = `${vscodeCommandNS}.${name}`;
