@@ -9,6 +9,8 @@ import { systemdValueEnum } from "../value-enum";
 import { podmanValueEnum } from "../podman/value-enum";
 import { SystemdFileType } from "../../parser/file-info";
 import { getSubsetOfManagers } from "./subset";
+import { sectionGroups } from "../../syntax/const-sections";
+import { SectionGroupMatcher } from "../../syntax/sections-utils";
 
 function mergeItems<T>(base: T[] | undefined, newItems: T[] | undefined): T[] | undefined {
     if (newItems && newItems.length > 0) return base ? base.concat(newItems) : newItems;
@@ -28,6 +30,8 @@ export type HintDataFilterRule = {
 
 export class HintDataManagers {
     private readonly managers: Array<HintDataManager | undefined> = [];
+    private readonly groups = new SectionGroupMatcher(sectionGroups);
+
     private initManager(manager: HintDataManager, items?: unknown[][]) {
         if (items) manager.addItems(items);
         this.managers[manager.category] = manager;
@@ -91,6 +95,21 @@ export class HintDataManagers {
         return false;
     }
 
+    /**
+     * @param section Example: `[Service]`
+     * @returns all matched section names and matched section group names, all in lower case
+     */
+    getLCSectionNames(section?: string): string[] {
+        const result: string[] = [];
+        if (section) {
+            const nameLC = section.replace(/[\[\]]/g, "").toLowerCase();
+            if (nameLC) result.push(nameLC);
+            const matchedGroup = this.groups.match(nameLC);
+            result.push(...matchedGroup);
+        }
+        return result;
+    }
+
     filterDirectives(text: string, filter: HintDataFilterRule) {
         let prefix: string;
         const mtx = text.match(/^(.+[\.\-])/);
@@ -100,17 +119,18 @@ export class HintDataManagers {
 
         let directives: RequiredDirectiveCompletionItem[] | undefined;
 
-        let sectionNameLC: string | undefined;
-        if (filter.section) sectionNameLC = filter.section.replace(/[\[\]]/g, "").toLowerCase();
-
+        const sectionNameLC = this.getLCSectionNames(filter.section);
         const managers =
             typeof filter.file === "number" ? getSubsetOfManagers(this.managers, filter.file) : this.managers;
         for (const manager of managers) {
             if (!manager) continue;
             let sectionIds: Set<number> | undefined;
-            if (sectionNameLC) {
-                const ids = manager.sectionIdMap.get(sectionNameLC);
-                sectionIds = new Set(ids);
+            if (sectionNameLC.length > 0) {
+                sectionIds = new Set();
+                for (const nameLC of sectionNameLC) {
+                    const ids = manager.sectionIdMap.get(nameLC);
+                    if (ids) for (const id of ids) sectionIds.add(id);
+                }
             }
             const dirs = manager.directives.filter((it) => {
                 if (prefix) {
@@ -126,8 +146,7 @@ export class HintDataManagers {
     }
 
     getDirectiveList(directiveName: string, filter: HintDataFilterRule) {
-        let sectionNameLC: string | undefined;
-        if (filter.section) sectionNameLC = filter.section.replace(/[\[\]]/g, "").toLowerCase();
+        const sectionNameLC = this.getLCSectionNames(filter.section);
 
         const directiveNameLC = directiveName.toLowerCase();
         let directives: RequiredDirectiveCompletionItem[] | undefined;
@@ -138,9 +157,12 @@ export class HintDataManagers {
             if (!it) continue;
             let list = it.directivesMap.get(directiveNameLC);
             if (!list) continue;
-            if (sectionNameLC) {
-                const ids = it.sectionIdMap.get(sectionNameLC);
-                const sectionIds = new Set(ids);
+            if (sectionNameLC.length > 0) {
+                const sectionIds = new Set<number>();
+                for (const nameLC of sectionNameLC) {
+                    const ids = it.sectionIdMap.get(nameLC);
+                    if (ids) for (const id of ids) sectionIds.add(id);
+                }
                 list = list.filter((it) => filterBySectionIds(sectionIds, it));
             }
             directives = mergeItems(directives, list);
@@ -166,7 +188,9 @@ export class HintDataManagers {
         if (!manager) return;
         const manPage = isValidArrayIndex(item.manPage) && manager.manPages[item.manPage];
         const docs = isValidArrayIndex(item.docsIndex) && manager.docsMarkdown[item.docsIndex];
-        const section = isValidArrayIndex(item.sectionIndex) && manager.sections[item.sectionIndex];
+        let section = isValidArrayIndex(item.sectionIndex) && manager.sections[item.sectionIndex];
+        // the internal group name is useless for users, so remove it
+        if (section && this.groups.hasGroup(section.name)) section = false;
         return { manPage, docs, section };
     }
 

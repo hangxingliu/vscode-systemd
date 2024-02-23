@@ -1,6 +1,18 @@
 type Sections = ReadonlyArray<string | [name: string, help: string]>;
 export type SectionsDefinition = Sections;
 
+export const enum SectionGroupName {
+    ResourceControl = "group[resource-control]",
+}
+export type SectionGroup = { name: SectionGroupName; sections: Sections };
+export const sectionGroups: SectionGroup[] = [
+    {
+        /** The resource control configuration options are configured in the [Slice], [Scope], [Service], [Socket], [Mount], or [Swap] sections, depending on the unit type. */
+        name: SectionGroupName.ResourceControl,
+        sections: ["Slice", "Scope", "Service", "Socket", "Mount", "Swap"],
+    },
+];
+
 export const commonSections: Sections = [
     ["Unit", "[Unit] carries generic information about the unit that is not dependent on the type of unit"],
     [
@@ -8,6 +20,7 @@ export const commonSections: Sections = [
         "[Install] carries installation information for the unit. This section is not interpreted by [systemd(1)](https://www.freedesktop.org/software/systemd/man/latest/systemd.html#) during runtime; it is used by the enable and disable commands of the [systemctl(1)](https://www.freedesktop.org/software/systemd/man/latest/systemctl.html#) tool during installation of a unit.",
     ],
 ];
+
 export const internalSections: Sections = ["Target", "UKI", "D-BUS Service"];
 export const knownSections: Sections = [
     "Automount",

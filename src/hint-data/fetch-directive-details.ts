@@ -20,6 +20,7 @@ import {
 } from "./types-manifest";
 import { similarSections } from "../syntax/systemd-sections";
 import { extractDirectiveSignature } from "./extract-directive-signature";
+import { SectionGroupName } from "../syntax/const-sections";
 
 const ignoredH2Sections: string[] = [
     "Commands",
@@ -102,6 +103,7 @@ export async function fetchDirectiveDetailsFromManPage(
             else if (pageName === "homed.conf(5)") sectionName = "Home";
             else if (pageName === "systemd.path(5)") sectionName = "Path";
             else if (pageName === "systemd-system.conf(5)") sectionName = "Manager";
+            else if (pageName === "systemd.resource-control(5)") sectionName = SectionGroupName.ResourceControl;
         }
         // print.debug(h2text);
         let sectionIndex: number | undefined;

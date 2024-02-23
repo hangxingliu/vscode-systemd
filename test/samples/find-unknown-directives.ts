@@ -1,6 +1,6 @@
 import { readdirSync, readFileSync } from 'fs'
 import { resolve as resolvePath } from 'path'
-import { isManifestItemForDirective } from "../../src/utils/types"
+import { isManifestItemForDirective } from "../../src/hint-data/types-manifest"
 import { getDirectiveKeys } from "../../src/parser/get-directive-keys"
 import { customDirectives, directivePrefixes } from "../../src/syntax/const"
 
