@@ -12,8 +12,9 @@ export const enum DirectiveCategory {
     podman = 5,
     link = 6,
     dnssd = 7,
-    default = 8,
-    fallback = 9,
+    path = 8,
+    default = 9,
+    fallback = 10,
 }
 
 export type ManPageInfo = {

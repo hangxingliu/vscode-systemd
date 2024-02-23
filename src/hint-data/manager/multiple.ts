@@ -65,6 +65,9 @@ export class HintDataManagers {
         const dnssd = new HintDataManager(DirectiveCategory.dnssd, manpageURLs.base);
         this.initManager(dnssd, require("../manifests/dnssd.json"));
 
+        const path = new HintDataManager(DirectiveCategory.path, manpageURLs.base);
+        this.initManager(path, require("../manifests/path.json"));
+
         const defaults = new HintDataManager(DirectiveCategory.default, manpageURLs.base);
         defaults.bindValueEnum(systemdValueEnum);
         this.initManager(defaults, require("../manifests/default.json"));

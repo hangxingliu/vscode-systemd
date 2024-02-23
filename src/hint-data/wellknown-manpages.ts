@@ -13,4 +13,6 @@ export const wellknownManPages = {
     timer: 'systemd.timer(5)',
     /** Network device configuration */
     link: 'systemd.link(5)',
+    /** Path unit configuration */
+    path: 'systemd.path(5)',
 }

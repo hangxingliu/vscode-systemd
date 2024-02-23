@@ -28,6 +28,10 @@ function _getSubsetOfManagers(
             filters[DirectiveCategory.dnssd] = true;
             break;
         }
+        case SystemdFileType.path: {
+            filters[DirectiveCategory.path] = true;
+            break;
+        }
         case SystemdFileType.link: {
             filters[DirectiveCategory.link] = true;
             break;

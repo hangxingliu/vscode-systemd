@@ -9,6 +9,7 @@ import {
     dnssdSections,
     netdevSections,
     networkSections,
+    pathSections,
     podmanSections,
     socketSections,
     knownSections,
@@ -38,6 +39,9 @@ export function getSectionCompletionItems(fileType: SystemdFileType) {
         case SystemdFileType.network:
             networkSections.forEach((it) => items.add(it));
             break;
+        case SystemdFileType.path:
+            pathSections.forEach((it) => items.add(it));
+            break;
         case SystemdFileType.podman:
             serviceSections.forEach((it) => items.add(it));
             podmanSections.forEach((it) => items.add(it));
@@ -54,6 +58,7 @@ export function getSectionCompletionItems(fileType: SystemdFileType) {
             podmanSections.forEach((it) => items.add(it));
             networkSections.forEach((it) => items.add(it));
             dnssdSections.forEach((it) => items.add(it));
+            pathSections.forEach((it) => items.add(it));
             socketSections.forEach((it) => items.add(it));
             knownSections.forEach((it) => items.add(it));
     }

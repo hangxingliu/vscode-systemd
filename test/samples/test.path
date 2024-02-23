@@ -1,0 +1,5 @@
+[Path]
+PathModified=/etc/test.conf
+
+[Install]
+WantedBy=multi-user.target

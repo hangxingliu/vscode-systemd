@@ -37,6 +37,7 @@ export const socketSections: Sections = ["Socket"];
 export const timerSections: Sections = ["Timer"];
 export const linkSections: Sections = ["Link", "Match", "SR-IOV"];
 export const dnssdSections: Sections = ["Service"];
+export const pathSections: Sections = ["Path"];
 export const netdevSections: Sections = [
     "BareUDP",
     "BatmanAdvanced",

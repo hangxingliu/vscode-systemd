@@ -100,6 +100,7 @@ export async function fetchDirectiveDetailsFromManPage(
             else if (pageName === "pstore.conf(5)") sectionName = "PStore";
             else if (pageName === "journald.conf(5)") sectionName = "Journal";
             else if (pageName === "homed.conf(5)") sectionName = "Home";
+            else if (pageName === "systemd.path(5)") sectionName = "Path";
         }
         // print.debug(h2text);
         let sectionIndex: number | undefined;

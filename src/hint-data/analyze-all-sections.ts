@@ -37,7 +37,7 @@ async function main() {
     // debug [Network]
     for (let i = 0; i < entries.length; i++) {
         const entry = entries[i];
-        if (!entry[1].includes("systemd.network(5)")) continue;
+        if (!entry[1].includes("systemd.path(5)")) continue;
         // if (entry[1][0] !== 'systemd.network(5)' || entry[1].length > 1) continue;
         filtered.push(entry);
     }
