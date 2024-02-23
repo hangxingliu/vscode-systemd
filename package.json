@@ -43,6 +43,7 @@
         "build:pkgjson": "node --enable-source-maps out/build-contributes",
         "fetch:base": "node --enable-source-maps out/hint-data/fetch-all",
         "fetch:podman": "node --enable-source-maps out/hint-data/podman/fetch",
+        "fetch:capabilities": "node --enable-source-maps out/hint-data/fetch-capabilities",
         "analyze": "node --enable-source-maps out/hint-data/analyze-value-enum",
         "test": "tsc --project tsconfig.json --outDir .tsc",
         "lint": "eslint src",

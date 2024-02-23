@@ -4,6 +4,8 @@ export const enum ManifestItemType {
     DocsMarkdown = 4,
     Specifier = 5,
     Section = 6,
+    /** Linux capabilities */
+    Capability = 7,
 }
 export type ManifestItem =
     | ManifestItemForDirective
@@ -11,6 +13,8 @@ export type ManifestItem =
     | ManifestItemForDocsMarkdown
     | ManifestItemForSpecifier
     | ManifestItemForSection;
+
+export type CapabilityManifestItem = [type: ManifestItemType.Capability, name: string, docs: string];
 
 export type ManifestItemForDirective = [
     type: ManifestItemType.Directive,

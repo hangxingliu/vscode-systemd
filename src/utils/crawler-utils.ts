@@ -1,5 +1,5 @@
 // author: hangxingliu
-// version: 2023-11-20
+// version: 2024-02-23
 import axios, { AxiosResponse } from "axios";
 import { load, CheerioAPI, Element, Cheerio } from "cheerio";
 export { load as loadHtml } from "cheerio";
@@ -306,6 +306,7 @@ export function matchElementsByText<T extends Element>(
             .trim()
             .replace(/\s+/g, " ");
         for (const substr of deleteSubstr) t = t.replaceAll(substr, "");
+        t = t.trim().replace(/\s+/g, " ");
         return caseSensitive ? t : t.toLocaleLowerCase();
     };
 
@@ -443,7 +444,7 @@ export function getMarkdownHelpFromElement($el: Cheerio<Element>): string {
         if (href && href.endsWith("#")) $link.attr("href", href.replace(/#$/, ""));
     }
     const html = $el.html();
-    return toMarkdown(html || '');
+    return toMarkdown(html || "");
 }
 //#endregion html to markdown
 //
