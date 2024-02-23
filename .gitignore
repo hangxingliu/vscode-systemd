@@ -6,7 +6,7 @@ out
 .tsc
 
 # cached content
-cache
+cache*
 
 # archive files
 *.tgz

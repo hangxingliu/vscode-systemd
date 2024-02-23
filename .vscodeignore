@@ -16,7 +16,7 @@ artifacts
 .tsc
 
 # cache directory
-cache
+cache*
 
 # scripts
 scripts
