@@ -68,6 +68,9 @@ export class HintDataManagers {
         const path = new HintDataManager(DirectiveCategory.path, manpageURLs.base);
         this.initManager(path, require("../manifests/path.json"));
 
+        const mount = new HintDataManager(DirectiveCategory.mount, manpageURLs.base);
+        this.initManager(mount, require("../manifests/mount.json"));
+
         const defaults = new HintDataManager(DirectiveCategory.default, manpageURLs.base);
         defaults.bindValueEnum(systemdValueEnum);
         this.initManager(defaults, require("../manifests/default.json"));

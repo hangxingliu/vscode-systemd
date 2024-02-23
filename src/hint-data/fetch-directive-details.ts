@@ -101,6 +101,7 @@ export async function fetchDirectiveDetailsFromManPage(
             else if (pageName === "journald.conf(5)") sectionName = "Journal";
             else if (pageName === "homed.conf(5)") sectionName = "Home";
             else if (pageName === "systemd.path(5)") sectionName = "Path";
+            else if (pageName === "systemd-system.conf(5)") sectionName = "Manager";
         }
         // print.debug(h2text);
         let sectionIndex: number | undefined;

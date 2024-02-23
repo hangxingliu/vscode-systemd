@@ -22,11 +22,16 @@ export const enum SystemdFileType {
     dnssd = 7,
     /** https://www.freedesktop.org/software/systemd/man/latest/systemd.path.html# */
     path = 8,
+    /** https://www.freedesktop.org/software/systemd/man/latest/systemd.mount.html# */
+    mount = 9,
 
     /** https://docs.podman.io/en/latest/markdown/podman-systemd.unit.5.html */
     podman = 20,
     /** https://docs.podman.io/en/latest/markdown/podman-systemd.unit.5.html */
     podman_network = 21,
+
+    /** https://www.freedesktop.org/software/systemd/man/latest/systemd.target.html# */
+    target = 100,
 }
 
 export const systemdFileTypeNames: { [type in SystemdFileType]: string } = {
@@ -39,15 +44,23 @@ export const systemdFileTypeNames: { [type in SystemdFileType]: string } = {
     [SystemdFileType.link]: "Network device configuration (*.link)",
     [SystemdFileType.dnssd]: "DNS-SD configuration (*.dnssd)",
     [SystemdFileType.path]: "Path unit configuration (*.path)",
+    [SystemdFileType.mount]: "Mount unit configuration (*.mount)",
+    [SystemdFileType.target]: "Target unit configuration (*.target)",
     [SystemdFileType.podman]: "Systemd Unit Using Podman Quadlet",
     [SystemdFileType.podman_network]: "Systemd Unit Using Podman Quadlet or Network configuration",
 };
 
 export function parseSystemdFilePath(filePath: string | undefined | null, enablePodman = true): SystemdFileType {
     if (!filePath) return SystemdFileType.unknown;
-    const mtx = filePath.match(/\.([\w-]+)$/);
+    let mtx = filePath.match(/\.([\w-]+)$/);
     if (!mtx) return SystemdFileType.unknown;
-    const ext = mtx[1];
+    let ext = mtx[1];
+    if (ext === "in") {
+        // template file
+        mtx = filePath.match(/\.([\w-]+)\.\w+$/);
+        if (!mtx) return SystemdFileType.unknown;
+        ext = mtx[1];
+    }
     switch (ext) {
         case "service":
             return SystemdFileType.service;
@@ -63,6 +76,10 @@ export function parseSystemdFilePath(filePath: string | undefined | null, enable
             return SystemdFileType.dnssd;
         case "path":
             return SystemdFileType.path;
+        case "mount":
+            return SystemdFileType.mount;
+        case "target":
+            return SystemdFileType.target;
         case "network":
             return enablePodman ? SystemdFileType.podman_network : SystemdFileType.network;
     }

@@ -15,4 +15,6 @@ export const wellknownManPages = {
     link: 'systemd.link(5)',
     /** Path unit configuration */
     path: 'systemd.path(5)',
+    /** Mount unit configuration */
+    mount: 'systemd.mount(5)',
 }

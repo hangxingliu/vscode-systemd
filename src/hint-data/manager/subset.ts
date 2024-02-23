@@ -48,6 +48,10 @@ function _getSubsetOfManagers(
             filters[DirectiveCategory.timer] = true;
             break;
         }
+        case SystemdFileType.mount: {
+            filters[DirectiveCategory.mount] = true;
+            break;
+        }
         case SystemdFileType.network: {
             filters[DirectiveCategory.network] = true;
             break;

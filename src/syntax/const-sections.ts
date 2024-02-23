@@ -17,12 +17,10 @@ export const knownSections: Sections = [
     "Home",
     "Journal",
     "Login",
-    "Mount",
     "Network",
     "Output",
     "OOM",
     "PStore",
-    "Path",
     "Partition",
     "Partitions",
     "Packages",
@@ -38,6 +36,7 @@ export const timerSections: Sections = ["Timer"];
 export const linkSections: Sections = ["Link", "Match", "SR-IOV"];
 export const dnssdSections: Sections = ["Service"];
 export const pathSections: Sections = ["Path"];
+export const mountSections: Sections = ["Mount"];
 export const netdevSections: Sections = [
     "BareUDP",
     "BatmanAdvanced",

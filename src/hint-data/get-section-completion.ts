@@ -10,6 +10,7 @@ import {
     netdevSections,
     networkSections,
     pathSections,
+    mountSections,
     podmanSections,
     socketSections,
     knownSections,
@@ -18,6 +19,9 @@ import {
 export function getSectionCompletionItems(fileType: SystemdFileType) {
     const items = new Set<SectionsDefinition[0]>(commonSections);
     switch (fileType) {
+        // These unit types have no specific options
+        case SystemdFileType.target:
+            break;
         case SystemdFileType.service:
             serviceSections.forEach((it) => items.add(it));
             break;
@@ -42,6 +46,9 @@ export function getSectionCompletionItems(fileType: SystemdFileType) {
         case SystemdFileType.path:
             pathSections.forEach((it) => items.add(it));
             break;
+        case SystemdFileType.mount:
+            mountSections.forEach((it) => items.add(it));
+            break;
         case SystemdFileType.podman:
             serviceSections.forEach((it) => items.add(it));
             podmanSections.forEach((it) => items.add(it));
@@ -59,6 +66,7 @@ export function getSectionCompletionItems(fileType: SystemdFileType) {
             networkSections.forEach((it) => items.add(it));
             dnssdSections.forEach((it) => items.add(it));
             pathSections.forEach((it) => items.add(it));
+            mountSections.forEach((it) => items.add(it));
             socketSections.forEach((it) => items.add(it));
             knownSections.forEach((it) => items.add(it));
     }

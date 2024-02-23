@@ -13,8 +13,9 @@ export const enum DirectiveCategory {
     link = 6,
     dnssd = 7,
     path = 8,
-    default = 9,
-    fallback = 10,
+    mount = 9,
+    default = 10,
+    fallback = 11,
 }
 
 export type ManPageInfo = {
