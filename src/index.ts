@@ -10,11 +10,13 @@ import { SystemdLint } from "./vscode-lint";
 import { SystemdCommands } from "./vscode-commands";
 import { SystemdCodeLens } from "./vscode-codelens";
 import { SystemdDocumentManager } from "./vscode-documents";
+import { SystemdCapabilities } from "./hint-data/manager/capabilities";
 
 export function activate(context: ExtensionContext) {
     const hintDataManager = new HintDataManagers();
     const config = ExtensionConfig.init(context);
     hintDataManager.init();
+    SystemdCapabilities.init();
 
     const subs = context.subscriptions;
     const selector = [languageId];

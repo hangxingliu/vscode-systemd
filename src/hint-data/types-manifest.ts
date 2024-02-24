@@ -14,7 +14,7 @@ export type ManifestItem =
     | ManifestItemForSpecifier
     | ManifestItemForSection;
 
-export type CapabilityManifestItem = [type: ManifestItemType.Capability, name: string, docs: string];
+export type ManifestItemForCapability = [type: ManifestItemType.Capability, name: string, docs: string];
 
 export type ManifestItemForDirective = [
     type: ManifestItemType.Directive,
@@ -66,4 +66,7 @@ export function isManifestItemForSpecifier(row: unknown[]): row is ManifestItemF
 }
 export function isManifestItemForSection(row: unknown[]): row is ManifestItemForSection {
     return row && row[0] === ManifestItemType.Section;
+}
+export function isManifestItemForCapability(row: unknown[]): row is ManifestItemForCapability {
+    return row && row[0] === ManifestItemType.Capability;
 }

@@ -28,7 +28,7 @@ export type DocsContext = {
     ref: string;
     /** Markdown */
     str: MarkdownString;
-}
+};
 
 export type DirectiveCompletionItem = CompletionItem & {
     category?: DirectiveCategory;

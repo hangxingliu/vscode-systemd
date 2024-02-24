@@ -11,11 +11,11 @@ import {
     assertLength,
     toMarkdown,
 } from "../utils/crawler-utils";
-import { CapabilityManifestItem, ManifestItemType } from "./types-manifest";
+import { ManifestItemForCapability, ManifestItemType } from "./types-manifest";
 import { resolve } from "path";
 import { existsSync, mkdirSync } from "fs";
 
-class ManifestWriter extends JsonFileWriter<CapabilityManifestItem> {
+class ManifestWriter extends JsonFileWriter<ManifestItemForCapability> {
     nextIds = { docs: 1, sections: 1 };
     constructor(name: string) {
         super(resolve(manifestDir, name + ".json"));

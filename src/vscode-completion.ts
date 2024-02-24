@@ -20,6 +20,7 @@ import { getSectionCompletionItems } from "./hint-data/get-section-completion";
 import { getUnitNameCompletionItems } from "./hint-data/get-unit-name-completion";
 import { getCalendarCompletion } from "./hint-data/get-calendar-completion";
 import { SystemdDocumentManager } from "./vscode-documents";
+import { SystemdCapabilities } from "./hint-data/manager/capabilities";
 
 const zeroPos = new Position(0, 0);
 
@@ -79,6 +80,8 @@ export class SystemdCompletionProvider implements CompletionItemProvider {
                 if (pending.endsWith("%") && !pending.endsWith("%%")) return this.managers.getSpecifiers();
                 const directive = cursorContext.directiveKey;
                 if (directive) {
+                    const capabilities = SystemdCapabilities.instance.getCompletionItems(directive);
+                    if (capabilities) return capabilities;
                     const units = getUnitNameCompletionItems(directive);
                     if (units) return units;
                     const calendarWords = getCalendarCompletion(directive, pending);

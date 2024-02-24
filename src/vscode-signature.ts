@@ -19,6 +19,7 @@ import { HintDataManagers } from "./hint-data/manager/multiple";
 import { languageId } from "./syntax/const";
 import { DocsContext, ManPageInfo } from "./hint-data/types-runtime";
 import { SystemdDocumentManager } from "./vscode-documents";
+import { SystemdCapabilities } from "./hint-data/manager/capabilities";
 
 const zeroPos = new Position(0, 0);
 export class SystemdSignatureProvider implements SignatureHelpProvider, HoverProvider {
@@ -38,7 +39,7 @@ export class SystemdSignatureProvider implements SignatureHelpProvider, HoverPro
         let url = manPage.url.toString();
         if (docs && docs.ref) url += docs.ref;
         const markdown = `[${manPage.title}](${url})`;
-        return markdown
+        return markdown;
     }
 
     provideSignatureHelp(
@@ -119,6 +120,14 @@ export class SystemdSignatureProvider implements SignatureHelpProvider, HoverPro
                 return new Hover([helpText1, ...markdowns], range);
             }
             case CursorType.directiveValue: {
+                // Capabilities
+                const cap = SystemdCapabilities.instance;
+                if (cap.testDirectiveKey(cursor.directiveKey)) {
+                    const capName = document.getText(range);
+                    const capItem = cap.getByName(capName);
+                    if (capItem) return new Hover([capItem.name, capItem.docs]);
+                }
+
                 const p0 = new Position(position.line, Math.max(position.character - 2, 0));
                 const p1 = new Position(position.line, position.character + 2);
                 const text = document.getText(new Range(p0, p1));
