@@ -1,4 +1,4 @@
-import { TextDocument } from "vscode";
+import { TextDocument, EventEmitter } from "vscode";
 import { languageId } from "./syntax/const";
 import { SystemdFileType, parseSystemdFilePath } from "./parser/file-info";
 
@@ -6,7 +6,11 @@ import { SystemdFileType, parseSystemdFilePath } from "./parser/file-info";
 //     ? Parameters<Event<EventArg>>[0]
 //     : never;
 
-export class SystemdDocumentManager {
+export type SetDocumentTypeEvent = {
+    fileName: string;
+};
+
+export class SystemdDocumentManager extends EventEmitter<SetDocumentTypeEvent> {
     static instance: SystemdDocumentManager;
     static init() {
         this.instance = new SystemdDocumentManager();
@@ -14,7 +18,9 @@ export class SystemdDocumentManager {
     }
 
     readonly types = new Map<string, SystemdFileType>();
-    private constructor() {}
+    private constructor() {
+        super();
+    }
 
     readonly onDidOpenTextDocument = (document: TextDocument): boolean => {
         if (document.languageId !== languageId) return false;
@@ -25,12 +31,14 @@ export class SystemdDocumentManager {
     };
     readonly getType = (doc: Pick<TextDocument, "fileName">) => {
         let type = this.types.get(doc.fileName);
-        if (typeof type !== 'number') {
+        if (typeof type !== "number") {
             type = parseSystemdFilePath(doc.fileName, true);
             this.types.set(doc.fileName, type);
         }
         return type;
-    }
-    readonly setType = (doc: Pick<TextDocument, "fileName">, type: SystemdFileType) =>
+    };
+    readonly setType = (doc: Pick<TextDocument, "fileName">, type: SystemdFileType) => {
         this.types.set(doc.fileName, type);
+        this.fire(doc);
+    };
 }

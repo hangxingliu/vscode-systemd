@@ -54,6 +54,12 @@ export function activate(context: ExtensionContext) {
 
     subs.push(commands.register("addUnknownDirective"));
     subs.push(commands.register("changeUnitFileType"));
+
+    docs.event((doc) => {
+        const docs = workspace.textDocuments.filter((it) => it.fileName === doc.fileName);
+        for (const doc of docs) lint.lintDocumentAsync(doc);
+    });
+    subs.push(docs);
     if (config.lintDirectiveKeys) lint.lintAll();
 }
 
