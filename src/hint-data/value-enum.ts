@@ -273,6 +273,11 @@ export const systemdValueEnum: ReadonlyArray<SystemdValueEnum> = [
         values: ["no", "on-success", "on-failure", "on-abnormal", "on-watchdog", "on-abort", "always"],
     },
     {
+        directive: "RestartMode",
+        file: SystemdFileType.service,
+        values: ["normal", "direct"],
+    },
+    {
         directive: "TimeoutStartFailureMode",
         section: "Service",
         file: SystemdFileType.service,
@@ -862,5 +867,39 @@ export const systemdValueEnum: ReadonlyArray<SystemdValueEnum> = [
         section: "Source",
         manPage: "sysupdate.d(5)",
         values: ["url-file", "url-tar", "tar", "regular-file", "directory", "subvolume"],
+    },
+    {
+        directive: "KillMode",
+        values: ["control-group", "mixed", "process" /*"none"*/],
+        manPage: "systemd.kill(5)",
+    },
+    {
+        directive: "ConditionSecurity",
+        values: [
+            "selinux",
+            "apparmor",
+            "tomoyo",
+            "smack",
+            "ima",
+            "audit",
+            "uefi-secureboot",
+            "tpm2",
+            "cvm",
+            "measured-uki",
+        ],
+        desc: {
+            selinux: "SELinux MAC",
+            apparmor: "AppArmor MAC",
+            tomoyo: "Tomoyo MAC",
+            smack: "SMACK MAC",
+            ima: "Integrity Measurement Architecture (IMA)",
+            audit: "Linux Audit Framework",
+            "uefi-secureboot": "UEFI SecureBoot",
+            tpm2: "Trusted Platform Module 2.0 (TPM2)",
+            cvm: "Confidential virtual machine (SEV/TDX)",
+            "measured-uki":
+                "Unified Kernel Image with PCR 11 Measurements, as per [systemd-stub(7)](systemd-stub.html).\nAdded in version 255.",
+        },
+        manPage: "systemd.unit(5)",
     },
 ];
