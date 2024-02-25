@@ -29,8 +29,8 @@ export class SystemdCapabilities {
 
     constructor() {
         const items = require("../manifests/capabilities.json");
+        this.baseUri = Uri.parse(manpageURLs.capabilitiesBase);
         for (const item of items) this.addItem(item);
-        this.baseUri = Uri.parse(manpageURLs.capabilities);
     }
 
     addItem(item: unknown[]) {
