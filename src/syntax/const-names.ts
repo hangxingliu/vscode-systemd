@@ -38,6 +38,7 @@ export const names = {
     $: "punctuation.definition.variable.systemd",
     prefixChar: "keyword.operator.prefix.systemd",
     invalid: "invalid.illegal",
+    deprecated: "invalid.deprecated",
 
     //#region jinja
     // https://github.com/samuelcolvin/jinjahtml-vscode/blob/main/syntaxes/jinja.tmLanguage.json

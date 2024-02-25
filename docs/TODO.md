@@ -9,5 +9,4 @@
 - [x] Completion/Syntax for time spans, e.g., `OnCalendar=`, `weekly`
 - [ ] Lint/Test by `systemd-analyze`
 - [ ] Fix docs in completion items for Linux capabilities
-- [ ] Fix highlights for podman directives: `AddCapability`, `DropCapability`
-- [ ] Fix documents for directive key followed by spaces, eg: `Description = xxxx`
+- [x] Fix highlights for podman directives: `AddCapability`, `DropCapability`

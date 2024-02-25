@@ -20,7 +20,8 @@ export const syntaxPatterns: TextMateGrammarPatterns<RepositoryNames> = [
         begin: "^\\s*(" + deprecatedDirectives.join("|") + ")\\s*(=)[ \\t]*",
         end: /(?<!\\)\n/,
         beginCaptures: {
-            "1": "invalid.deprecated",
+            "1": names.deprecated,
+            "2": names.operator.assignment,
         },
         patterns: [
             { include: "#commnets" },
@@ -74,7 +75,7 @@ export const syntaxPatterns: TextMateGrammarPatterns<RepositoryNames> = [
     },
     {
         name: names.meta.configEntry,
-        begin: /^\s*(CapabilityBoundingSet|AmbientCapabilities)\s*(=)[ \t]*/,
+        begin: /^\s*(CapabilityBoundingSet|AmbientCapabilities|AddCapability|DropCapability)\s*(=)[ \t]*/,
         end: /(?<!\\)\n/,
         beginCaptures: {
             "1": names.entityName.configKey,

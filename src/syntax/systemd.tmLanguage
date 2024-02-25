@@ -22,6 +22,11 @@
           <key>name</key>
           <string>invalid.deprecated</string>
         </dict>
+        <key>2</key>
+        <dict>
+          <key>name</key>
+          <string>keyword.operator.assignment</string>
+        </dict>
       </dict>
       <key>patterns</key>
       <array>
@@ -156,7 +161,7 @@
       <key>name</key>
       <string>meta.config-entry.systemd</string>
       <key>begin</key>
-      <string>^\s*(CapabilityBoundingSet|AmbientCapabilities)\s*(=)[ \t]*</string>
+      <string>^\s*(CapabilityBoundingSet|AmbientCapabilities|AddCapability|DropCapability)\s*(=)[ \t]*</string>
       <key>end</key>
       <string>(?&lt;!\\)\n</string>
       <key>beginCaptures</key>
