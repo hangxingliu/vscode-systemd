@@ -7,8 +7,14 @@ export type SystemdCapabilityItem = {
     docs: MarkdownString;
 };
 
-/** https://www.freedesktop.org/software/systemd/man/latest/systemd.exec.html */
-const directiveKeysLC = new Set(["capabilityboundingset", "ambientcapabilities"]);
+const directiveKeysLC = new Set([
+    /** https://www.freedesktop.org/software/systemd/man/latest/systemd.exec.html */
+    "capabilityboundingset",
+    "ambientcapabilities",
+    /** https://docs.podman.io/en/latest/markdown/podman-systemd.unit.5.html#addcapability */
+    "addcapability",
+    "dropcapability",
+]);
 
 export class SystemdCapabilities {
     static instance: SystemdCapabilities;
