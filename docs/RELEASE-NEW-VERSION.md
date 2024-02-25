@@ -1,5 +1,5 @@
 ---
-date: 2024-02-19
+date: 2024-02-26
 ---
 # Release New Version SOP
 
@@ -15,6 +15,9 @@ date: 2024-02-19
 7. Check it on <https://marketplace.visualstudio.com/manage/publishers/hangxingliu> after 10~15 minutes
 8. Create and push Git tag. e.g., `git tag 2.0.0-preview`, `git push --tags`
 9. Create a new release at <https://github.com/hangxingliu/vscode-systemd/releases/new>
+    - Title: `<major>.<minor>.<patch>[-pre.<no>] (<year>-<month>-<day>)`
+    - Content: copying from the [CHANGELOG.md](./CHANGELOG.md)
+    - Assets: `*.vsix`
 10. Release vsix file to Open VSX
     - URL: <https://open-vsx.org/user-settings/extensions>
     - **ONLY** Publish vsix file built through CI from: <https://github.com/hangxingliu/vscode-systemd/actions/workflows/ci.yaml>
