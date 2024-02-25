@@ -1,5 +1,5 @@
 ---
-date: 2023-11-20
+date: 2024-02-25
 ---
 # Contributing
 
@@ -82,5 +82,7 @@ Target file:
 
 ``` bash
 yarn build:dev
-yarn fetch:directives
+yarn fetch:base
+yarn fetch:podman
+yarn fetch:capabilities
 ```
