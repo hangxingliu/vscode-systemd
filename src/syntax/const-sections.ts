@@ -1,17 +1,46 @@
 type Sections = ReadonlyArray<string | [name: string, help: string]>;
 export type SectionsDefinition = Sections;
 
+//
+//#region section groups
+export type SectionGroup = { name: SectionGroupName; sections: Sections };
 export const enum SectionGroupName {
     ResourceControl = "group[resource-control]",
+    Kill = "group[kill]",
+    Execution = "group[execution]",
 }
-export type SectionGroup = { name: SectionGroupName; sections: Sections };
 export const sectionGroups: SectionGroup[] = [
     {
         /** The resource control configuration options are configured in the [Slice], [Scope], [Service], [Socket], [Mount], or [Swap] sections, depending on the unit type. */
         name: SectionGroupName.ResourceControl,
         sections: ["Slice", "Scope", "Service", "Socket", "Mount", "Swap"],
     },
+    {
+        /** The kill procedure configuration options are configured in the [Service], [Socket], [Mount] or [Swap] section, depending on the unit type. */
+        name: SectionGroupName.Kill,
+        sections: ["Service", "Socket", "Mount", "Swap"],
+    },
+    {
+        /** The execution specific configuration options are configured in the [Service], [Socket], [Mount], or [Swap] sections, depending on the unit type. */
+        name: SectionGroupName.Execution,
+        sections: ["Service", "Socket", "Mount", "Swap"],
+    },
 ];
+//#endregion section groups
+//
+
+export const similarSections = new Map<string, string>([
+    //
+    //#region systemd.netdev
+    //
+    // The [MACVTAP] section applies for netdevs of kind "macvtap" and accepts the same keys as [MACVLAN].
+    ["MACVTAP", "MACVLAN"],
+    // The [IPVTAP] section only applies for netdevs of kind "ipvtap" and accepts the same keys as [IPVLAN].
+    ["IPVTAP", "IPVLAN"],
+    // The [Tap] section only applies for netdevs of kind "tap", and accepts the same keys as the [Tun] section.
+    ["Tap", "Tun"],
+    //#endregion
+]);
 
 export const commonSections: Sections = [
     ["Unit", "[Unit] carries generic information about the unit that is not dependent on the type of unit"],
@@ -21,35 +50,76 @@ export const commonSections: Sections = [
     ],
 ];
 
-export const internalSections: Sections = ["Target", "UKI", "D-BUS Service"];
-export const knownSections: Sections = [
-    "Automount",
+export const internalSections: Sections = [
     "Distribution",
-    "Exec",
-    "Files",
-    "Home",
-    "Journal",
-    "Login",
-    "Network",
     "Output",
-    "OOM",
-    "PStore",
-    "Partition",
-    "Partitions",
+    "Content",
+    "Target",
+    "UKI",
+    "D-BUS Service",
     "Packages",
-    "Remote",
-    "Resolve",
-    "Swap",
-    "Source",
-    "Transfer",
 ];
+
+/** sysupdate.d/*.conf */
+export const sysupdatedSections: Sections = ["Transfer", "Source"];
+/** resolved.conf, esolved.conf.d/*.conf */
+export const resolvedSections: Sections = ["Resolve"];
+/** repart.d/*.conf */
+export const repartdSections: Sections = ["Partition"];
+/** pstore.conf, pstore.conf.d/*  */
+export const pstoreSections: Sections = ["PStore"];
+/** oomd.conf, oomd.conf.d/*.conf */
+export const oomdSections: Sections = ["OOM"];
+/** homed.conf, homed.conf.d/*.conf */
+export const homedSections: Sections = ["Home"];
+/**
+ * journald.conf, journald.conf.d/*.conf,
+ * journald@NAMESPACE.conf, journald@NAMESPACE.conf.d/*.conf
+ */
+export const journaldSections: Sections = ["Journal"];
+/** journal-remote.conf, journal-remote.conf.d/*.conf */
+export const journalRemoteSections: Sections = ["Remote"];
+/** journal-upload.conf, journal-upload.conf.d/*.conf */
+export const journalUploadSections: Sections = ["Upload"];
+/** logind.conf, logind.conf.d/*.conf */
+export const logindSections: Sections = ["Login"];
+/** timesyncd.conf, timesyncd.conf.d/*.conf */
+export const timesyncdSections: Sections = ["Time"];
+/** sleep.conf, sleep.conf.d/*.conf */
+export const sleepSections: Sections = ["Sleep"];
+/** networkd.conf, networkd.conf.d/*.conf */
+export const networkdSections: Sections = ["Network", "DHCPv4", "DHCPv6"];
+/** coredump.conf, coredump.conf.d/*.conf */
+export const coredumpSections: Sections = ["Coredump"];
+/**
+ * system.conf, system.conf.d/*.conf
+ * user.conf, user.conf.d/*.conf
+ */
+export const systemManagerSections: Sections = ["Manager"];
+
+/** .nspawn */
+export const nspawnSections: Sections = ["Exec", "Network", "Files"];
+/** *.service */
 export const serviceSections: Sections = ["Service"];
+/** *.socket */
 export const socketSections: Sections = ["Socket"];
+/** *.timer */
 export const timerSections: Sections = ["Timer"];
+/** *.automount */
+export const automountSections: Sections = ["Automount"];
+/** *.link */
 export const linkSections: Sections = ["Link", "Match", "SR-IOV"];
+/** *.dnssd */
 export const dnssdSections: Sections = ["Service"];
+/** *.path */
 export const pathSections: Sections = ["Path"];
+/** *.mount */
 export const mountSections: Sections = ["Mount"];
+/** *.swap */
+export const swapSections: Sections = ["Swap"];
+/** *.scope */
+export const scopeSections: Sections = ["Scope"];
+/** *.netdev */
 export const netdevSections: Sections = [
     "BareUDP",
     "BatmanAdvanced",
@@ -83,6 +153,7 @@ export const netdevSections: Sections = [
     "WireGuardPeer",
     "Xfrm",
 ];
+/** *.network */
 export const networkSections: Sections = [
     "Address",
     "BFIFO",
@@ -137,4 +208,50 @@ export const networkSections: Sections = [
     "TokenBucketFilter",
     "TrivialLinkEqualizer",
 ];
+
 export const podmanSections: Sections = ["Container", "Kube", "Network", "Volume", "Image"];
+
+export const defaultSections: Sections = Array.from(
+    new Set([
+        ...commonSections,
+        //
+        ...sysupdatedSections,
+        ...resolvedSections,
+        ...repartdSections,
+        ...pstoreSections,
+        ...oomdSections,
+        ...homedSections,
+        ...journaldSections,
+        ...journalUploadSections,
+        ...journalRemoteSections,
+        ...logindSections,
+        ...timesyncdSections,
+        ...sleepSections,
+        ...networkdSections,
+        ...coredumpSections,
+        ...systemManagerSections,
+        //
+        ...nspawnSections,
+        ...serviceSections,
+        ...socketSections,
+        ...timerSections,
+        ...automountSections,
+        ...linkSections,
+        ...dnssdSections,
+        ...pathSections,
+        ...mountSections,
+        ...swapSections,
+        ...scopeSections,
+        ...netdevSections,
+        ...networkSections,
+    ])
+);
+
+/** This is used for generating grammar file */
+export const allSections: Sections = Array.from(
+    new Set([
+        ...defaultSections,
+        ...internalSections,
+        ...podmanSections,
+    ])
+);

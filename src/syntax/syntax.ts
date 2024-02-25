@@ -1,10 +1,11 @@
-import { syntaxRepository } from "./repository";
+import { RepositoryNames, syntaxRepository } from "./repository";
 import { syntaxPatterns } from "./patterns";
+import { TextMateGrammarConfig } from "./types";
 
 /**
  * @see https://macromates.com/manual/en/language_grammars
  */
-export const syntax = {
+export const syntax: TextMateGrammarConfig<RepositoryNames> = {
 
     name: 'systemd configuration file',
 
@@ -32,7 +33,6 @@ export const syntax = {
 	// foldingStopMarker: /^\s*\}/,
 
     patterns: syntaxPatterns,
-
     repository: syntaxRepository,
 }
 

@@ -18,9 +18,8 @@ import {
     ManifestItemForSection,
     ManifestItemType,
 } from "./types-manifest";
-import { similarSections } from "../syntax/systemd-sections";
 import { extractDirectiveSignature } from "./extract-directive-signature";
-import { SectionGroupName } from "../syntax/const-sections";
+import { SectionGroupName, similarSections } from "../syntax/const-sections";
 
 const ignoredH2Sections: string[] = [
     "Commands",

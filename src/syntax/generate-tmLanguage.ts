@@ -2,7 +2,7 @@ import { createWriteStream } from "fs";
 import { Writable } from "stream";
 
 import { syntax } from "./syntax";
-import type { SyntaxPattern } from "./types";
+import type { TextMateGrammarPattern, TextMateGrammarPatterns } from "./types";
 import { tmLanguageFile } from "../config/fs";
 
 const tab = '  ';
@@ -13,7 +13,7 @@ const escapeMap = {
 };
 const escapeRegexp = /[&<>]/g
 const escapeCharFn = (ch: string) => escapeMap[ch] || ch;
-const captureKeys: Array<keyof SyntaxPattern> = [
+const captureKeys: Array<keyof TextMateGrammarPattern<string>> = [
 	'captures',
 	'beginCaptures',
 	'endCaptures',
@@ -55,7 +55,7 @@ export function generate(file: Writable) {
 	write(keyTag('name', 'string', syntax.name))
 
 	//#region patterns
-	const patterns: SyntaxPattern[] = [];
+	const patterns: TextMateGrammarPattern<string>[] = [];
 	syntax.patterns.forEach(it => Array.isArray(it)
 		? it.forEach(nested => nested && patterns.push(nested))
 		: (it && patterns.push(it)));
@@ -78,17 +78,18 @@ export function generate(file: Writable) {
 	//#endregion repository
 
 	write(keyTag('scopeName', 'string', syntax.scopeName))
-	write(keyTag('uuid', 'string', syntax.uuid))
+    if (syntax.uuid) write(keyTag('uuid', 'string', syntax.uuid))
 	write([
 		'</dict>',
 		'</plist>'
 	], -1)
 
-	function writePatterns(patterns: SyntaxPattern[]) {
+    function writePatterns(patterns: TextMateGrammarPatterns<string>) {
 		write(tag('key', 'patterns'))
 		write('<array>', 1)
 		for (let i = 0; i < patterns.length; i++) {
-			const pattern = patterns[i];
+            const pattern = patterns[i];
+            if (!pattern) continue;
 			write('<dict>', 1)
 			if (pattern.comment)
 				write(`<!-- ${pattern.comment.replace(escapeRegexp, escapeCharFn)} -->`);

@@ -14,6 +14,16 @@ export function getLCSectionNames(...args: SectionsDefinition[]) {
     }
     return result;
 }
+export function getOrderedSectionNames(...args: SectionsDefinition[]) {
+    const result = new Set<string>();
+    for (const sections of args) {
+        for (const section of sections) {
+            const name = typeof section === "string" ? section : section[0];
+            result.add(name);
+        }
+    }
+    return Array.from(result).sort();
+}
 
 export class SectionGroupMatcher {
     nameToGroup: MapList<string>;

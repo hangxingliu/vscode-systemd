@@ -1,82 +1,50 @@
-import { names } from "./match-names";
-import {
-    commonSections,
-    internalSections,
-    knownSections,
-    serviceSections,
-    socketSections,
-    timerSections,
-    linkSections,
-    netdevSections,
-    networkSections,
-    podmanSections,
-    SectionsDefinition,
-    dnssdSections,
-} from "./const-sections";
-import type { SyntaxPattern } from "./types";
+import { names } from "./const-names";
+import { allSections } from "./const-sections";
+import type { TextMateGrammarPattern, TextMateGrammarPatterns, TextMateGrammarRepository } from "./types";
+import { capabilityNamesRegExp } from "./const-capabilities";
+import { getOrderedSectionNames } from "./sections-utils";
 
-function pickSectionNames(sections: SectionsDefinition) {
-    return sections.map((it) => (typeof it === "string" ? it : it[0]));
-}
-function mergeAllSectionNames(...allSections: Array<SectionsDefinition>) {
-    const allSectionNames = new Set<string>();
-    for (const sections of allSections) {
-        const names = pickSectionNames(sections);
-        for (const name of names) allSectionNames.add(name);
-    }
-    return Array.from(allSectionNames).sort();
-}
-const allSectionNames = mergeAllSectionNames(
-    commonSections,
-    internalSections,
-    knownSections,
-    serviceSections,
-    timerSections,
-    linkSections,
-    dnssdSections,
-    socketSections,
-    netdevSections,
-    networkSections,
-    podmanSections
-);
+export type RepositoryNames =
+    | "commnets"
+    | "sections"
+    | "timeSpans"
+    | "calendarShorthands"
+    | "capabilities"
+    | "numbers"
+    | "sizes"
+    | "booleans"
+    | "restartOptions"
+    | "typeOptions"
+    | "variables"
+    | "quotedString"
+    | "embeddedJinja"
+    | "executablePrefixes";
 
-export const includeRepo = {
-    commnets: "#commnets",
-    sections: "#sections",
-    timeSpans: "#timeSpans",
-    calendarShorthands: "#calendarShorthands",
-    numbers: "#numbers",
-    sizes: "#sizes",
-    booleans: "#booleans",
-    restartOptions: "#restartOptions",
-    typeOptions: "#typeOptions",
-    variables: "#variables",
-    quotedString: "#quotedString",
-};
-
-export function getQuotedStringPatterns(patterns?: SyntaxPattern[]) {
-    const subPatterns: SyntaxPattern[] = [
+export function getQuotedStringPatterns(patterns?: TextMateGrammarPatterns<RepositoryNames>) {
+    const subPatterns: TextMateGrammarPattern<RepositoryNames>[] = [
         {
-            match: /\\(?:[abfnrtvs\\"']|x[0-9A-Fa-f]{2}|[0-8]{3}|u[0-9A-Fa-f]{4}|U[0-9A-Fa-f]{8})/,
+            match: /\\(?:[abfnrtvs\\"'\n]|x[0-9A-Fa-f]{2}|[0-8]{3}|u[0-9A-Fa-f]{4}|U[0-9A-Fa-f]{8})/,
             name: names.string.escape,
         },
     ];
-    if (patterns && patterns.length > 0) subPatterns.push(...patterns);
+    if (patterns && patterns.length > 0) {
+        for (const pattern of patterns) if (pattern) subPatterns.push(pattern);
+    }
     /**
      * the following general rules apply: double quotes ("…") and single quotes ('…') may be used to wrap a whole item
      * 1. the opening quote may appear only at the beginning or after whitespace that is not quoted
      * 2. and the closing quote must be followed by whitespace or the end of line
      */
-    const result: SyntaxPattern[] = [
+    const result: TextMateGrammarPattern<RepositoryNames>[] = [
         {
             begin: /(?<=\G|\s)'/,
-            end: /(?:(?<!\\)['\n])/,
+            end: /['\n]/,
             name: names.string.singleQuoted,
             patterns: subPatterns,
         },
         {
             begin: /(?<=\G|\s)"/,
-            end: /(?:(?<!\\)["\n])/,
+            end: /["\n]/,
             name: names.string.doubleQuoted,
             patterns: subPatterns,
         },
@@ -89,9 +57,7 @@ export function getQuotedStringPatterns(patterns?: SyntaxPattern[]) {
  *
  * a dictionary (i.e. key/value pairs) of rules which can be included from other places in the grammar. The key is the name of the rule and the value is the actual rule. Further explanation (and example) follow with the description of the include rule key.
  */
-export const syntaxRepository: {
-    [x in keyof typeof includeRepo]: { patterns: SyntaxPattern[] };
-} = {
+export const syntaxRepository: TextMateGrammarRepository<RepositoryNames> = {
     commnets: {
         patterns: [
             {
@@ -103,12 +69,21 @@ export const syntaxRepository: {
     sections: {
         patterns: [
             {
-                match: "^\\s*\\[(" + allSectionNames.join("|") + ")\\]",
+                match: "^\\s*\\[(" + getOrderedSectionNames(allSections).join("|") + ")\\]",
                 name: names.entityName.section,
             },
             {
                 match: /\s*\[[\w-]+\]/,
                 name: names.entityName.unknownSection,
+            },
+        ],
+    },
+    executablePrefixes: {
+        patterns: [
+            {
+                // "@", "-", ":", and one of "+"/"!"/"!!" may be used together and they can appear in any order. However, only one of "+", "!", "!!" may be used at a time.
+                match: "\\G([@\\-\\:]+(?:\\+|\\!\\!?)?|(?:\\+|\\!\\!?)[@\\-\\:]*)",
+                name: names.prefixChar,
             },
         ],
     },
@@ -128,6 +103,14 @@ export const syntaxRepository: {
             {
                 match: /\b(?:minute|hour|dai|month|week|quarter|semiannual)ly\b/,
                 name: names.languageConstant,
+            },
+        ],
+    },
+    capabilities: {
+        patterns: [
+            {
+                match: "\\b(?:" + capabilityNamesRegExp + ")\\b",
+                name: names.otherConstant,
             },
         ],
     },
@@ -201,6 +184,41 @@ export const syntaxRepository: {
                 match: /%[aAbBCEfgGhHiIjJlLmMnNopPsStTuUvVwW]\b/,
                 name: names.specifier,
             },
+        ],
+    },
+    embeddedJinja: {
+        patterns: [
+            {
+                begin: /({\%)\s*(raw)\s*(%\})/,
+                captures: {
+                    "1": {
+                        name: "entity.other.jinja.delimiter.tag",
+                    },
+                    "2": {
+                        name: "keyword.control.jinja",
+                    },
+                    "3": {
+                        name: "entity.other.jinja.delimiter.tag",
+                    },
+                },
+                end: /(\{%)\s*(endraw)\s*(%\})/,
+                name: names.jinja.raw,
+                patterns: [{ include: "source.systemd" }],
+            },
+            {
+                // can't add group in the following regexp
+                begin: /\{\{\-?/,
+                end: /-?\}\}/,
+                name: names.jinja.variable,
+                patterns: [{ include: names.jinja.expression }],
+            },
+            {
+                begin: /\{%\-?/,
+                end: /-?%\}/,
+                name: names.jinja.tag,
+                patterns: [{ include: names.jinja.expression }],
+            },
+            { include: names.jinja.comments },
         ],
     },
 };
