@@ -19,7 +19,8 @@ import {
     ManifestItemType,
 } from "./types-manifest";
 import { extractDirectiveSignature } from "./extract-directive-signature";
-import { SectionGroupName, similarSections } from "../syntax/const-sections";
+import { similarSections } from "../syntax/const-sections";
+import { extractSectionNameFromDocs } from "./extract-section-names";
 
 const ignoredH2Sections: string[] = [
     "Commands",
@@ -37,6 +38,8 @@ const ignoredH2Sections: string[] = [
     "Signals",
     "Sockets and FIFOs",
     "Specifiers",
+    "Process Exit Codes",
+    "Implicit Dependencies",
 ];
 
 export async function fetchDirectiveDetailsFromManPage(
@@ -47,6 +50,7 @@ export async function fetchDirectiveDetailsFromManPage(
     const { id: manPageId, pageName, pageUri, manPageURL } = manPage;
     const debugName = `man page "${pageName}"`;
 
+    const prevSection = { index: -1, name: "" };
     const result = {
         nextIds,
         manPage: [] as ManifestItemForManPageInfo[],
@@ -58,6 +62,7 @@ export async function fetchDirectiveDetailsFromManPage(
         if (item[0] === ManifestItemType.ManPageInfo) return result.manPage.push(item);
         if (item[0] === ManifestItemType.DocsMarkdown) return result.docs.push(item);
         if (item[0] === ManifestItemType.Directive) return result.directives.push(item);
+        if (item[0] === ManifestItemType.Section) return result.sections.push(item);
         throw new Error(`Unknown manifest item type: ${item[0]}`);
     }
 
@@ -79,36 +84,18 @@ export async function fetchDirectiveDetailsFromManPage(
         const h2text = getText($h2);
         if (ignoredH2Sections.includes(h2text)) continue;
 
-        let sectionName: string | undefined;
-        const mtx = h2text.match(/^(.*?)\[([^\]]+)\](.+)$/);
-        if (mtx) {
-            sectionName = mtx[2];
-            if (!sectionName.match(/^[\w-]+$/) || mtx[3].trim() !== "Section Options")
-                throw new Error(`Invalid section name in "${h2text}"`);
-        }
-        // patch
-        if (!sectionName && h2text === "Options") {
-            if (pageName === "systemd.service(5)") sectionName = "Service";
-            else if (pageName === "systemd.socket(5)") sectionName = "Socket";
-            else if (pageName === "systemd.mount(5)") sectionName = "Mount";
-            else if (pageName === "systemd.automount(5)") sectionName = "Automount";
-            else if (pageName === "systemd.timer(5)") sectionName = "Timer";
-            else if (pageName === "journal-remote.conf(5)") sectionName = "Remote";
-            else if (pageName === "coredump.conf(5)") sectionName = "Coredump";
-            else if (pageName === "resolved.conf(5)") sectionName = "Resolve";
-            else if (pageName === "logind.conf(5)") sectionName = "Login";
-            else if (pageName === "pstore.conf(5)") sectionName = "PStore";
-            else if (pageName === "journald.conf(5)") sectionName = "Journal";
-            else if (pageName === "homed.conf(5)") sectionName = "Home";
-            else if (pageName === "systemd.path(5)") sectionName = "Path";
-            else if (pageName === "systemd-system.conf(5)") sectionName = "Manager";
-            else if (pageName === "systemd.resource-control(5)") sectionName = SectionGroupName.ResourceControl;
-        }
         // print.debug(h2text);
+        const sectionName = extractSectionNameFromDocs(h2text, pageName);
         let sectionIndex: number | undefined;
         if (sectionName) {
-            sectionIndex = nextIds.sections++;
-            result.sections.push([ManifestItemType.Section, sectionIndex, sectionName]);
+            if (prevSection.name === sectionName) {
+                sectionIndex = prevSection.index;
+            } else {
+                sectionIndex = nextIds.sections++;
+                pushResult([ManifestItemType.Section, sectionIndex, sectionName]);
+                prevSection.index = sectionIndex;
+                prevSection.name = sectionName;
+            }
         }
 
         const mustContainItems = sectionName && !similarSections.has(sectionName);
