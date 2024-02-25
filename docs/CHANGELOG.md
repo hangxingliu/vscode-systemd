@@ -1,12 +1,21 @@
 # CHANGELOG
 
-### 2.1.0 (2024-03-XX)
+### 2.1.0-pre.1 (2024-02-25)
 
-- Fix Links
-- Add completion on calendar
-- Update syntax
-
-If there is nobody report issues of the extension
+- Add CodeLens for files to show the type of the unit file and allow user to change the type
+- Add a new lint rule for the directive `KillMode`
+    - <https://github.com/systemd/systemd/blob/effefa30de46f25d0f50a36210a9835097381c2b/src/core/load-fragment.c#L665>
+- Improve the accuracy of the following completion:
+    - systemd.resource-control
+    - systemd.kill
+    - systemd.exec
+- Add more unit types: `*.path`, `*.mount`, `journald.conf`, ...
+- Fix the links to directives in the systemd help documents
+- Add completion for `OnCalendar`
+- Add more value completions
+- Update the data of `podman-systemd.unit` to the latest (new section `[Pod]`)
+- Update syntax for size/calendar/restart options/section names/prefixes
+- Fix syntax for escaped characters
 
 ### 2.0.0-preview (2023-11-26)
 

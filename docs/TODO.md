@@ -3,8 +3,11 @@
 - [ ] Click and jump to unit file
 - [ ] Completion for path
 - [ ] boolean value completion
-- [ ] capabilities
+- [x] capabilities
     - https://man7.org/linux/man-pages/man7/capabilities.7.html
 - [ ] View, search and edit remote unit files
-- [ ] Completion/Syntax for time spans, e.g., `OnCalendar=`, `weekly`
+- [x] Completion/Syntax for time spans, e.g., `OnCalendar=`, `weekly`
 - [ ] Lint/Test by `systemd-analyze`
+- [ ] Fix docs in completion items for Linux capabilities
+- [ ] Fix highlights for podman directives: `AddCapability`, `DropCapability`
+- [ ] Fix documents for directive key followed by spaces, eg: `Description = xxxx`
