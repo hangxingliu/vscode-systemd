@@ -72,7 +72,11 @@ export class HintDataManager {
             const base = this.manPageBaseUri;
             const desc = new MarkdownString(item[3]);
             desc.baseUri = base;
-            this.manPages[item[1]] = { title, desc, url: Uri.joinPath(base, item[4]) };
+            const rawUri = item[4];
+            let url: Uri;
+            if (rawUri.match(/^\w+\:\/\//)) url = Uri.parse(rawUri);
+            else url = Uri.joinPath(base, rawUri);
+            this.manPages[item[1]] = { title, desc, url };
             // `man man`:
             // 5      File Formats and Conventions
             // /etc/vconsole.conf
