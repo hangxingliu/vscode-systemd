@@ -61,16 +61,26 @@
                     "systemd-conf",
                     "systemd-unit-file"
                 ],
+                "firstLine": "^\\[(Unit|Install)\\]",
+                "filenamePatterns": [
+                    "**/systemd/*.conf",
+                    "**/systemd/*.conf.d/*.conf",
+                    "**/*.{service,slice,scope}.d/*.conf",
+                    "**/{repart,sysupdate}.d/*.conf"
+                ],
                 "extensions": [
                     ".container",
                     ".volume",
                     ".kube",
                     ".image",
+                    ".pod",
                     ".link",
                     ".dnssd",
                     ".netdev",
                     ".network",
+                    ".nspawn",
                     ".service",
+                    ".service.in",
                     ".socket",
                     ".device",
                     ".mount",
