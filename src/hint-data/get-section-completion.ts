@@ -10,65 +10,76 @@ import {
     netdevSections,
     networkSections,
     pathSections,
+    swapSections,
+    sleepSections,
     mountSections,
     podmanSections,
     socketSections,
-    knownSections,
+    defaultSections,
+    automountSections,
+    nspawnSections,
+    coredumpSections,
+    homedSections,
+    journaldSections,
+    journalRemoteSections,
+    logindSections,
+    networkdSections,
+    oomdSections,
+    pstoreSections,
+    repartdSections,
+    systemManagerSections,
+    sysupdatedSections,
+    timesyncdSections,
+    journalUploadSections,
+    scopeSections,
 } from "../syntax/const-sections";
 
-export function getSectionCompletionItems(fileType: SystemdFileType) {
+const fileTypeToSections = new Map<SystemdFileType, SectionsDefinition[]>([
+    [SystemdFileType.target, []],
+    [SystemdFileType.device, []],
+    [SystemdFileType.slice, []],
+    //
+    [SystemdFileType.service, [serviceSections]],
+    [SystemdFileType.timer, [timerSections]],
+    [SystemdFileType.socket, [socketSections]],
+    [SystemdFileType.network, [networkSections]],
+    [SystemdFileType.netdev, [netdevSections]],
+    [SystemdFileType.link, [linkSections]],
+    [SystemdFileType.dnssd, [dnssdSections]],
+    [SystemdFileType.path, [pathSections]],
+    [SystemdFileType.mount, [mountSections]],
+    [SystemdFileType.automount, [automountSections]],
+    [SystemdFileType.swap, [swapSections]],
+    [SystemdFileType.nspawn, [nspawnSections]],
+    [SystemdFileType.scope, [scopeSections]],
+    //
+    [SystemdFileType.coredump, [coredumpSections]],
+    [SystemdFileType.homed, [homedSections]],
+    [SystemdFileType.journald, [journaldSections]],
+    [SystemdFileType.journal_remote, [journalRemoteSections]],
+    [SystemdFileType.journal_upload, [journalUploadSections]],
+    [SystemdFileType.logind, [logindSections]],
+    [SystemdFileType.networkd, [networkdSections]],
+    [SystemdFileType.oomd, [oomdSections]],
+    [SystemdFileType.pstore, [pstoreSections]],
+    [SystemdFileType.repartd, [repartdSections]],
+    [SystemdFileType.sleep, [sleepSections]],
+    [SystemdFileType.system, [systemManagerSections]],
+    [SystemdFileType.sysupdated, [sysupdatedSections]],
+    [SystemdFileType.timesyncd, [timesyncdSections]],
+    //
+    [SystemdFileType.podman, [serviceSections, podmanSections]],
+    [SystemdFileType.podman_network, [podmanSections, networkSections]],
+]);
+
+export function getSectionCompletionItems(fileType: SystemdFileType, enabledPodman: boolean) {
     const items = new Set<SectionsDefinition[0]>(commonSections);
-    switch (fileType) {
-        // These unit types have no specific options
-        case SystemdFileType.target:
-            break;
-        case SystemdFileType.service:
-            serviceSections.forEach((it) => items.add(it));
-            break;
-        case SystemdFileType.timer:
-            timerSections.forEach((it) => items.add(it));
-            break;
-        case SystemdFileType.netdev:
-            netdevSections.forEach((it) => items.add(it));
-            break;
-        case SystemdFileType.link:
-            linkSections.forEach((it) => items.add(it));
-            break;
-        case SystemdFileType.socket:
-            socketSections.forEach((it) => items.add(it));
-            break;
-        case SystemdFileType.dnssd:
-            dnssdSections.forEach((it) => items.add(it));
-            break;
-        case SystemdFileType.network:
-            networkSections.forEach((it) => items.add(it));
-            break;
-        case SystemdFileType.path:
-            pathSections.forEach((it) => items.add(it));
-            break;
-        case SystemdFileType.mount:
-            mountSections.forEach((it) => items.add(it));
-            break;
-        case SystemdFileType.podman:
-            serviceSections.forEach((it) => items.add(it));
-            podmanSections.forEach((it) => items.add(it));
-            break;
-        case SystemdFileType.podman_network:
-            podmanSections.forEach((it) => items.add(it));
-            networkSections.forEach((it) => items.add(it));
-            break;
-        default:
-            serviceSections.forEach((it) => items.add(it));
-            timerSections.forEach((it) => items.add(it));
-            netdevSections.forEach((it) => items.add(it));
-            linkSections.forEach((it) => items.add(it));
-            podmanSections.forEach((it) => items.add(it));
-            networkSections.forEach((it) => items.add(it));
-            dnssdSections.forEach((it) => items.add(it));
-            pathSections.forEach((it) => items.add(it));
-            mountSections.forEach((it) => items.add(it));
-            socketSections.forEach((it) => items.add(it));
-            knownSections.forEach((it) => items.add(it));
+    const allSections = fileTypeToSections.get(fileType);
+    if (allSections) {
+        for (const sections of allSections) for (const section of sections) items.add(section);
+    } else {
+        for (const section of defaultSections) items.add(section);
+        for (const section of podmanSections) items.add(section);
     }
 
     return Array.from(items).map((it) => {
