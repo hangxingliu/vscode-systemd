@@ -1,0 +1,8 @@
+[
+[3,33,"homed.conf(5)","homed.conf, homed.conf.d — Home area/user account manager configuration files","homed.conf.html"],
+[6,1,"Home"],
+[4,1,"The default storage to use for home areas. Takes one of \"`luks`\", \"`fscrypt`\", \"`directory`\", \"`subvolume`\", \"`cifs`\". For details about these options, see [homectl(1)](homectl.html). If not configured or assigned the empty string, the default storage is automatically determined: if not running in a container environment and `/home/` is not itself encrypted, defaults to \"`luks`\". Otherwise defaults to \"`subvolume`\" if `/home/` is on a btrfs file system, and \"`directory`\" otherwise. Note that the storage selected on the **homectl** command line always takes precedence.\n\nAdded in version 246.","#DefaultStorage="],
+[4,2,"When using \"`luks`\" as storage (see above), selects the default file system to use inside the user's LUKS volume. Takes one of \"`btrfs`\", \"`ext4`\" or \"`xfs`\". If not specified defaults to \"`btrfs`\". This setting has no effect if a different storage mechanism is used. The file system type selected on the **homectl** command line always takes precedence.\n\nAdded in version 246.","#DefaultFileSystemType="],
+[2,"DefaultFileSystemType","",2,33,1],
+[2,"DefaultStorage","",1,33,1]
+]

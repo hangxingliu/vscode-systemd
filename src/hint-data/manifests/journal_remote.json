@@ -1,0 +1,19 @@
+[
+[3,58,"journal-remote.conf(5)","journal-remote.conf, journal-remote.conf.d — Configuration files for the service accepting remote journal uploads","journal-remote.conf.html"],
+[6,1,"Remote"],
+[4,1,"Periodically sign the data in the journal using Forward Secure Sealing.\n\nAdded in version 229.","#Seal="],
+[4,2,"One of \"`host`\" or \"`none`\".\n\nAdded in version 220.","#SplitMode="],
+[4,3,"SSL key in PEM format.\n\nAdded in version 220.","#ServerKeyFile="],
+[4,4,"SSL certificate in PEM format.\n\nAdded in version 220.","#ServerCertificateFile="],
+[4,5,"SSL CA certificate.\n\nAdded in version 220.","#TrustedCertificateFile="],
+[4,6,"These are analogous to `SystemMaxUse=`, `SystemKeepFree=`, `SystemMaxFileSize=` and `SystemMaxFiles=` in [journald.conf(5)](journald.conf.html).\n\n`MaxUse=` controls how much disk space the **systemd-journal-remote** may use up at most. `KeepFree=` controls how much disk space **systemd-journal-remote** shall leave free for other uses. **systemd-journal-remote** will respect both limits and use the smaller of the two values.\n\n`MaxFiles=` controls how many individual journal files to keep at most. Note that only archived files are deleted to reduce the number of files until this limit is reached; active files will stay around. This means that, in effect, there might still be more journal files around in total than this limit after a vacuuming operation is complete.\n\nAdded in version 253.","#MaxUse="],
+[2,"KeepFree","",6,58,1],
+[2,"MaxFileSize","",6,58,1],
+[2,"MaxFiles","",6,58,1],
+[2,"MaxUse","",6,58,1],
+[2,"Seal","",1,58,1],
+[2,"ServerCertificateFile","",4,58,1],
+[2,"ServerKeyFile","",3,58,1],
+[2,"SplitMode","",2,58,1],
+[2,"TrustedCertificateFile","",5,58,1]
+]
