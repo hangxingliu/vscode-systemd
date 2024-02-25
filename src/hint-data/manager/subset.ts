@@ -9,6 +9,37 @@ export function getSubsetOfManagers(managers: ReadonlyArray<HintDataManager | un
     return (runtimeCache[fileInfo] = _getSubsetOfManagers(managers, fileInfo));
 }
 
+const fileTypeToDirectives = new Map<SystemdFileType, DirectiveCategory>([
+    [SystemdFileType.service, DirectiveCategory.service],
+    [SystemdFileType.timer, DirectiveCategory.timer],
+    [SystemdFileType.socket, DirectiveCategory.socket],
+    [SystemdFileType.network, DirectiveCategory.network],
+    [SystemdFileType.netdev, DirectiveCategory.netdev],
+    [SystemdFileType.link, DirectiveCategory.link],
+    [SystemdFileType.dnssd, DirectiveCategory.dnssd],
+    [SystemdFileType.path, DirectiveCategory.path],
+    [SystemdFileType.mount, DirectiveCategory.mount],
+    [SystemdFileType.automount, DirectiveCategory.automount],
+    [SystemdFileType.swap, DirectiveCategory.swap],
+    [SystemdFileType.scope, DirectiveCategory.scope],
+    [SystemdFileType.nspawn, DirectiveCategory.nspawn],
+    //
+    [SystemdFileType.coredump, DirectiveCategory.coredump],
+    [SystemdFileType.homed, DirectiveCategory.homed],
+    [SystemdFileType.journald, DirectiveCategory.journald],
+    [SystemdFileType.journal_remote, DirectiveCategory.journal_remote],
+    [SystemdFileType.journal_upload, DirectiveCategory.journal_upload],
+    [SystemdFileType.logind, DirectiveCategory.logind],
+    [SystemdFileType.networkd, DirectiveCategory.networkd],
+    [SystemdFileType.oomd, DirectiveCategory.oomd],
+    [SystemdFileType.pstore, DirectiveCategory.pstore],
+    [SystemdFileType.repartd, DirectiveCategory.repartd],
+    [SystemdFileType.sleep, DirectiveCategory.sleep],
+    [SystemdFileType.system, DirectiveCategory.system],
+    [SystemdFileType.sysupdated, DirectiveCategory.sysupdated],
+    [SystemdFileType.timesyncd, DirectiveCategory.timesyncd],
+]);
+
 function _getSubsetOfManagers(
     managers: ReadonlyArray<HintDataManager | undefined>,
     fileInfo: SystemdFileType
@@ -19,56 +50,30 @@ function _getSubsetOfManagers(
     filters[DirectiveCategory.fallback] = true;
 
     const result: Array<HintDataManager> = [];
+
     switch (fileInfo) {
-        case SystemdFileType.service: {
-            filters[DirectiveCategory.service] = true;
+        case SystemdFileType.target:
+        case SystemdFileType.device:
+        case SystemdFileType.slice:
             break;
-        }
-        case SystemdFileType.dnssd: {
-            filters[DirectiveCategory.dnssd] = true;
-            break;
-        }
-        case SystemdFileType.path: {
-            filters[DirectiveCategory.path] = true;
-            break;
-        }
-        case SystemdFileType.link: {
-            filters[DirectiveCategory.link] = true;
-            break;
-        }
-        case SystemdFileType.netdev: {
-            filters[DirectiveCategory.netdev] = true;
-            break;
-        }
-        case SystemdFileType.socket: {
-            filters[DirectiveCategory.socket] = true;
-            break;
-        }
-        case SystemdFileType.timer: {
-            filters[DirectiveCategory.timer] = true;
-            break;
-        }
-        case SystemdFileType.mount: {
-            filters[DirectiveCategory.mount] = true;
-            break;
-        }
-        case SystemdFileType.network: {
-            filters[DirectiveCategory.network] = true;
-            break;
-        }
-        case SystemdFileType.podman_network: {
+        case SystemdFileType.podman_network:
             filters[DirectiveCategory.network] = true;
             filters[DirectiveCategory.podman] = true;
             break;
-        }
-        case SystemdFileType.podman: {
+        case SystemdFileType.podman:
             filters[DirectiveCategory.service] = true;
             filters[DirectiveCategory.podman] = true;
             break;
+        default: {
+            const onlyOne = fileTypeToDirectives.get(fileInfo);
+            if (typeof onlyOne === "number") {
+                filters[onlyOne] = true;
+            } else {
+                // unknown:
+                for (const it of managers) if (it && it.category !== DirectiveCategory.podman) result.push(it);
+                return result;
+            }
         }
-        default: // unknown
-            for (const it of managers) if (it && it.category !== DirectiveCategory.podman) result.push(it);
-            return result;
     }
     for (const it of managers) if (it && filters[it.category]) result.push(it);
     return result;

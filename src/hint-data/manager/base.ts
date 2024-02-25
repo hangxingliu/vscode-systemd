@@ -28,10 +28,19 @@ import { CustomSystemdDirective, deprecatedDirectivesSet } from "../../syntax/co
 
 type ExtraProps<T extends CompletionItem> = Omit<T, keyof CompletionItem>;
 
+const hiddenManPageTitles = new Set([
+    "vconsole.conf(5)",
+    "crypttab(5)",
+    // A separate [Device] section does not exist, since no device-specific options may be configured.
+    // https://www.freedesktop.org/software/systemd/man/latest/systemd.device.html
+    "systemd.device(5)",
+]);
+
 export class HintDataManager {
     readonly manPageBaseUri: Uri;
 
     readonly manPages: Array<ManPageInfo> = [];
+    readonly hiddenManPages = new Set<number>();
     readonly docsMarkdown: Array<DocsContext> = [];
     /** key is lowercase name of the section */
     readonly sectionIdMap = new MapList<number>();
@@ -59,10 +68,15 @@ export class HintDataManager {
     }
     addItem(item: unknown[]) {
         if (isManifestItemForManPageInfo(item)) {
+            const title = item[2];
             const base = this.manPageBaseUri;
             const desc = new MarkdownString(item[3]);
             desc.baseUri = base;
-            this.manPages[item[1]] = { title: item[2], desc, url: Uri.joinPath(base, item[4]) };
+            this.manPages[item[1]] = { title, desc, url: Uri.joinPath(base, item[4]) };
+            // `man man`:
+            // 5      File Formats and Conventions
+            // /etc/vconsole.conf
+            if (!title.includes("(5)") || hiddenManPageTitles.has(title)) this.hiddenManPages.add(item[1]);
             return;
         }
 

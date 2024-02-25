@@ -32,12 +32,12 @@ export class SystemdCompletionProvider implements CompletionItemProvider {
         "%",
         ".",
     ];
-    private readonly fileTypeToSections: Array<Array<CompletionItem>> = [];
+    private fileTypeToSections: Array<Array<CompletionItem>> = [];
     constructor(private readonly config: ExtensionConfig, private readonly managers: HintDataManagers) {}
 
     getSectionItems(fileType: SystemdFileType) {
         const cache = this.fileTypeToSections;
-        if (!cache[fileType]) cache[fileType] = getSectionCompletionItems(fileType);
+        if (!cache[fileType]) cache[fileType] = getSectionCompletionItems(fileType, true);
         return cache[fileType];
     }
 
@@ -47,6 +47,10 @@ export class SystemdCompletionProvider implements CompletionItemProvider {
             this,
             ...SystemdCompletionProvider.triggerCharacters
         );
+    }
+
+    afterChangedConfig() {
+        this.fileTypeToSections = [];
     }
 
     provideCompletionItems(

@@ -36,6 +36,12 @@ export class HintDataManagers {
         if (items) manager.addItems(items);
         this.managers[manager.category] = manager;
     }
+    private initFromItems(category: DirectiveCategory, items: unknown[][], baseURL?: string) {
+        if (!baseURL) baseURL = manpageURLs.base;
+        const manager = new HintDataManager(category, baseURL);
+        manager.addItems(items);
+        this.managers[manager.category] = manager;
+    }
     subset(fileType?: SystemdFileType) {
         if (typeof fileType !== "number") return this;
         const result = new HintDataManagers();
@@ -44,36 +50,38 @@ export class HintDataManagers {
     }
 
     init() {
-        const service = new HintDataManager(DirectiveCategory.service, manpageURLs.base);
-        this.initManager(service, require("../manifests/service.json"));
-
-        const timer = new HintDataManager(DirectiveCategory.timer, manpageURLs.base);
-        this.initManager(timer, require("../manifests/timer.json"));
-
-        const socket = new HintDataManager(DirectiveCategory.socket, manpageURLs.base);
-        this.initManager(socket, require("../manifests/socket.json"));
-
-        const network = new HintDataManager(DirectiveCategory.network, manpageURLs.base);
-        this.initManager(network, require("../manifests/network.json"));
-
-        const netdev = new HintDataManager(DirectiveCategory.netdev, manpageURLs.base);
-        this.initManager(netdev, require("../manifests/netdev.json"));
+        // ls src/hint-data/manifests/ | sort | sed 's:.json::' | awk '!/capabilities/ && !/default/ && !/podman/ {print "this.initFromItems(DirectiveCategory." $1 ", require(\"../manifests/" $1 ".json\"));"}'
+        this.initFromItems(DirectiveCategory.automount, require("../manifests/automount.json"));
+        this.initFromItems(DirectiveCategory.coredump, require("../manifests/coredump.json"));
+        this.initFromItems(DirectiveCategory.dnssd, require("../manifests/dnssd.json"));
+        this.initFromItems(DirectiveCategory.homed, require("../manifests/homed.json"));
+        this.initFromItems(DirectiveCategory.journal_remote, require("../manifests/journal_remote.json"));
+        this.initFromItems(DirectiveCategory.journal_upload, require("../manifests/journal_upload.json"));
+        this.initFromItems(DirectiveCategory.journald, require("../manifests/journald.json"));
+        this.initFromItems(DirectiveCategory.link, require("../manifests/link.json"));
+        this.initFromItems(DirectiveCategory.logind, require("../manifests/logind.json"));
+        this.initFromItems(DirectiveCategory.mount, require("../manifests/mount.json"));
+        this.initFromItems(DirectiveCategory.netdev, require("../manifests/netdev.json"));
+        this.initFromItems(DirectiveCategory.network, require("../manifests/network.json"));
+        this.initFromItems(DirectiveCategory.networkd, require("../manifests/networkd.json"));
+        this.initFromItems(DirectiveCategory.nspawn, require("../manifests/nspawn.json"));
+        this.initFromItems(DirectiveCategory.oomd, require("../manifests/oomd.json"));
+        this.initFromItems(DirectiveCategory.path, require("../manifests/path.json"));
+        this.initFromItems(DirectiveCategory.pstore, require("../manifests/pstore.json"));
+        this.initFromItems(DirectiveCategory.repartd, require("../manifests/repartd.json"));
+        this.initFromItems(DirectiveCategory.scope, require("../manifests/scope.json"));
+        this.initFromItems(DirectiveCategory.service, require("../manifests/service.json"));
+        this.initFromItems(DirectiveCategory.sleep, require("../manifests/sleep.json"));
+        this.initFromItems(DirectiveCategory.socket, require("../manifests/socket.json"));
+        this.initFromItems(DirectiveCategory.swap, require("../manifests/swap.json"));
+        this.initFromItems(DirectiveCategory.system, require("../manifests/system.json"));
+        this.initFromItems(DirectiveCategory.sysupdated, require("../manifests/sysupdated.json"));
+        this.initFromItems(DirectiveCategory.timer, require("../manifests/timer.json"));
+        this.initFromItems(DirectiveCategory.timesyncd, require("../manifests/timesyncd.json"));
 
         const podman = new HintDataManager(DirectiveCategory.podman, manpageURLs.podmanBase);
         podman.bindValueEnum(podmanValueEnum);
         this.initManager(podman, require("../manifests/podman.json"));
-
-        const link = new HintDataManager(DirectiveCategory.link, manpageURLs.base);
-        this.initManager(link, require("../manifests/link.json"));
-
-        const dnssd = new HintDataManager(DirectiveCategory.dnssd, manpageURLs.base);
-        this.initManager(dnssd, require("../manifests/dnssd.json"));
-
-        const path = new HintDataManager(DirectiveCategory.path, manpageURLs.base);
-        this.initManager(path, require("../manifests/path.json"));
-
-        const mount = new HintDataManager(DirectiveCategory.mount, manpageURLs.base);
-        this.initManager(mount, require("../manifests/mount.json"));
 
         const defaults = new HintDataManager(DirectiveCategory.default, manpageURLs.base);
         defaults.bindValueEnum(systemdValueEnum);
@@ -138,6 +146,7 @@ export class HintDataManagers {
                 } else if (it.directiveNameLC.startsWith("_")) {
                     return false;
                 }
+                if (prefix.length <= 2 && it.manPage && manager.hiddenManPages.has(it.manPage)) return false;
                 return filterBySectionIds(sectionIds, it);
             });
             directives = mergeItems(directives, dirs);

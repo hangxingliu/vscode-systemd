@@ -34,6 +34,7 @@ export function activate(context: ExtensionContext) {
             if (!e.affectsConfiguration(vscodeConfigNS)) return;
 
             config.reload();
+            completion.afterChangedConfig();
             if (config.lintDirectiveKeys) lint.lintAll();
             else diagnostics.clear();
         })
