@@ -1,6 +1,6 @@
 # CHANGELOG
 
-### 2.1.0-pre.1 (2024-02-25)
+### 2.1.0 (2024-02-28)
 
 - Add CodeLens for files to show the type of the unit file and allow user to change the type
 - Add a new lint rule for the directive `KillMode`
