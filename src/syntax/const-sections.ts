@@ -51,6 +51,10 @@ export const commonSections: Sections = [
 ];
 
 export const internalSections: Sections = [
+    "DHCP", // before v243
+    "IPv6PrefixDelegation", // before v247. then it was renamed to [IPv6SendRA]
+    "DHCPv6PrefixDelegation", // before v250, then it was renamed to [DHCPPrefixDelegation]
+    "TrafficControlQueueingDiscipline", // before 245. then it was renamed to [NetworkEmulator]
     "Distribution",
     "Output",
     "Content",
