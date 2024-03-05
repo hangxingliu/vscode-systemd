@@ -20,7 +20,7 @@ import {
     getDiagnosticForUnknown,
 } from "./diagnostics";
 import { getDirectiveKeys } from "./parser/get-directive-keys";
-import { deprecatedDirectivesSet, directivePrefixes, languageId } from "./syntax/const";
+import { languageId } from "./syntax/const-language-conf";
 import { ExtensionConfig } from "./config/vscode-config-loader";
 import { HintDataManagers } from "./hint-data/manager/multiple";
 import { SystemdCommands } from "./commands/vscode-commands";
@@ -79,10 +79,11 @@ export class SystemdLint implements CodeActionProvider {
                     new Position(it.loc1[1], it.loc1[2]),
                     new Position(it.loc2[1], it.loc2[2] + (addOffset || 0))
                 );
-            if (deprecatedDirectivesSet.has(directiveName)) {
-                items.push(getDiagnosticForDeprecated(getRange(), directiveName));
-                return;
-            }
+            // todo: wip
+            // if (deprecatedDirectivesSet.has(directiveName)) {
+            //     items.push(getDiagnosticForDeprecated(getRange(), directiveName));
+            //     return;
+            // }
             // example lint:
             // https://github.com/systemd/systemd/blob/effefa30de46f25d0f50a36210a9835097381c2b/src/core/load-fragment.c#L665
             if (directiveName === "KillMode") {
@@ -98,7 +99,8 @@ export class SystemdLint implements CodeActionProvider {
                 }
             }
 
-            if (directivePrefixes.find((p) => directiveName.startsWith(p))) return;
+            if (directiveNameLC.startsWith("x-")) return;
+            if (directiveNameLC.startsWith("-")) return;
             if (managers.hasDirective(directiveNameLC)) return;
             if (customDirectiveKeys.indexOf(directiveName) >= 0) return;
             if (customDirectiveRegexps.findIndex((it) => it.test(directiveName)) >= 0) return;

@@ -11,7 +11,7 @@ import {
 } from "vscode";
 import { getCursorInfoFromSystemdConf } from "./parser";
 import { CursorType } from "./parser/types";
-import { languageId } from "./syntax/const";
+import { languageId } from "./syntax/const-language-conf";
 import { ExtensionConfig } from "./config/vscode-config-loader";
 import { HintDataManagers } from "./hint-data/manager/multiple";
 import { RequiredDirectiveCompletionItem } from "./hint-data/types-runtime";

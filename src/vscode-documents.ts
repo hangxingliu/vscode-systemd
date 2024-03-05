@@ -1,5 +1,5 @@
 import { TextDocument, EventEmitter } from "vscode";
-import { languageId } from "./syntax/const";
+import { languageId } from "./syntax/const-language-conf";
 import { SystemdFileType, parseSystemdFilePath } from "./parser/file-info";
 
 // type WorkspaceListener<Key extends keyof typeof workspace> = typeof workspace[Key] extends Event<infer EventArg>
