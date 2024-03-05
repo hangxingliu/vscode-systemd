@@ -3,21 +3,25 @@
 - [x] capabilities
     - https://man7.org/linux/man-pages/man7/capabilities.7.html
 - [x] Completion/Syntax for time spans, e.g., `OnCalendar=`, `weekly`
-- [ ] Fix docs in completion items for Linux capabilities
+- [x] Fix docs in completion items for Linux capabilities
 - [x] Fix highlights for podman directives: `AddCapability`, `DropCapability`
 
 ## 2.2.0
 
-- [ ] Update data for custom directives
-- [ ] Add completion for predefined filters in <https://www.freedesktop.org/software/systemd/man/latest/systemd.exec.html#>
+- [ ] Update data for custom directives (todo: check it)
+- [ ] Add more deprecated/removed/renamed directives from `CHANGELOG` in systemd repo
 - [ ] boolean value completion
 - [ ] Settings for enabling/disabling Podman
+- [ ] Fix incorrect markdown styles in docs (italic with formatted code)
+- [ ] Fix completion for `MACVTAP`/`IPVTAP`/`Tap`
 
 ## 2.3.0
 
 - [ ] Settings for systemd version
 - [ ] Add support for `jinja2`
 - [ ] Systemd 256: `IPv4ProxyARPPrivateVLAN=`
+- [ ] Add completion for predefined filters in <https://www.freedesktop.org/software/systemd/man/latest/systemd.exec.html#>
+    - <https://man7.org/linux/man-pages/man2/syscalls.2.html>
 
 ## 2.4.0
 
