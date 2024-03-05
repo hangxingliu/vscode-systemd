@@ -155,6 +155,7 @@
         "axios": "^1",
         "cheerio": "1.0.0-rc.12",
         "copyfiles": "^2.4.1",
+        "escape-html": "^1.0.3",
         "https-proxy-agent": "^7",
         "rimraf": "^5",
         "swc-loader": "^0.2.3",
