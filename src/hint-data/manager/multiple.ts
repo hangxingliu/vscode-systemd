@@ -1,5 +1,4 @@
 import { CompletionItem } from "vscode";
-import { customDirectives } from "../../syntax/const";
 import { manpageURLs } from "../manpage-url";
 import { DirectiveCategory, RequiredDirectiveCompletionItem, SpecifierCompletionItem } from "../types-runtime";
 import { HintDataManager } from "./base";
@@ -11,6 +10,7 @@ import { SystemdFileType } from "../../parser/file-info";
 import { getSubsetOfManagers } from "./subset";
 import { sectionGroups } from "../../syntax/const-sections";
 import { SectionGroupMatcher } from "../../syntax/sections-utils";
+import { CustomSystemdDirective, directives } from "../custom-directives";
 
 function mergeItems<T>(base: T[] | undefined, newItems: T[] | undefined): T[] | undefined {
     if (newItems && newItems.length > 0) return base ? base.concat(newItems) : newItems;
@@ -41,6 +41,11 @@ export class HintDataManagers {
         const manager = new HintDataManager(category, baseURL);
         manager.addItems(items);
         this.managers[manager.category] = manager;
+        return manager;
+    }
+    private addCustom(category: DirectiveCategory, items: CustomSystemdDirective[]) {
+        const manager = this.managers[category];
+        for (const it of items) manager!.addCustomDirective(it);
     }
     subset(fileType?: SystemdFileType) {
         if (typeof fileType !== "number") return this;
@@ -87,8 +92,18 @@ export class HintDataManagers {
         defaults.bindValueEnum(systemdValueEnum);
         this.initManager(defaults, require("../manifests/default.json"));
 
+        this.addCustom(DirectiveCategory.default, directives.exec);
+        this.addCustom(DirectiveCategory.link, directives.link);
+        this.addCustom(DirectiveCategory.logind, directives.logind);
+        this.addCustom(DirectiveCategory.netdev, directives.netdev);
+        this.addCustom(DirectiveCategory.network, directives.network);
+        this.addCustom(DirectiveCategory.nspawn, directives.nspawn);
+        this.addCustom(DirectiveCategory.default, directives.resource_control);
+        this.addCustom(DirectiveCategory.service, directives.service);
+        this.addCustom(DirectiveCategory.system, directives.system);
+        this.addCustom(DirectiveCategory.default, directives.unit);
+
         const fallback = new HintDataManager(DirectiveCategory.fallback, manpageURLs.base);
-        for (const directive of customDirectives) fallback.addCustomDirective(directive);
         this.initManager(fallback);
     }
 
@@ -146,6 +161,7 @@ export class HintDataManagers {
                 } else if (it.directiveNameLC.startsWith("_")) {
                     return false;
                 }
+                if (it.hidden) return false;
                 if (prefix.length <= 2 && it.manPage && manager.hiddenManPages.has(it.manPage)) return false;
                 return filterBySectionIds(sectionIds, it);
             });

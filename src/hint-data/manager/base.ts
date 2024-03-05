@@ -24,7 +24,7 @@ import {
     isManifestItemForSection,
     isManifestItemForSpecifier,
 } from "../types-manifest";
-import { CustomSystemdDirective, deprecatedDirectivesSet } from "../../syntax/const";
+import { CustomSystemdDirective } from "../custom-directives";
 
 type ExtraProps<T extends CompletionItem> = Omit<T, keyof CompletionItem>;
 
@@ -45,6 +45,7 @@ export class HintDataManager {
     /** key is lowercase name of the section */
     readonly sectionIdMap = new MapList<number>();
     readonly sections: Array<SectionInfo> = [];
+    private maxSectionId = 1;
 
     /** key is lowercase name */
     readonly directivesMap = new MapList<RequiredDirectiveCompletionItem>();
@@ -97,6 +98,7 @@ export class HintDataManager {
             const nameLC = name.toLowerCase();
             this.sectionIdMap.push(nameLC, sectionId);
             this.sections[sectionId] = { name, nameLC };
+            if (sectionId > this.maxSectionId) this.maxSectionId = sectionId;
         }
 
         if (isManifestItemForDirective(item)) {
@@ -105,8 +107,6 @@ export class HintDataManager {
             if (signature) label.detail = " " + signature;
 
             const ci = new CompletionItem(label, CompletionItemKind.Property);
-            if (deprecatedDirectivesSet.has(directiveName)) ci.tags = [CompletionItemTag.Deprecated];
-
             const directiveNameLC = directiveName.toLowerCase();
             const extraProps: ExtraProps<RequiredDirectiveCompletionItem> = {
                 category: this.category,
@@ -151,30 +151,55 @@ export class HintDataManager {
         for (let i = 0; i < array.length; i++) {
             const name = array[i];
             const nameLC = name.toLowerCase();
-            if (this.directivesMap.has(nameLC)) continue;
+            // if (this.directivesMap.has(nameLC)) continue;
             names.push(name);
             namesLC.push(nameLC);
         }
         let docsIndex: number | undefined;
-        if (typeof item.description === "string") {
-            docsIndex = this.docsMarkdown.push({ str: new MarkdownString(item.description), ref: "" }) - 1;
+        if (typeof item.docs === "string") {
+            const markdown = new MarkdownString(item.docs);
+            docsIndex = this.docsMarkdown.push({ str: markdown, ref: "" }) - 1;
         }
-        for (let i = 0; i < names.length; i++) {
-            const directiveName = names[i];
-            const directiveNameLC = directiveName.toLowerCase();
-            const extraProps: ExtraProps<RequiredDirectiveCompletionItem> = {
-                category: this.category,
-                sectionIndex: 0,
-                directiveNameLC,
-                directiveName,
-                docsIndex,
-            };
-            const ci: RequiredDirectiveCompletionItem = Object.assign(
-                new CompletionItem(directiveName, CompletionItemKind.Property),
-                extraProps
-            );
-            this.directivesMap.push(directiveNameLC, ci);
-            this.directives.push(ci);
+
+        const sectionIndexes = new Set<number>();
+        const sectionNames = Array.isArray(item.section) ? item.section : [item.section];
+        for (const sectionName of sectionNames) {
+            const sectionNameLC = sectionName.toLowerCase();
+            const indexes = this.sectionIdMap.get(sectionNameLC);
+            if (indexes) {
+                for (const index of indexes) sectionIndexes.add(index);
+            } else {
+                const sectionId = ++this.maxSectionId;
+                this.sectionIdMap.push(sectionNameLC, sectionId);
+                this.sections[sectionId] = { name: sectionName, nameLC: sectionNameLC };
+                sectionIndexes.add(sectionId);
+            }
+        }
+
+        for (const sectionIndex of sectionIndexes) {
+            for (let i = 0; i < names.length; i++) {
+                const directiveName = names[i];
+                const directiveNameLC = directiveName.toLowerCase();
+                const extraProps: ExtraProps<RequiredDirectiveCompletionItem> = {
+                    category: this.category,
+                    sectionIndex,
+                    directiveNameLC,
+                    directiveName,
+                    docsIndex,
+                };
+                if (item.dead || item.internal) extraProps.hidden = true;
+
+                const label: CompletionItemLabel = { label: directiveName };
+                if (item.signature) label.detail = " " + item.signature;
+
+                const ci: RequiredDirectiveCompletionItem = Object.assign(
+                    new CompletionItem(label, CompletionItemKind.Property),
+                    extraProps
+                );
+                if (item.deprecated) ci.tags = [CompletionItemTag.Deprecated];
+                this.directivesMap.push(directiveNameLC, ci);
+                this.directives.push(ci);
+            }
         }
     }
 }

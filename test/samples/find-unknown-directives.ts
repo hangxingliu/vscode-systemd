@@ -2,7 +2,8 @@ import { readdirSync, readFileSync } from 'fs'
 import { resolve as resolvePath } from 'path'
 import { isManifestItemForDirective } from "../../src/hint-data/types-manifest"
 import { getDirectiveKeys } from "../../src/parser/get-directive-keys"
-import { customDirectives, directivePrefixes } from "../../src/syntax/const"
+import { directivePrefixes } from "../../src/syntax/const"
+import { customDirectives } from "../../src/hint-data/custom-directives"
 
 const hintData: unknown[][] = require('../../src/hint-data/directives.json');
 const directiveNames = new Set(hintData.filter(isManifestItemForDirective).map(it => it[1]));

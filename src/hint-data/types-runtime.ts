@@ -63,6 +63,8 @@ export type DirectiveCompletionItem = CompletionItem & {
     signatures?: string[];
     docsIndex?: number;
     manPage?: number;
+    /** `true` represents that this item would not be shown in auto-completion by default */
+    hidden?: boolean;
 };
 export type RequiredDirectiveCompletionItem = PartialRequired<
     DirectiveCompletionItem,
