@@ -1,5 +1,5 @@
 //#region main
-// template: vscode-command-types.ts
+// template: vscode-commands-types.ts
 // author:   hangxingliu
 // license:  MIT
 // version:  2023-11-28

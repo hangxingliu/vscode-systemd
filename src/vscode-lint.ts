@@ -23,7 +23,7 @@ import { getDirectiveKeys } from "./parser/get-directive-keys";
 import { deprecatedDirectivesSet, directivePrefixes, languageId } from "./syntax/const";
 import { ExtensionConfig } from "./config/vscode-config-loader";
 import { HintDataManagers } from "./hint-data/manager/multiple";
-import { SystemdCommands } from "./vscode-commands";
+import { SystemdCommands } from "./commands/vscode-commands";
 import { SystemdDocumentManager } from "./vscode-documents";
 
 export class SystemdLint implements CodeActionProvider {

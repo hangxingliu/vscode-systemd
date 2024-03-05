@@ -2,7 +2,7 @@ import { TextDocument, CancellationToken, CodeLensProvider, CodeLens } from "vsc
 import { ExtensionConfig } from "./config/vscode-config-loader";
 import { HintDataManagers } from "./hint-data/manager/multiple";
 import { systemdFileTypeNames } from "./parser/file-info";
-import { SystemdCommands } from "./vscode-commands";
+import { SystemdCommands } from "./commands/vscode-commands";
 import { SystemdDocumentManager } from "./vscode-documents";
 
 export class SystemdCodeLens implements CodeLensProvider {

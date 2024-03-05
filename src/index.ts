@@ -1,13 +1,13 @@
 import { ExtensionContext, languages, workspace } from "vscode";
 import { ExtensionConfig } from "./config/vscode-config-loader";
 import { SystemdDiagnosticManager } from "./diagnostics";
-import { languageId } from "./syntax/const";
+import { languageId } from "./syntax/const-language-conf";
 import { SystemdCompletionProvider } from "./vscode-completion";
 import { SystemdSignatureProvider } from "./vscode-signature";
 import { vscodeConfigNS } from "./config/vscode-config";
 import { HintDataManagers } from "./hint-data/manager/multiple";
 import { SystemdLint } from "./vscode-lint";
-import { SystemdCommands } from "./vscode-commands";
+import { SystemdCommands } from "./commands/vscode-commands";
 import { SystemdCodeLens } from "./vscode-codelens";
 import { SystemdDocumentManager } from "./vscode-documents";
 import { SystemdCapabilities } from "./hint-data/manager/capabilities";
