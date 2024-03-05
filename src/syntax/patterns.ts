@@ -1,4 +1,4 @@
-import { deprecatedDirectives } from "./const";
+import { allDeadNames } from "../hint-data/custom-directives";
 import { names } from "./const-names";
 import { RepositoryNames } from "./repository";
 import type { TextMateGrammarPatterns, TextMateGrammarPattern } from "./types";
@@ -17,7 +17,7 @@ export const syntaxPatterns: TextMateGrammarPatterns<RepositoryNames> = [
     { include: "#commnets" },
     jinjaPattern,
     {
-        begin: "^\\s*(" + deprecatedDirectives.join("|") + ")\\s*(=)[ \\t]*",
+        begin: "^\\s*(" + Array.from(allDeadNames).join("|") + ")\\s*(=)[ \\t]*",
         end: /(?<!\\)\n/,
         beginCaptures: {
             "1": names.deprecated,
