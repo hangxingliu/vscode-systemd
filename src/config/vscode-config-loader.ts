@@ -15,6 +15,7 @@ export class ExtensionConfig {
 
     //#region vscode configurations
     lintDirectiveKeys: boolean;
+    podmanEnabled: boolean;
     readonly customDirectiveKeys: string[] = [];
     readonly customDirectiveRegexps: RegExp[] = [];
     //#endregion vscode configurations
@@ -24,6 +25,7 @@ export class ExtensionConfig {
 
     reload = () => {
         const config = workspace.getConfiguration(vscodeConfigNS);
+        this.podmanEnabled = getRuntimeConfigValue(config, 'podman.enabled');
         this.lintDirectiveKeys = getRuntimeConfigValue(config, "lintDirectiveKeys");
 
         const customKeys = getRuntimeConfigValue(config, "customDirectiveKeys");
