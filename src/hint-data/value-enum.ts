@@ -129,7 +129,7 @@ export const systemdValueEnum: ReadonlyArray<SystemdValueEnum> = [
             "recvmsg6",
             "getsockopt",
             "setsockopt",
-        ],
+        ].map((it) => `${it}:\${program_path}`),
     },
     {
         directive: "MemoryPressureWatch",
@@ -901,5 +901,20 @@ export const systemdValueEnum: ReadonlyArray<SystemdValueEnum> = [
                 "Unified Kernel Image with PCR 11 Measurements, as per [systemd-stub(7)](systemd-stub.html).\nAdded in version 255.",
         },
         manPage: "systemd.unit(5)",
+    },
+    {
+        directive: "ManagedOOMSwap",
+        values: ["auto", "kill"],
+        manPage: "systemd.resource-control(5)",
+    },
+    {
+        directive: "ManagedOOMMemoryPressure",
+        values: ["auto", "kill"],
+        manPage: "systemd.resource-control(5)",
+    },
+    {
+        directive: "ManagedOOMPreference",
+        values: ["none", "avoid", "omit"],
+        manPage: "systemd.resource-control(5)",
     },
 ];
