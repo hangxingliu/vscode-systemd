@@ -25,6 +25,7 @@ import {
     isManifestItemForSpecifier,
 } from "../types-manifest";
 import { CustomSystemdDirective } from "../custom-directives";
+import { createMarkdown } from "../../utils/vscode";
 
 type ExtraProps<T extends CompletionItem> = Omit<T, keyof CompletionItem>;
 
@@ -71,8 +72,7 @@ export class HintDataManager {
         if (isManifestItemForManPageInfo(item)) {
             const title = item[2];
             const base = this.manPageBaseUri;
-            const desc = new MarkdownString(item[3]);
-            desc.baseUri = base;
+            const desc = createMarkdown(item[3], base);
             const rawUri = item[4];
             let url: Uri;
             if (rawUri.match(/^\w+\:\/\//)) url = Uri.parse(rawUri);
@@ -86,9 +86,7 @@ export class HintDataManager {
         }
 
         if (isManifestItemForDocsMarkdown(item)) {
-            const base = this.manPageBaseUri;
-            const desc = new MarkdownString(item[2]);
-            desc.baseUri = base;
+            const desc = createMarkdown(item[2], this.manPageBaseUri);
             this.docsMarkdown[item[1]] = { ref: item[3], str: desc };
             return;
         }
@@ -130,7 +128,7 @@ export class HintDataManager {
             ci.label = label;
             ci.insertText = specifier;
             ci.detail = meaning;
-            ci.documentation = new MarkdownString(item[3]); // details
+            ci.documentation = createMarkdown(item[3], this.manPageBaseUri); // details
 
             const extraProps: ExtraProps<SpecifierCompletionItem> = {
                 category: this.category,
@@ -157,7 +155,7 @@ export class HintDataManager {
         }
         let docsIndex: number | undefined;
         if (typeof item.docs === "string") {
-            const markdown = new MarkdownString(item.docs);
+            const markdown = createMarkdown(item.docs, this.manPageBaseUri);
             docsIndex = this.docsMarkdown.push({ str: markdown, ref: "" }) - 1;
         }
 

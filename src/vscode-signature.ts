@@ -20,6 +20,7 @@ import { languageId } from "./syntax/const-language-conf";
 import { DocsContext, ManPageInfo } from "./hint-data/types-runtime";
 import { SystemdDocumentManager } from "./vscode-documents";
 import { SystemdCapabilities } from "./hint-data/manager/capabilities";
+import { createMarkdown } from "./utils/vscode";
 
 const zeroPos = new Position(0, 0);
 export class SystemdSignatureProvider implements SignatureHelpProvider, HoverProvider {
@@ -79,7 +80,7 @@ export class SystemdSignatureProvider implements SignatureHelpProvider, HoverPro
                 signStrings[0] = defaultSign;
             }
             for (const signString of signStrings)
-                signatures.push(new SignatureInformation(signString, new MarkdownString(docsMarkdown)));
+                signatures.push(new SignatureInformation(signString, createMarkdown(docsMarkdown)));
         }
         help.activeSignature = 0;
         help.signatures = signatures;

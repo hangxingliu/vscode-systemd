@@ -1,6 +1,7 @@
 import { CompletionItem, CompletionItemKind, MarkdownString, Uri } from "vscode";
 import { manpageURLs } from "../manpage-url";
 import { isManifestItemForCapability } from "../types-manifest";
+import { createMarkdown } from "../../utils/vscode";
 
 export type SystemdCapabilityItem = {
     name: string;
@@ -35,8 +36,7 @@ export class SystemdCapabilities {
 
     addItem(item: unknown[]) {
         if (isManifestItemForCapability(item)) {
-            const docs = new MarkdownString(item[2]);
-            docs.baseUri = this.baseUri;
+            const docs = createMarkdown(item[2], this.baseUri);
             const cap: SystemdCapabilityItem = { name: item[1], docs };
             this.byName.set(cap.name, cap);
             return;
