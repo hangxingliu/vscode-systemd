@@ -10,6 +10,7 @@ import {
     matchElementsByText,
     assertLength,
     toMarkdown,
+    enableHTMLSupportedInMarkdown,
 } from "../utils/crawler-utils";
 import { ManifestItemForCapability, ManifestItemType } from "./types-manifest";
 import { resolve } from "path";
@@ -30,6 +31,7 @@ main().catch((error) => {
 });
 async function main() {
     SimpleHttpCache.init(cacheDir);
+    enableHTMLSupportedInMarkdown();
 
     const $ = await getHTMLDoc("capabilities", manpageURLs.capabilities);
     print.start("extracting all capabilities");

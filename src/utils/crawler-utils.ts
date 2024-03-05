@@ -1,5 +1,5 @@
 // author: hangxingliu
-// version: 2024-02-23
+// version: 2024-03-05
 import axios, { AxiosResponse } from "axios";
 import { load, CheerioAPI, Element, Cheerio } from "cheerio";
 export { load as loadHtml } from "cheerio";
@@ -9,6 +9,7 @@ import { Agent as HttpsAgent } from "https";
 import { resolve as resolvePath } from "path";
 import { deepStrictEqual } from "assert";
 import { existsSync, mkdirSync, readFileSync, writeFileSync, createWriteStream, WriteStream, appendFileSync } from "fs";
+import type * as TurndownType from "turndown";
 
 //
 //#region terminal style
@@ -428,12 +429,37 @@ export function resolveURL(from: string, to: string) {
 
 //
 //#region html to markdown
-let turndownService: { turndown(html: string): string };
+let turndownService: TurndownType;
+let turndownHTMLSupported = false;
+export function enableHTMLSupportedInMarkdown(enabled = true) {
+    turndownHTMLSupported = enabled;
+}
 export function toMarkdown(html: string): string {
     if (!turndownService) {
         const Turndown = require("turndown");
         turndownService = new Turndown({ headingStyle: "atx", hr: "***" });
     }
+    turndownService.addRule("fix-nested-code", {
+        filter(node, options) {
+            const { nodeName } = node;
+            if (nodeName !== "CODE") return false;
+            // #text
+            const childTags = Array.from(node.childNodes).filter((it) => it.nodeName && !it.nodeName.startsWith("#"));
+            if (childTags.length === 0) return false;
+            // console.log(childTags.map((it) => [it.nodeName, it.textContent]));
+            return true;
+        },
+        replacement(content, node, options) {
+            if (turndownHTMLSupported) {
+                let html = node["outerHTML"];
+                // simple replace for removing class names
+                html = html.replace(/(<\w+)\s+class="(.+?)"/g, "$1");
+                return html;
+            } else {
+                return "`" + node.textContent + "`";
+            }
+        },
+    });
     return turndownService.turndown(html);
 }
 export function getMarkdownHelpFromElement($el: Cheerio<Element>): string {

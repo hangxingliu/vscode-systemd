@@ -3,7 +3,7 @@
 import { cacheDir, manifestDir } from "../config/fs";
 import { manpageURLs } from "./manpage-url";
 import { fetchSpecifiersList } from "../hint-data/fetch-specifier-list";
-import { print, SimpleHttpCache, resolveURL, JsonFileWriter } from "../utils/crawler-utils";
+import { print, SimpleHttpCache, resolveURL, JsonFileWriter, enableHTMLSupportedInMarkdown } from "../utils/crawler-utils";
 import { ManifestItem } from "./types-manifest";
 import { fetchDirectivesList } from "../hint-data/fetch-directive-list";
 import { fetchDirectiveDetailsFromManPage } from "../hint-data/fetch-directive-details";
@@ -26,6 +26,7 @@ main().catch((error) => {
 });
 async function main() {
     SimpleHttpCache.init(cacheDir);
+    enableHTMLSupportedInMarkdown();
 
     const specifiers = await fetchSpecifiersList();
     print.info(`found ${specifiers.length} specifiers`);

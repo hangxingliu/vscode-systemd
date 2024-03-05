@@ -12,7 +12,7 @@
 - [ ] Add more deprecated/removed/renamed directives from `CHANGELOG` in systemd repo
 - [ ] boolean value completion
 - [ ] Settings for enabling/disabling Podman
-- [ ] Fix incorrect markdown styles in docs (italic with formatted code)
+- [x] Fix incorrect markdown styles in docs (italic with formatted code)
 - [ ] Fix completion for `MACVTAP`/`IPVTAP`/`Tap`
 
 ## 2.3.0
