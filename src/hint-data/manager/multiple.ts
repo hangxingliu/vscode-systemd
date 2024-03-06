@@ -8,7 +8,7 @@ import { systemdValueEnum } from "../value-enum";
 import { podmanValueEnum } from "../podman/value-enum";
 import { SystemdFileType } from "../../parser/file-info";
 import { getSubsetOfManagers } from "./subset";
-import { sectionGroups } from "../../syntax/const-sections";
+import { sectionGroups, similarSections } from "../../syntax/const-sections";
 import { SectionGroupMatcher } from "../../syntax/sections-utils";
 import { CustomSystemdDirective, directives } from "../custom-directives";
 
@@ -125,8 +125,13 @@ export class HintDataManagers {
     getLCSectionNames(section?: string): string[] {
         const result: string[] = [];
         if (section) {
-            const nameLC = section.replace(/[\[\]]/g, "").toLowerCase();
-            if (nameLC) result.push(nameLC);
+            const name = section.replace(/[\[\]]/g, "");
+            const nameLC = name.toLowerCase();
+            if (name) {
+                const similarSection = similarSections.get(name);
+                if (similarSection) result.push(similarSection.toLowerCase());
+                else result.push(nameLC);
+            }
             const matchedGroup = this.groups.match(nameLC);
             result.push(...matchedGroup);
         }
@@ -134,6 +139,7 @@ export class HintDataManagers {
     }
 
     filterDirectives(text: string, filter: HintDataFilterRule) {
+        /** A lowercase prefix string */
         let prefix: string;
         const mtx = text.match(/^(.+[\.\-])/);
         if (mtx) prefix = mtx[1].toLowerCase();

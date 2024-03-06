@@ -1,0 +1,10 @@
+# from systemd docs:
+# https://www.freedesktop.org/software/systemd/man/latest/systemd.netdev.html
+
+# Create a MacVTap device.
+
+[NetDev]
+Name=macvtap-test
+Kind=macvtap
+
+# [MACVTAP]
