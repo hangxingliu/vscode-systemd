@@ -1,4 +1,13 @@
-import { workspace, ConfigurationTarget, commands, Command, TextDocument, window, QuickPickItem } from "vscode";
+import {
+    workspace,
+    ConfigurationTarget,
+    commands,
+    Command,
+    TextDocument,
+    window,
+    QuickPickItem,
+    QuickPickItemKind,
+} from "vscode";
 import { SystemdFileType, systemdFileTypeNames } from "../parser/file-info";
 import { SystemdDocumentManager } from "../vscode-documents";
 
@@ -38,18 +47,36 @@ export class SystemdCommands {
         }
 
         const manager = SystemdDocumentManager.instance;
-        const currentType = String(manager.getType(document)!);
+        const currentType = manager.getType(document);
         const entries = Object.entries(systemdFileTypeNames);
 
         type ItemType = QuickPickItem & { typeStr: string };
-        const items: Array<ItemType> = entries.map(([typeStr, typeName]) => {
-            return {
-                label: typeName,
-                typeStr,
-                picked: currentType === typeStr,
-            };
+        const firstItems: Array<ItemType> = [];
+        const items: Array<ItemType> = [];
+
+        const networkTypeStr = String(SystemdFileType.network);
+        const podmanNetworkTypeStr = String(SystemdFileType.podman_network);
+        const currentTypeStr = String(currentType);
+        for (const [typeStr, typeName] of entries) {
+            const item: ItemType = { label: typeName, typeStr };
+            if (typeStr === currentTypeStr) {
+                item.description = "current";
+                firstItems.unshift(item);
+                continue;
+            }
+            if (typeStr === podmanNetworkTypeStr && currentTypeStr === networkTypeStr) {
+                firstItems.push(item);
+                continue;
+            }
+            items.push(item);
+        }
+        firstItems.push({
+            label: "separator",
+            kind: QuickPickItemKind.Separator,
+            typeStr: "",
         });
-        const selected = await window.showQuickPick(items, {
+
+        const selected = await window.showQuickPick(firstItems.concat(items), {
             title: "Please select a type:",
         });
         if (!selected) return;
