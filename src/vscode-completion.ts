@@ -8,6 +8,7 @@ import {
     ProviderResult,
     TextDocument,
     languages,
+    CompletionItemKind,
 } from "vscode";
 import { getCursorInfoFromSystemdConf } from "./parser";
 import { CursorType } from "./parser/types";
@@ -21,6 +22,7 @@ import { getUnitNameCompletionItems } from "./hint-data/get-unit-name-completion
 import { getCalendarCompletion } from "./hint-data/get-calendar-completion";
 import { SystemdDocumentManager } from "./vscode-documents";
 import { SystemdCapabilities } from "./hint-data/manager/capabilities";
+import { PredefinedSignature } from "./hint-data/types-manifest";
 
 const zeroPos = new Position(0, 0);
 
@@ -33,6 +35,7 @@ export class SystemdCompletionProvider implements CompletionItemProvider {
         ".",
     ];
     private fileTypeToSections: Array<Array<CompletionItem>> = [];
+    private booleanItems: CompletionItem[] | undefined;
     constructor(private readonly config: ExtensionConfig, private readonly managers: HintDataManagers) {}
 
     getSectionItems(fileType: SystemdFileType) {
@@ -51,6 +54,17 @@ export class SystemdCompletionProvider implements CompletionItemProvider {
 
     afterChangedConfig() {
         this.fileTypeToSections = [];
+        this.booleanItems = undefined;
+    }
+
+    getBooleanCompletion() {
+        if (this.booleanItems) return this.booleanItems;
+        const enums = this.config.booleanStyle.split("-");
+        this.booleanItems = enums.map((it, index) => {
+            const ci = new CompletionItem(it, CompletionItemKind.Keyword);
+            ci.sortText = `bool${index}`;
+            return ci;
+        });
     }
 
     provideCompletionItems(
@@ -61,37 +75,49 @@ export class SystemdCompletionProvider implements CompletionItemProvider {
     ): CompletionItem[] | undefined {
         const beforeText = document.getText(new Range(zeroPos, position));
         const cursorContext = getCursorInfoFromSystemdConf(beforeText);
-        const fileType = SystemdDocumentManager.instance.getType(document);
+        const file = SystemdDocumentManager.instance.getType(document);
+        const { section } = cursorContext;
 
         switch (cursorContext.type) {
             case CursorType.directiveKey: {
                 const pending = getPendingText();
 
-                const directives = this.managers.filterDirectives(pending, {
-                    section: cursorContext.section,
-                    file: fileType,
-                });
+                const directives = this.managers.filterDirectives(pending, { section, file });
                 if (!directives) return;
                 const range = new Range(position.translate(0, -pending.length), position);
                 directives.forEach((it) => (it.range = range));
                 return directives;
             }
             case CursorType.section: {
-                return this.getSectionItems(fileType);
+                return this.getSectionItems(file);
             }
             case CursorType.directiveValue: {
                 const pending = getPendingText();
                 if (pending.endsWith("%") && !pending.endsWith("%%")) return this.managers.getSpecifiers();
+
                 const directive = cursorContext.directiveKey;
                 if (directive) {
                     const capabilities = SystemdCapabilities.instance.getCompletionItems(directive);
                     if (capabilities) return capabilities;
+
                     const units = getUnitNameCompletionItems(directive);
                     if (units) return units;
+
                     const calendarWords = getCalendarCompletion(directive, pending);
                     if (calendarWords) return calendarWords;
                 }
-                return this.managers.filterValueEnum(cursorContext, fileType);
+
+                const items = this.managers.filterValueEnum(cursorContext, file);
+                if (items) return items;
+
+                if (directive && section) {
+                    const list = this.managers.getDirectiveList(directive, { section, file });
+                    if (list && list.length > 0) {
+                        const directive = list[0];
+                        if (directive.signatures === PredefinedSignature.Boolean) return this.getBooleanCompletion();
+                    }
+                }
+                return;
             }
         }
 

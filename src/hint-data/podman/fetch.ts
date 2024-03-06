@@ -15,9 +15,11 @@ import {
     ManifestItemForDirective,
     ManifestItemForDocsMarkdown,
     ManifestItemType,
+    PredefinedSignature,
 } from "../types-manifest";
 import { Cheerio, Element } from "cheerio";
 import { extractDirectiveSignature } from "../extract-directive-signature";
+import { _PODMAN_BOOLEAN_DIRECTIVES } from "./boolean-directives";
 
 const url = "https://docs.podman.io/en/latest/markdown/podman-systemd.unit.5.html";
 const targetFile = resolve(manifestDir, "podman.json");
@@ -77,9 +79,10 @@ async function main() {
             const signs = extractDirectiveSignature(title);
             assertLength("signatures in the header", signs, 1);
 
-            const $link = findElements($code.parent(), "a.headerlink", '=1');
+            const $link = findElements($code.parent(), "a.headerlink", "=1");
             const urlRefId = $link.attr("href");
-            if (!urlRefId || !urlRefId.startsWith("#")) throw new Error(`Invalid link "${urlRefId}" to directive "${title}"`);
+            if (!urlRefId || !urlRefId.startsWith("#"))
+                throw new Error(`Invalid link "${urlRefId}" to directive "${title}"`);
 
             const section = $code.parent("h2").parent("section");
             assertLength("the section of h2", section, 1);
@@ -92,10 +95,15 @@ async function main() {
             allDocs.push([ManifestItemType.DocsMarkdown, currentDocsIndex, markdown, urlRefId]);
 
             const [sign] = signs;
+            let signParams: string[] | PredefinedSignature | undefined;
+            if (_PODMAN_BOOLEAN_DIRECTIVES.has(`[${sectionName}]${sign.name}`)) {
+                signParams = PredefinedSignature.Boolean;
+            }
+
             allDirectives.push([
                 ManifestItemType.Directive,
                 sign.name,
-                sign.params,
+                signParams || sign.params,
                 currentDocsIndex,
                 manPageIndex,
                 sectionId,

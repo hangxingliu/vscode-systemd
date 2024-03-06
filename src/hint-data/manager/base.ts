@@ -1,11 +1,4 @@
-import {
-    CompletionItem,
-    CompletionItemKind,
-    CompletionItemLabel,
-    CompletionItemTag,
-    MarkdownString,
-    Uri,
-} from "vscode";
+import { CompletionItem, CompletionItemKind, CompletionItemLabel, CompletionItemTag, Uri } from "vscode";
 import {
     DirectiveCategory,
     DocsContext,
@@ -18,6 +11,7 @@ import { MapList } from "../../utils/data-types";
 import { ValueEnumManager } from "../value-enum-manager";
 import { SystemdValueEnum } from "../value-enum";
 import {
+    PredefinedSignature,
     isManifestItemForDirective,
     isManifestItemForDocsMarkdown,
     isManifestItemForManPageInfo,
@@ -100,9 +94,15 @@ export class HintDataManager {
         }
 
         if (isManifestItemForDirective(item)) {
-            const [, directiveName, signature, docsIndex, manPageIndex, sectionIndex] = item;
+            const [, directiveName, signatures, docsIndex, manPageIndex, sectionIndex] = item;
             const label: CompletionItemLabel = { label: directiveName };
-            if (signature) label.detail = " " + signature;
+            if (signatures) {
+                if (signatures === PredefinedSignature.Boolean) {
+                    label.detail = " boolean";
+                } else {
+                    label.detail = " " + signatures;
+                }
+            }
 
             const ci = new CompletionItem(label, CompletionItemKind.Property);
             const directiveNameLC = directiveName.toLowerCase();
@@ -113,7 +113,7 @@ export class HintDataManager {
                 directiveNameLC,
                 directiveName,
                 docsIndex,
-                signatures: Array.isArray(signature) ? signature : [signature],
+                signatures,
             };
             const completionItem: RequiredDirectiveCompletionItem = Object.assign(ci, extraProps);
             this.directivesMap.push(directiveNameLC, completionItem);

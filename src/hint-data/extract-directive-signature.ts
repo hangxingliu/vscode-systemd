@@ -1,9 +1,7 @@
 /**
  * @param signatureString The text from the elements "dt" on the man pages
  */
-export function extractDirectiveSignature(
-    signatureString: string
-): ReadonlyArray<{ name: string; params: string[] | string }> {
+export function extractDirectiveSignature(signatureString: string): ReadonlyArray<{ name: string; params: string[] }> {
     const result = new Map<string, string[]>();
     for (const part of signatureString.split(/,\s+/)) {
         if (part.startsWith("--")) continue; // cli options
@@ -17,12 +15,16 @@ export function extractDirectiveSignature(
 
         const savedParams = result.get(directive);
         if (savedParams) savedParams.push(params);
-        else result.set(directive, [params]);
+        else if (params) result.set(directive, [params]);
+        else result.set(directive, []);
     }
 
     const entries = Array.from(result.entries());
-    return entries.map(([name, params]) => {
-        if (params.length > 1) return { name, params };
-        return { name, params: params[0] };
-    });
+    return entries.map(([name, params]) => ({ name, params }));
+}
+
+export function isBooleanArgument(docs: string | undefined) {
+    if (!docs) return false;
+    if (docs.match(/\btakes?\s+(a\s+)?bool(?:ean)\s+(value|arguments?)/i)) return true;
+    return false;
 }

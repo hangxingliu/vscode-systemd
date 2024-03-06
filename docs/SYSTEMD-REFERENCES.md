@@ -31,4 +31,4 @@
 > from <https://www.freedesktop.org/software/systemd/man/latest/systemd.unit.html#Description>
 
 
-
+> Boolean arguments used in configuration files can be written in various formats. For positive settings the strings `1`, `yes`, `true` and `on` are equivalent. For negative settings, the strings `0`, `no`, `false` and `off` are equivalent.

@@ -21,12 +21,14 @@ import { DocsContext, ManPageInfo } from "./hint-data/types-runtime";
 import { SystemdDocumentManager } from "./vscode-documents";
 import { SystemdCapabilities } from "./hint-data/manager/capabilities";
 import { createMarkdown } from "./utils/vscode";
+import { PredefinedSignature } from "./hint-data/types-manifest";
+import { ExtensionConfig } from "./config/vscode-config-loader";
 
 const zeroPos = new Position(0, 0);
 export class SystemdSignatureProvider implements SignatureHelpProvider, HoverProvider {
     static readonly triggerCharacters: string[] = ["="];
 
-    constructor(private readonly managers: HintDataManagers) {}
+    constructor(private readonly config: ExtensionConfig, private readonly managers: HintDataManagers) {}
 
     register() {
         return languages.registerSignatureHelpProvider(
@@ -73,7 +75,13 @@ export class SystemdSignatureProvider implements SignatureHelpProvider, HoverPro
             if (manPage) docsMarkdown = this.getManPageLink(manPage, docs);
             docsMarkdown += docs ? docs.str.value : "";
 
-            const signStrings = isNonEmptyArray(directive.signatures) ? directive.signatures : [];
+            const signStrings: string[] = [];
+            if (directive.signatures === PredefinedSignature.Boolean) {
+                signStrings.push(this.config.booleanStyle.split("-").join("|"));
+            } else if (isNonEmptyArray(directive.signatures)) {
+                signStrings.push(...signStrings);
+            }
+
             if (!signStrings[0]) {
                 let defaultSign = `${directive.directiveName}=`;
                 if (section) defaultSign = `[${section.name}] ${defaultSign}`;

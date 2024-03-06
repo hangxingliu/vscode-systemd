@@ -24,7 +24,7 @@ export function activate(context: ExtensionContext) {
 
     const docs = SystemdDocumentManager.init(context);
     const completion = new SystemdCompletionProvider(config, hintDataManager);
-    const signature = new SystemdSignatureProvider(hintDataManager);
+    const signature = new SystemdSignatureProvider(config, hintDataManager);
     const lint = new SystemdLint(config, hintDataManager);
     const codeLens = new SystemdCodeLens(config, hintDataManager);
     const commands = new SystemdCommands();

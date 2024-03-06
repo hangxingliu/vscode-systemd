@@ -1,4 +1,5 @@
 import type { CompletionItem, MarkdownString, Uri } from "vscode";
+import type { PredefinedSignature } from "./types-manifest";
 
 type PartialRequired<T, Keys extends keyof T> = Omit<T, Keys> & { [P in Keys]-?: T[P] };
 
@@ -60,7 +61,7 @@ export type DirectiveCompletionItem = CompletionItem & {
     sectionIndex?: number;
     directiveNameLC?: string;
     directiveName?: string;
-    signatures?: string[];
+    signatures?: string[] | PredefinedSignature;
     docsIndex?: number;
     manPage?: number;
     /** `true` represents that this item would not be shown in auto-completion by default */

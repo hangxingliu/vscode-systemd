@@ -16,10 +16,13 @@ export type ManifestItem =
 
 export type ManifestItemForCapability = [type: ManifestItemType.Capability, name: string, docs: string];
 
+export const enum PredefinedSignature {
+    Boolean = "b",
+}
 export type ManifestItemForDirective = [
     type: ManifestItemType.Directive,
     directiveName: string,
-    signature: string | string[],
+    signature: string[] | PredefinedSignature,
     docsMarkdown: number,
     manPageIndex: number,
     sectionIndex?: number

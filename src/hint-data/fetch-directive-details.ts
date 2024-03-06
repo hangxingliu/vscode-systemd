@@ -17,8 +17,9 @@ import {
     ManifestItemForManPageInfo,
     ManifestItemForSection,
     ManifestItemType,
+    PredefinedSignature,
 } from "./types-manifest";
-import { extractDirectiveSignature } from "./extract-directive-signature";
+import { extractDirectiveSignature, isBooleanArgument } from "./extract-directive-signature";
 import { similarSections } from "../syntax/const-sections";
 import { extractSectionNameFromDocs } from "./extract-section-names";
 
@@ -122,6 +123,7 @@ export async function fetchDirectiveDetailsFromManPage(
         if (!urlRefId || !urlRefId.startsWith("#")) throw new Error(`Invalid link "${urlRefId}" to directive`);
 
         let currentDocsIndex: number | undefined;
+        let currentDocs: string | undefined;
         const getCurrentDocsIndex = () => {
             if (typeof currentDocsIndex === "number") return currentDocsIndex;
 
@@ -130,6 +132,7 @@ export async function fetchDirectiveDetailsFromManPage(
             const docsMarkdown = getMarkdownHelpFromElement($dd);
             if (!docsMarkdown) throw new Error(`No description for the directive "${text}"`);
 
+            currentDocs = docsMarkdown;
             currentDocsIndex = nextIds.docs++;
             pushResult([ManifestItemType.DocsMarkdown, currentDocsIndex, docsMarkdown, urlRefId]);
             return currentDocsIndex;
@@ -139,12 +142,18 @@ export async function fetchDirectiveDetailsFromManPage(
         for (const directive of items) {
             if (!validDirectiveNames.has(directive.name)) continue;
 
+            const docsIndex = getCurrentDocsIndex();
+            let signParams: string[] | PredefinedSignature | undefined;
+            if (directive.params.length === 0) {
+                if (isBooleanArgument(currentDocs)) signParams = PredefinedSignature.Boolean;
+            }
+
             duplicate.check(directive.name + (sectionName ? `in [${sectionName}]` : ""));
             pushResult([
                 ManifestItemType.Directive,
                 directive.name,
-                directive.params,
-                getCurrentDocsIndex(),
+                signParams || directive.params,
+                docsIndex,
                 manPageId,
                 sectionIndex,
             ]);
