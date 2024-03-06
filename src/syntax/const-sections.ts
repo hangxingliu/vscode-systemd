@@ -213,7 +213,23 @@ export const networkSections: Sections = [
     "TrivialLinkEqualizer",
 ];
 
-export const podmanSections: Sections = ["Container", "Kube", "Network", "Volume", "Image"];
+type PodmanUnitType = "Container" | "Kube" | "Volume" | "Network" | "Image" | "Pod";
+export const podmanSections: { [x in PodmanUnitType]: Sections } = {
+    Container: ["Container", "Service"],
+    Kube: ["Kube"],
+    Volume: ["Volume"],
+    Network: ["Network"],
+    Image: ["Image"],
+    Pod: ["Pod"],
+};
+export const allPodmanSections: Sections = [
+    ...podmanSections.Container,
+    ...podmanSections.Image,
+    ...podmanSections.Kube,
+    ...podmanSections.Network,
+    ...podmanSections.Pod,
+    ...podmanSections.Volume,
+];
 
 export const defaultSections: Sections = Array.from(
     new Set([
@@ -253,9 +269,5 @@ export const defaultSections: Sections = Array.from(
 
 /** This is used for generating grammar file */
 export const allSections: Sections = Array.from(
-    new Set([
-        ...defaultSections,
-        ...internalSections,
-        ...podmanSections,
-    ])
+    new Set([...defaultSections, ...internalSections, ...allPodmanSections])
 );

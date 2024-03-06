@@ -38,6 +38,13 @@ const fileTypeToDirectives = new Map<SystemdFileType, DirectiveCategory>([
     [SystemdFileType.system, DirectiveCategory.system],
     [SystemdFileType.sysupdated, DirectiveCategory.sysupdated],
     [SystemdFileType.timesyncd, DirectiveCategory.timesyncd],
+    // podman
+    [SystemdFileType.podman_container, DirectiveCategory.podman],
+    [SystemdFileType.podman_image, DirectiveCategory.podman],
+    [SystemdFileType.podman_kube, DirectiveCategory.podman],
+    [SystemdFileType.podman_network, DirectiveCategory.podman],
+    [SystemdFileType.podman_pod, DirectiveCategory.podman],
+    [SystemdFileType.podman_volume, DirectiveCategory.podman],
 ]);
 
 function _getSubsetOfManagers(
@@ -56,21 +63,22 @@ function _getSubsetOfManagers(
         case SystemdFileType.device:
         case SystemdFileType.slice:
             break;
-        case SystemdFileType.podman_network:
-            filters[DirectiveCategory.network] = true;
-            filters[DirectiveCategory.podman] = true;
-            break;
-        case SystemdFileType.podman:
+        //#region podman related patch
+        case SystemdFileType.podman_container:
             filters[DirectiveCategory.service] = true;
             filters[DirectiveCategory.podman] = true;
             break;
+        //#endregion podman related patch
         default: {
             const onlyOne = fileTypeToDirectives.get(fileInfo);
             if (typeof onlyOne === "number") {
                 filters[onlyOne] = true;
             } else {
                 // unknown:
-                for (const it of managers) if (it && it.category !== DirectiveCategory.podman) result.push(it);
+                for (const it of managers) {
+                    if (!it) continue;
+                    result.push(it);
+                }
                 return result;
             }
         }

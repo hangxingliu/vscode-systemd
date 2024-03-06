@@ -32,54 +32,60 @@ import {
     timesyncdSections,
     journalUploadSections,
     scopeSections,
+    allPodmanSections,
 } from "../syntax/const-sections";
 
-const fileTypeToSections = new Map<SystemdFileType, SectionsDefinition[]>([
+const fileTypeToSections = new Map<SystemdFileType, SectionsDefinition>([
     [SystemdFileType.target, []],
     [SystemdFileType.device, []],
     [SystemdFileType.slice, []],
     //
-    [SystemdFileType.service, [serviceSections]],
-    [SystemdFileType.timer, [timerSections]],
-    [SystemdFileType.socket, [socketSections]],
-    [SystemdFileType.network, [networkSections]],
-    [SystemdFileType.netdev, [netdevSections]],
-    [SystemdFileType.link, [linkSections]],
-    [SystemdFileType.dnssd, [dnssdSections]],
-    [SystemdFileType.path, [pathSections]],
-    [SystemdFileType.mount, [mountSections]],
-    [SystemdFileType.automount, [automountSections]],
-    [SystemdFileType.swap, [swapSections]],
-    [SystemdFileType.nspawn, [nspawnSections]],
-    [SystemdFileType.scope, [scopeSections]],
+    [SystemdFileType.service, serviceSections],
+    [SystemdFileType.timer, timerSections],
+    [SystemdFileType.socket, socketSections],
+    [SystemdFileType.network, networkSections],
+    [SystemdFileType.netdev, netdevSections],
+    [SystemdFileType.link, linkSections],
+    [SystemdFileType.dnssd, dnssdSections],
+    [SystemdFileType.path, pathSections],
+    [SystemdFileType.mount, mountSections],
+    [SystemdFileType.automount, automountSections],
+    [SystemdFileType.swap, swapSections],
+    [SystemdFileType.nspawn, nspawnSections],
+    [SystemdFileType.scope, scopeSections],
     //
-    [SystemdFileType.coredump, [coredumpSections]],
-    [SystemdFileType.homed, [homedSections]],
-    [SystemdFileType.journald, [journaldSections]],
-    [SystemdFileType.journal_remote, [journalRemoteSections]],
-    [SystemdFileType.journal_upload, [journalUploadSections]],
-    [SystemdFileType.logind, [logindSections]],
-    [SystemdFileType.networkd, [networkdSections]],
-    [SystemdFileType.oomd, [oomdSections]],
-    [SystemdFileType.pstore, [pstoreSections]],
-    [SystemdFileType.repartd, [repartdSections]],
-    [SystemdFileType.sleep, [sleepSections]],
-    [SystemdFileType.system, [systemManagerSections]],
-    [SystemdFileType.sysupdated, [sysupdatedSections]],
-    [SystemdFileType.timesyncd, [timesyncdSections]],
+    [SystemdFileType.coredump, coredumpSections],
+    [SystemdFileType.homed, homedSections],
+    [SystemdFileType.journald, journaldSections],
+    [SystemdFileType.journal_remote, journalRemoteSections],
+    [SystemdFileType.journal_upload, journalUploadSections],
+    [SystemdFileType.logind, logindSections],
+    [SystemdFileType.networkd, networkdSections],
+    [SystemdFileType.oomd, oomdSections],
+    [SystemdFileType.pstore, pstoreSections],
+    [SystemdFileType.repartd, repartdSections],
+    [SystemdFileType.sleep, sleepSections],
+    [SystemdFileType.system, systemManagerSections],
+    [SystemdFileType.sysupdated, sysupdatedSections],
+    [SystemdFileType.timesyncd, timesyncdSections],
     //
-    [SystemdFileType.podman, [serviceSections, podmanSections]],
-    [SystemdFileType.podman_network, [podmanSections, networkSections]],
+    [SystemdFileType.podman_container, podmanSections.Container],
+    [SystemdFileType.podman_volume, podmanSections.Volume],
+    [SystemdFileType.podman_kube, podmanSections.Kube],
+    [SystemdFileType.podman_network, podmanSections.Network],
+    [SystemdFileType.podman_pod, podmanSections.Pod],
+    [SystemdFileType.podman_image, podmanSections.Image],
 ]);
 
 export function getSectionCompletionItems(fileType: SystemdFileType, enabledPodman: boolean) {
     const items = new Set<SectionsDefinition[0]>(commonSections);
-    const allSections = fileTypeToSections.get(fileType);
-    if (allSections) {
-        for (const sections of allSections) for (const section of sections) items.add(section);
+
+    const matched = fileTypeToSections.get(fileType);
+    if (matched) {
+        for (const section of matched) items.add(section);
     } else {
         for (const section of defaultSections) items.add(section);
-        for (const section of podmanSections) items.add(section);
+        if (enabledPodman) for (const section of allPodmanSections) items.add(section);
     }
 
     return Array.from(items).map((it) => {

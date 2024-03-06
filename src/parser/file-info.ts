@@ -1,6 +1,3 @@
-/** internal use, excluding `network` */
-const _podmanExts = new Set(["container", "volume", "kube", "image", "pod"]);
-
 export const enum SystemdFileType {
     unknown = 0,
     //
@@ -79,12 +76,12 @@ export const enum SystemdFileType {
     //
     //
     /** https://docs.podman.io/en/latest/markdown/podman-systemd.unit.5.html */
-    podman = 64,
-    /**
-     * https://docs.podman.io/en/latest/markdown/podman-systemd.unit.5.html
-     * `podman + network`
-     */
+    podman_container = 64,
+    podman_volume = 65,
+    podman_kube = 66,
     podman_network = 67,
+    podman_image = 68,
+    podman_pod = 69,
 }
 
 export const systemdFileTypeNames: { [type in SystemdFileType]: string } = {
@@ -115,15 +112,20 @@ export const systemdFileTypeNames: { [type in SystemdFileType]: string } = {
     [SystemdFileType.oomd]: "oomd.conf - Global systemd-oomd configuration files",
     [SystemdFileType.homed]: "homed.conf - Home area/user account manager configuration files",
     [SystemdFileType.journald]: "journald.conf - Journal service configuration files",
-    [SystemdFileType.journal_remote]: "journal-remote.conf - Configuration files for the service accepting remote journal uploads",
+    [SystemdFileType.journal_remote]:
+        "journal-remote.conf - Configuration files for the service accepting remote journal uploads",
     [SystemdFileType.journal_upload]: "journal-upload.conf - Configuration files for the journal upload service",
     [SystemdFileType.logind]: "logind.conf -  Login manager configuration files",
     [SystemdFileType.networkd]: "networkd.conf - Global Network configuration files",
     [SystemdFileType.coredump]: "coredump.conf - Core dump storage configuration files",
     [SystemdFileType.system]: "systemd-system.conf - System and session service manager configuration files",
     //
-    [SystemdFileType.podman]: "Systemd Unit Using Podman Quadlet",
-    [SystemdFileType.podman_network]: "Systemd Unit Using Podman Quadlet or Network configuration",
+    [SystemdFileType.podman_container]: "Podman Quadlet container units (*.container)",
+    [SystemdFileType.podman_pod]: "Podman Quadlet pod units (*.pod)",
+    [SystemdFileType.podman_image]: "Podman Quadlet image files (*.image)",
+    [SystemdFileType.podman_network]: "Podman Quadlet network files (*.network)",
+    [SystemdFileType.podman_volume]: "Podman Quadlet volume files (*.volume)",
+    [SystemdFileType.podman_kube]: "Podman Quadlet kube units (*.kube)",
 };
 
 const fileExtToType = new Map<string, SystemdFileType>([
@@ -142,6 +144,11 @@ const fileExtToType = new Map<string, SystemdFileType>([
     ["scope", SystemdFileType.scope],
     ["slice", SystemdFileType.slice],
     // ["network", SystemdFileType.network],
+    ["container", SystemdFileType.podman_container],
+    ["pod", SystemdFileType.podman_pod],
+    ["image", SystemdFileType.podman_image],
+    ["volume", SystemdFileType.podman_volume],
+    ["kube", SystemdFileType.podman_kube],
 ]);
 
 export function parseSystemdFilePath(filePath: string | undefined | null, enablePodman = true): SystemdFileType {
@@ -155,17 +162,22 @@ export function parseSystemdFilePath(filePath: string | undefined | null, enable
         if (!mtx) return SystemdFileType.unknown;
         ext = mtx[1];
     }
+
     const type = fileExtToType.get(ext);
     if (type) return type;
 
-    if (ext === "network") return enablePodman ? SystemdFileType.podman_network : SystemdFileType.network;
-    if (enablePodman && _podmanExts.has(ext)) return SystemdFileType.podman;
+    if (ext === "network") {
+        if (enablePodman && (filePath.includes("containers/") || filePath.includes("podman/")))
+            return SystemdFileType.podman_network;
+        return SystemdFileType.network;
+    }
     if (ext === "conf") {
         if (filePath.includes("service.d/")) return SystemdFileType.service;
         if (filePath.includes("slice.d/")) return SystemdFileType.slice;
         if (filePath.includes("scope.d/")) return SystemdFileType.scope;
         //
-        if (filePath.includes("systemd/system.conf") || filePath.includes("systemd/user.conf")) return SystemdFileType.system;
+        if (filePath.includes("systemd/system.conf") || filePath.includes("systemd/user.conf"))
+            return SystemdFileType.system;
         if (filePath.includes("journald.conf") || filePath.includes("journald@")) return SystemdFileType.journald;
 
         if (filePath.includes("journal-remote.conf")) return SystemdFileType.journal_remote;

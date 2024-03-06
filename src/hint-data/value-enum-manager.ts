@@ -35,8 +35,9 @@ export class ValueEnumManager {
 
         const files: boolean[] = [];
         files[file] = true;
-        if (file === SystemdFileType.podman_network) files[SystemdFileType.network] = true;
-        if (file === SystemdFileType.podman) files[SystemdFileType.service] = true;
+        //#region patch
+        if (file === SystemdFileType.podman_container) files[SystemdFileType.service] = true;
+        //#endregion patch
         for (const valueEnum of enums) {
             if (valueEnum.section && valueEnum.section !== section) continue;
             if (typeof valueEnum.file === "number" && !files[valueEnum.file]) continue;
