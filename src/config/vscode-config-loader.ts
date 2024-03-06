@@ -1,6 +1,6 @@
 import { ExtensionContext, window, workspace } from "vscode";
 import { parseRegExp } from "../utils/regexp";
-import { getRuntimeConfigValue, vscodeConfigNS } from "./vscode-config";
+import { BooleanStyleEnum, getRuntimeConfigValue, vscodeConfigNS } from "./vscode-config";
 
 export class ExtensionConfig {
     private static _instance: ExtensionConfig;
@@ -16,6 +16,8 @@ export class ExtensionConfig {
     //#region vscode configurations
     lintDirectiveKeys: boolean;
     podmanCompletion: boolean;
+    booleanStyle: BooleanStyleEnum;
+
     readonly customDirectiveKeys: string[] = [];
     readonly customDirectiveRegexps: RegExp[] = [];
     //#endregion vscode configurations

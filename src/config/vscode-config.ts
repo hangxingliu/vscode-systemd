@@ -1,8 +1,10 @@
 import { ConfigItem, VSCodeConfigs } from "./vscode-config-types";
 import type { WorkspaceConfiguration } from "vscode";
 
+export type BooleanStyleEnum = "yes-no" | "true-false" | "on-off" | "1-0";
 export type AllRuntimeConfigs = {
     "podman.completion": boolean;
+    "style.boolean": BooleanStyleEnum;
     lintDirectiveKeys: boolean;
     customDirectiveKeys: string[];
 };
