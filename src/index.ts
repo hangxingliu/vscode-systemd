@@ -22,7 +22,7 @@ export function activate(context: ExtensionContext) {
     const selector = [languageId];
     const diagnostics = SystemdDiagnosticManager.get();
 
-    const docs = SystemdDocumentManager.init();
+    const docs = SystemdDocumentManager.init(context);
     const completion = new SystemdCompletionProvider(config, hintDataManager);
     const signature = new SystemdSignatureProvider(hintDataManager);
     const lint = new SystemdLint(config, hintDataManager);
@@ -34,7 +34,7 @@ export function activate(context: ExtensionContext) {
             if (!e.affectsConfiguration(vscodeConfigNS)) return;
 
             config.reload();
-            completion.afterChangedConfig();
+            // completion.afterChangedConfig();
             if (config.lintDirectiveKeys) lint.lintAll();
             else diagnostics.clear();
         })
@@ -51,6 +51,7 @@ export function activate(context: ExtensionContext) {
     );
     subs.push(workspace.onDidCloseTextDocument((document) => diagnostics.delete(document.uri)));
     subs.push(workspace.onDidChangeTextDocument(lint.onDidChangeTextDocument));
+    subs.push(workspace.onDidDeleteFiles(docs.onDidDeleteFiles));
 
     subs.push(commands.register("addUnknownDirective"));
     subs.push(commands.register("changeUnitFileType"));
