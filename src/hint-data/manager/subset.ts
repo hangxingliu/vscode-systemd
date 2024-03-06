@@ -63,6 +63,10 @@ function _getSubsetOfManagers(
         case SystemdFileType.device:
         case SystemdFileType.slice:
             break;
+        // there is only one section `[IOCost]` in this type
+        // we put it into the default manifest
+        case SystemdFileType.iocost:
+            break;
         //#region podman related patch
         case SystemdFileType.podman_container:
             filters[DirectiveCategory.service] = true;

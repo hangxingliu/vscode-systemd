@@ -72,6 +72,8 @@ export const enum SystemdFileType {
     coredump = 29,
     /** https://www.freedesktop.org/software/systemd/man/latest/systemd-system.conf.html */
     system = 30,
+    /** https://www.freedesktop.org/software/systemd/man/latest/iocost.conf.html */
+    iocost = 31,
     //
     //
     //
@@ -119,6 +121,7 @@ export const systemdFileTypeNames: { [type in SystemdFileType]: string } = {
     [SystemdFileType.networkd]: "networkd.conf - Global Network configuration files",
     [SystemdFileType.coredump]: "coredump.conf - Core dump storage configuration files",
     [SystemdFileType.system]: "systemd-system.conf - System and session service manager configuration files",
+    [SystemdFileType.iocost]: "iocost.conf - iocost solution manager configuration files",
     //
     [SystemdFileType.podman_container]: "Podman Quadlet container units (*.container)",
     [SystemdFileType.podman_pod]: "Podman Quadlet pod units (*.pod)",
@@ -185,6 +188,7 @@ export function parseSystemdFilePath(filePath: string | undefined | null, enable
         if (filePath.includes("timesyncd.conf")) return SystemdFileType.timesyncd;
         if (filePath.includes("networkd.conf")) return SystemdFileType.networkd;
         if (filePath.includes("coredump.conf")) return SystemdFileType.coredump;
+        if (filePath.includes("iocost.conf")) return SystemdFileType.iocost;
         if (filePath.includes("logind.conf")) return SystemdFileType.logind;
         if (filePath.includes("pstore.conf")) return SystemdFileType.timesyncd;
         if (filePath.includes("sleep.conf")) return SystemdFileType.sleep;

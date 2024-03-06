@@ -33,6 +33,7 @@ import {
     journalUploadSections,
     scopeSections,
     allPodmanSections,
+    iocostSections,
 } from "../syntax/const-sections";
 
 const fileTypeToSections = new Map<SystemdFileType, SectionsDefinition>([
@@ -68,6 +69,7 @@ const fileTypeToSections = new Map<SystemdFileType, SectionsDefinition>([
     [SystemdFileType.system, systemManagerSections],
     [SystemdFileType.sysupdated, sysupdatedSections],
     [SystemdFileType.timesyncd, timesyncdSections],
+    [SystemdFileType.iocost, iocostSections],
     //
     [SystemdFileType.podman_container, podmanSections.Container],
     [SystemdFileType.podman_volume, podmanSections.Volume],

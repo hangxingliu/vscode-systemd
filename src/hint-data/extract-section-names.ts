@@ -16,7 +16,7 @@ const defaultSectionNameForOptions = new Map([
     ["systemd-sleep.conf(5)", "Sleep"],
     ["coredump.conf(5)", "Coredump"],
     ["systemd-system.conf(5)", "Manager"],
-    ["systemd.scope(5)", "Scope"],
+    ["iocost.conf(5)", "IOCost"],
     //
     ["systemd.service(5)", "Service"],
     ["systemd.socket(5)", "Socket"],

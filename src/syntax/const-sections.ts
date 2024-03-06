@@ -100,6 +100,8 @@ export const coredumpSections: Sections = ["Coredump"];
  * user.conf, user.conf.d/*.conf
  */
 export const systemManagerSections: Sections = ["Manager"];
+/** iocost.conf, iocost.conf.d/*.conf */
+export const iocostSections: Sections = ["IOCost"];
 
 /** .nspawn */
 export const nspawnSections: Sections = ["Exec", "Network", "Files"];
@@ -250,6 +252,7 @@ export const defaultSections: Sections = Array.from(
         ...networkdSections,
         ...coredumpSections,
         ...systemManagerSections,
+        ...iocostSections,
         //
         ...nspawnSections,
         ...serviceSections,
