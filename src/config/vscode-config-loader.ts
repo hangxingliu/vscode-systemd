@@ -27,10 +27,23 @@ export class ExtensionConfig {
 
     reload = () => {
         const config = workspace.getConfiguration(vscodeConfigNS);
-        this.podmanCompletion = getRuntimeConfigValue(config, 'podman.completion');
-        this.lintDirectiveKeys = getRuntimeConfigValue(config, "lintDirectiveKeys");
+        this.podmanCompletion = getRuntimeConfigValue(config, "podman.completion");
+        this.booleanStyle = getRuntimeConfigValue(config, "style.boolean");
 
-        const customKeys = getRuntimeConfigValue(config, "customDirectiveKeys");
+        {
+            const key = "directive-keys.lint" as const;
+            this.lintDirectiveKeys = config.has(key)
+                ? getRuntimeConfigValue(config, key)
+                : getRuntimeConfigValue(config, "lintDirectiveKeys");
+        }
+
+        let customKeys: string[];
+        {
+            const key = "directive-keys.custom" as const;
+            customKeys = config.has(key)
+                ? getRuntimeConfigValue(config, key)
+                : getRuntimeConfigValue(config, "customDirectiveKeys");
+        }
         const { customDirectiveKeys, customDirectiveRegexps } = this;
         customDirectiveKeys.length = 0;
         customDirectiveRegexps.length = 0;

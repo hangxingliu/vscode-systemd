@@ -121,11 +121,45 @@
                         "description": "Please set this configuration to false if you don't use Podman Quadlet and don't want to see the useless Podman option in the auto-completion list",
                         "markdownDescription": "Setting this configuration to `false` can remove all auto-completion related to [Podman Quadlet](https://docs.podman.io/en/latest/markdown/podman-systemd.unit.5.html)\n\nHowever, syntax highlighting for supported Podman Quadlet unit files would **not be affected** by this configuration"
                     },
-                    "systemd.lintDirectiveKeys": {
+                    "systemd.style.boolean": {
+                        "title": "Set default boolean value style",
+                        "type": "string",
+                        "enum": [
+                            "yes-no",
+                            "true-false",
+                            "on-off",
+                            "1-0"
+                        ],
+                        "default": "yes-no",
+                        "description": "This configuration affects how boolean values are auto-completed"
+                    },
+                    "systemd.directive-keys.lint": {
                         "title": "Enable linter feature for directive keys",
                         "type": "boolean",
                         "default": true,
                         "description": "Give you warnings if any directive keys don't exist in the systemd"
+                    },
+                    "systemd.directive-keys.custom": {
+                        "title": "Custom directive keys",
+                        "type": "array",
+                        "default": [
+                            "/^[A-Z_]+$/"
+                        ],
+                        "examples": [
+                            [
+                                "/^[A-Z_]+$/"
+                            ],
+                            [
+                                "custom-key"
+                            ]
+                        ],
+                        "description": "An array contains case-sensitive strings or regex expressions. The extension will add them to the completion list and linter."
+                    },
+                    "systemd.lintDirectiveKeys": {
+                        "title": "Enable linter feature for directive keys",
+                        "type": "boolean",
+                        "default": true,
+                        "markdownDeprecationMessage": "This config was renamed to `directive-keys.lint`. It will be removed in early 2025"
                     },
                     "systemd.customDirectiveKeys": {
                         "title": "Custom directive keys",
@@ -141,7 +175,7 @@
                                 "custom-key"
                             ]
                         ],
-                        "description": "An array contains case-sensitive strings or regex expressions. The extension will add them to the completion list and linter."
+                        "markdownDeprecationMessage": "This config was renamed to `directive-keys.custom`. It will be removed in early 2025"
                     }
                 }
             }

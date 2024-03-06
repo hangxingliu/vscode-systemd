@@ -5,12 +5,19 @@ export type BooleanStyleEnum = "yes-no" | "true-false" | "on-off" | "1-0";
 export type AllRuntimeConfigs = {
     "podman.completion": boolean;
     "style.boolean": BooleanStyleEnum;
+    "directive-keys.lint": boolean;
+    "directive-keys.custom": string[];
+};
+
+export type DeprecatedRuntimeConfigs = {
     lintDirectiveKeys: boolean;
     customDirectiveKeys: string[];
 };
+
 export const vscodeConfigNS = "systemd";
 export type VSCodeConfigPath = `${typeof vscodeConfigNS}.${keyof AllRuntimeConfigs}`;
-export const allVSCodeConfigs: VSCodeConfigs<AllRuntimeConfigs, typeof vscodeConfigNS> = {
+
+export const all: VSCodeConfigs<AllRuntimeConfigs, typeof vscodeConfigNS> = {
     "systemd.podman.completion": {
         title: "Enable auto completion related to Podman Quadlet",
         type: "boolean",
@@ -22,13 +29,20 @@ export const allVSCodeConfigs: VSCodeConfigs<AllRuntimeConfigs, typeof vscodeCon
             "[Podman Quadlet](https://docs.podman.io/en/latest/markdown/podman-systemd.unit.5.html)" +
             "\n\nHowever, syntax highlighting for supported Podman Quadlet unit files would **not be affected** by this configuration",
     },
-    "systemd.lintDirectiveKeys": {
+    "systemd.style.boolean": {
+        title: "Set default boolean value style",
+        type: "string",
+        enum: ["yes-no", "true-false", "on-off", "1-0"],
+        default: "yes-no",
+        description: "This configuration affects how boolean values are auto-completed",
+    },
+    "systemd.directive-keys.lint": {
         title: "Enable linter feature for directive keys",
         type: "boolean",
         default: true,
         description: "Give you warnings if any directive keys don't exist in the systemd",
     },
-    "systemd.customDirectiveKeys": {
+    "systemd.directive-keys.custom": {
         title: "Custom directive keys",
         type: "array",
         default: ["/^[A-Z_]+$/"],
@@ -38,11 +52,31 @@ export const allVSCodeConfigs: VSCodeConfigs<AllRuntimeConfigs, typeof vscodeCon
     },
 };
 
-export function getRuntimeConfigValue<ConfigId extends keyof AllRuntimeConfigs>(
+const renameTo = (key: keyof AllRuntimeConfigs) =>
+    `This config was renamed to \`${key}\`. It will be removed in early 2025`;
+export const deprecated: VSCodeConfigs<DeprecatedRuntimeConfigs, typeof vscodeConfigNS> = {
+    "systemd.lintDirectiveKeys": {
+        ...all["systemd.directive-keys.lint"],
+        description: undefined,
+        markdownDeprecationMessage: renameTo("directive-keys.lint"),
+    },
+    "systemd.customDirectiveKeys": {
+        ...all["systemd.directive-keys.custom"],
+        description: undefined,
+        markdownDeprecationMessage: renameTo("directive-keys.custom"),
+    },
+};
+
+export function getRuntimeConfigValue<ConfigId extends keyof (AllRuntimeConfigs & DeprecatedRuntimeConfigs)>(
     configs: WorkspaceConfiguration,
     id: ConfigId
-): AllRuntimeConfigs[ConfigId] {
-    const prop: ConfigItem<unknown> = allVSCodeConfigs[`${vscodeConfigNS}.${id}`];
+): ConfigId extends keyof AllRuntimeConfigs
+    ? AllRuntimeConfigs[ConfigId]
+    : ConfigId extends keyof DeprecatedRuntimeConfigs
+    ? DeprecatedRuntimeConfigs[ConfigId]
+    : never {
+    const propName = `${vscodeConfigNS}.${id}`;
+    const prop: ConfigItem<unknown> = propName in all ? all[propName] : deprecated[propName];
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     let defaults: any = prop.default;
