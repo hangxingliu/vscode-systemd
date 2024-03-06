@@ -1,16 +1,16 @@
-import { glob } from "glob";
 import { readFileSync, writeFileSync } from "fs";
 import { blue, dim, red, resolveURL } from "../utils/crawler-utils";
-import { manpageURLs } from "./manpage-url";
+import { manpageURLs } from "../hint-data/manpage-url";
 import {
     ManifestItemForManPageInfo,
     isManifestItemForDirective,
     isManifestItemForDocsMarkdown,
     isManifestItemForManPageInfo,
     isManifestItemForSection,
-} from "./types-manifest";
+} from "../hint-data/types-manifest";
 import { manifestDir } from "../config/fs";
 import { resolve } from "path";
+import { listManifestFiles } from "./_include";
 
 main().catch((error) => {
     console.error(error);
@@ -19,7 +19,7 @@ main().catch((error) => {
 
 async function main() {
     let index = 0;
-    const manifestFiles: string[] = glob.sync("*.json", { cwd: manifestDir });
+    const manifestFiles = listManifestFiles();
 
     const code: string[] = [
         'import { SystemdFileType } from "../parser/file-info";',
@@ -35,26 +35,24 @@ async function main() {
         "export const systemdValueEnum: ReadonlyArray<SystemdValueEnum> = [",
     ];
 
-    const firsts: string[] = [];
+    const firsts: typeof manifestFiles = [];
     const addToFirsts = (name: string) => {
-        const index = manifestFiles.indexOf(name);
+        const index = manifestFiles.findIndex(it => it.file === name);
         if (index < 0) throw new Error(`"${name}" does not exist`);
         firsts.push(...manifestFiles.splice(index, 1));
     };
-    addToFirsts('socket.json');
-    addToFirsts('default.json');
-    addToFirsts('network.json');
-    addToFirsts('netdev.json');
+    addToFirsts("socket.json");
+    addToFirsts("default.json");
+    addToFirsts("network.json");
+    addToFirsts("netdev.json");
     manifestFiles.unshift(...firsts);
 
     for (const file of manifestFiles) {
-        const items = JSON.parse(readFileSync(resolve(manifestDir, file), "utf-8"));
-
         const sectionNames: string[] = [];
         const allDocs: string[] = [];
         const allManPages: ManifestItemForManPageInfo[] = [];
         const handledDocsIndex: boolean[] = [];
-        for (const item of items) {
+        for (const item of file.items) {
             if (isManifestItemForManPageInfo(item)) {
                 allManPages[item[1]] = item;
                 continue;
@@ -165,6 +163,6 @@ async function main() {
     mergedCode = mergedCode.replace(/\n+/g, "\n");
 
     const tmpFile = "value-enum.tmp.ts";
-    writeFileSync(tmpFile, mergedCode);
+    writeFileSync(resolve(manifestDir, "..", tmpFile), mergedCode);
     console.log(tmpFile);
 }

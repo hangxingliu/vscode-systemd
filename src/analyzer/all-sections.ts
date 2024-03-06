@@ -1,10 +1,7 @@
-import { glob } from "glob";
 import { MapList } from "../utils/data-types";
-import { isManifestItemForManPageInfo, isManifestItemForSection } from "./types-manifest";
-import { manifestDir } from "../config/fs";
-import { readFileSync } from "fs";
-import { resolve } from "path";
+import { isManifestItemForManPageInfo, isManifestItemForSection } from "../hint-data/types-manifest";
 import { JsonFileWriter } from "../utils/crawler-utils";
+import { listManifestFiles } from "./_include";
 
 main().catch((error) => {
     console.error(error);
@@ -14,14 +11,12 @@ main().catch((error) => {
 async function main() {
     const logFile = "sections.log";
 
-    // const items: unknown[][] = require("../../src/hint-data/directives.json");
     const sectionNames = new MapList<string>();
     /** current man page name */
     let currManPageName: string | undefined;
-    const manifestFiles: string[] = glob.sync("*.json", { cwd: manifestDir });
+    const manifestFiles = listManifestFiles();
     for (const file of manifestFiles) {
-        const items = JSON.parse(readFileSync(resolve(manifestDir, file), "utf-8"));
-        for (const item of items) {
+        for (const item of file.items) {
             if (isManifestItemForManPageInfo(item)) currManPageName = item[2];
             if (!isManifestItemForSection(item)) continue;
             if (!currManPageName) throw new Error(`no manpage name in advance`);
