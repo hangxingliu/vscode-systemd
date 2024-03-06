@@ -114,12 +114,12 @@
             {
                 "title": "Systemd",
                 "properties": {
-                    "systemd.podman.enabled": {
+                    "systemd.podman.completion": {
                         "title": "Enable auto completion related to Podman Quadlet",
                         "type": "boolean",
                         "default": true,
                         "description": "Please set this configuration to false if you don't use Podman Quadlet and don't want to see the useless Podman option in the auto-completion list",
-                        "markdownDescription": "Setting this configuration to `false` can remove all auto-completion related to [Podman Quadlet](https://docs.podman.io/en/latest/markdown/podman-systemd.unit.5.html)\nHowever, syntax highlighting for supported Podman Quadlet unit files would **not be affected** by this configuration"
+                        "markdownDescription": "Setting this configuration to `false` can remove all auto-completion related to [Podman Quadlet](https://docs.podman.io/en/latest/markdown/podman-systemd.unit.5.html)\n\nHowever, syntax highlighting for supported Podman Quadlet unit files would **not be affected** by this configuration"
                     },
                     "systemd.lintDirectiveKeys": {
                         "title": "Enable linter feature for directive keys",

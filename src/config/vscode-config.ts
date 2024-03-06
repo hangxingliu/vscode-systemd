@@ -2,14 +2,14 @@ import { ConfigItem, VSCodeConfigs } from "./vscode-config-types";
 import type { WorkspaceConfiguration } from "vscode";
 
 export type AllRuntimeConfigs = {
-    "podman.enabled": boolean;
+    "podman.completion": boolean;
     lintDirectiveKeys: boolean;
     customDirectiveKeys: string[];
 };
 export const vscodeConfigNS = "systemd";
 export type VSCodeConfigPath = `${typeof vscodeConfigNS}.${keyof AllRuntimeConfigs}`;
 export const allVSCodeConfigs: VSCodeConfigs<AllRuntimeConfigs, typeof vscodeConfigNS> = {
-    "systemd.podman.enabled": {
+    "systemd.podman.completion": {
         title: "Enable auto completion related to Podman Quadlet",
         type: "boolean",
         default: true,
