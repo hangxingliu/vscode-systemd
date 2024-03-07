@@ -226,6 +226,8 @@ export class HintDataManagers {
     }
 
     resolveCompletionItem(item: RequiredDirectiveCompletionItem): CompletionItem {
+        if (item.detail && item.documentation) return item;
+
         const src = this.managers[item.category];
         if (!src) return item;
 

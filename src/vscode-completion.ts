@@ -129,7 +129,7 @@ export class SystemdCompletionProvider implements CompletionItemProvider {
     }
 
     resolveCompletionItem(_item: CompletionItem, token: CancellationToken): ProviderResult<CompletionItem> {
-        if (!(_item as RequiredDirectiveCompletionItem).category) return _item;
+        if (typeof (_item as RequiredDirectiveCompletionItem).category !== "number") return _item;
 
         const item = _item as RequiredDirectiveCompletionItem;
         return this.managers.resolveCompletionItem(item);
