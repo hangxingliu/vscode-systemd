@@ -79,7 +79,7 @@ export async function fetchDirectiveDetailsFromManPage(
     pushResult([ManifestItemType.ManPageInfo, manPageId, pageName, toMarkdown(description), pageUri]);
 
     const $h2List = findElements($, ".refsect1 h2", ">0");
-    const dtList: Array<[Element, sectionIndex?: number, sectionName?: string]> = [];
+    const dtList: Array<[Element, sectionIndex: number | null, sectionName?: string]> = [];
     for (const h2 of $h2List) {
         const $h2 = $(h2);
         const h2text = getText($h2);
@@ -87,7 +87,7 @@ export async function fetchDirectiveDetailsFromManPage(
 
         // print.debug(h2text);
         const sectionName = extractSectionNameFromDocs(h2text, pageName);
-        let sectionIndex: number | undefined;
+        let sectionIndex: number | null = null;
         if (sectionName) {
             if (prevSection.name === sectionName) {
                 sectionIndex = prevSection.index;
@@ -129,8 +129,12 @@ export async function fetchDirectiveDetailsFromManPage(
 
             const $dd = $dt.next("dd");
             assertLength(`description of the directive "${text}"`, $dd, 1);
-            const docsMarkdown = getMarkdownHelpFromElement($dd);
+            let docsMarkdown = getMarkdownHelpFromElement($dd);
             if (!docsMarkdown) throw new Error(`No description for the directive "${text}"`);
+
+            // a small patch for Visual Studio Code render something like `getty@tty2.service`
+            // as a email address
+            docsMarkdown = docsMarkdown.replace(/(\w)@(\w+\.)/g, `$1\\@$2`);
 
             currentDocs = docsMarkdown;
             currentDocsIndex = nextIds.docs++;

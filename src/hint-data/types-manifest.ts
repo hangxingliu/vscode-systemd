@@ -25,7 +25,7 @@ export type ManifestItemForDirective = [
     signature: string[] | PredefinedSignature,
     docsMarkdown: number,
     manPageIndex: number,
-    sectionIndex?: number
+    sectionIndex: number | null,
 ];
 export type ManifestItemForManPageInfo = [
     type: ManifestItemType.ManPageInfo,

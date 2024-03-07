@@ -1,5 +1,5 @@
 // author: hangxingliu
-// version: 2024-03-05
+// version: 2024-03-07
 import axios, { AxiosResponse } from "axios";
 import { load, CheerioAPI, Element, Cheerio } from "cheerio";
 export { load as loadHtml } from "cheerio";
@@ -437,7 +437,9 @@ export function enableHTMLSupportedInMarkdown(enabled = true) {
 export function toMarkdown(html: string): string {
     if (!turndownService) {
         const Turndown = require("turndown");
+        const { gfm } = require('turndown-plugin-gfm');
         turndownService = new Turndown({ headingStyle: "atx", hr: "***" });
+        turndownService.use(gfm);
     }
     turndownService.addRule("fix-nested-code", {
         filter(node, options) {
