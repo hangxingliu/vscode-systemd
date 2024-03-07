@@ -39,7 +39,8 @@ export type ManifestItemForDocsMarkdown = [
     markdownIndex: number,
     markdown: string,
     /** Example: "Type=" in "...html#Type=" */
-    urlRefId: string
+    urlRefId: string,
+    sinceVersion?: number,
 ];
 export type ManifestItemForSpecifier = [
     type: ManifestItemType.Specifier,

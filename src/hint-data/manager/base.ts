@@ -80,8 +80,10 @@ export class HintDataManager {
         }
 
         if (isManifestItemForDocsMarkdown(item)) {
-            const desc = createMarkdown(item[2], this.manPageBaseUri);
-            this.docsMarkdown[item[1]] = { ref: item[3], str: desc };
+            const [, docsIndex, docsMarkdown, ref, sinceVersion] = item;
+            const version = Number.isInteger(sinceVersion) ? sinceVersion! : 0;
+            const desc = createMarkdown(docsMarkdown, this.manPageBaseUri);
+            this.docsMarkdown[docsIndex] = { ref, str: desc, version };
             return;
         }
 
@@ -115,6 +117,10 @@ export class HintDataManager {
                 docsIndex,
                 signatures,
             };
+            if (docsIndex) {
+                const docs = this.docsMarkdown[docsIndex];
+                if (docs && docs.version) extraProps.since = docs.version;
+            }
             const completionItem: RequiredDirectiveCompletionItem = Object.assign(ci, extraProps);
             this.directivesMap.push(directiveNameLC, completionItem);
             this.directives.push(completionItem);
@@ -156,7 +162,7 @@ export class HintDataManager {
         let docsIndex: number | undefined;
         if (typeof item.docs === "string") {
             const markdown = createMarkdown(item.docs, this.manPageBaseUri);
-            docsIndex = this.docsMarkdown.push({ str: markdown, ref: "" }) - 1;
+            docsIndex = this.docsMarkdown.push({ str: markdown, ref: "", version: 0 }) - 1;
         }
 
         const sectionIndexes = new Set<number>();

@@ -1,6 +1,11 @@
 import { CompletionItem } from "vscode";
 import { manpageURLs } from "../manpage-url";
-import { DirectiveCategory, RequiredDirectiveCompletionItem, SpecifierCompletionItem } from "../types-runtime";
+import {
+    DirectiveCategory,
+    DocsContext,
+    RequiredDirectiveCompletionItem,
+    SpecifierCompletionItem,
+} from "../types-runtime";
 import { HintDataManager } from "./base";
 import { CursorInfo } from "../../parser";
 import { isValidArrayIndex } from "../../utils/data-types";
@@ -11,6 +16,7 @@ import { getSubsetOfManagers } from "./subset";
 import { sectionGroups, similarSections } from "../../syntax/const-sections";
 import { SectionGroupMatcher } from "../../syntax/sections-utils";
 import { CustomSystemdDirective, directives } from "../custom-directives";
+import { createMarkdown } from "../../utils/vscode";
 
 function mergeItems<T>(base: T[] | undefined, newItems: T[] | undefined): T[] | undefined {
     if (newItems && newItems.length > 0) return base ? base.concat(newItems) : newItems;
@@ -236,9 +242,17 @@ export class HintDataManagers {
             if (manPage) item.detail = manPage.title;
         }
 
-        if (item.docsIndex) {
-            const docs = src.docsMarkdown[item.docsIndex];
-            if (docs) item.documentation = docs.str;
+        let docs: DocsContext | undefined;
+        if (item.docsIndex) docs = src.docsMarkdown[item.docsIndex];
+        if (docs) {
+            const { str } = docs;
+            if (item.since) {
+                const markdown = createMarkdown(`*Added in version ${item.since}*   \n`, str.baseUri);
+                markdown.appendMarkdown(str.value);
+                item.documentation = markdown;
+            } else {
+                item.documentation = str;
+            }
         }
         return item;
     }

@@ -54,6 +54,7 @@ export type DocsContext = {
     ref: string;
     /** Markdown */
     str: MarkdownString;
+    version: number;
 };
 
 export type DirectiveCompletionItem = CompletionItem & {
@@ -66,6 +67,8 @@ export type DirectiveCompletionItem = CompletionItem & {
     manPage?: number;
     /** `true` represents that this item would not be shown in auto-completion by default */
     hidden?: boolean;
+    /** Since version */
+    since?: number;
 };
 export type RequiredDirectiveCompletionItem = PartialRequired<
     DirectiveCompletionItem,

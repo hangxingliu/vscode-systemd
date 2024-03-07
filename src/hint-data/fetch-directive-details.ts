@@ -132,13 +132,26 @@ export async function fetchDirectiveDetailsFromManPage(
             let docsMarkdown = getMarkdownHelpFromElement($dd);
             if (!docsMarkdown) throw new Error(`No description for the directive "${text}"`);
 
+            //#region version
+            //https://github.com/systemd/systemd/blob/9529ae85f0a31720b7b17b71aef9ef4513473506/man/version-info.xml
+            let sinceVersion: number | undefined;
+            docsMarkdown = docsMarkdown.replace(/\s*Added\s+in\s+version\s+(\d+)\.?\s*$/gi, (_, _v) => {
+                const version = parseInt(_v, 10);
+                if (!Number.isInteger(version) || version < 183)
+                    throw new Error(`Invalid version "${_v}" of the directive "${text}"`);
+                // if (typeof sinceVersion === "number") throw new Error(`Duplicate version in the directive "${text}"`);
+                sinceVersion = version;
+                return "";
+            });
+            //#endregion version
+
             // a small patch for Visual Studio Code render something like `getty@tty2.service`
             // as a email address
             docsMarkdown = docsMarkdown.replace(/(\w)@(\w+\.)/g, `$1\\@$2`);
 
             currentDocs = docsMarkdown;
             currentDocsIndex = nextIds.docs++;
-            pushResult([ManifestItemType.DocsMarkdown, currentDocsIndex, docsMarkdown, urlRefId]);
+            pushResult([ManifestItemType.DocsMarkdown, currentDocsIndex, docsMarkdown, urlRefId, sinceVersion]);
             return currentDocsIndex;
         };
 
