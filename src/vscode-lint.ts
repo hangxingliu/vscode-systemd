@@ -1,36 +1,51 @@
 import {
-    window,
-    Selection,
-    Range,
-    Position,
-    TextDocument,
-    TextDocumentChangeEvent,
-    CodeActionProvider,
     CancellationToken,
     CodeAction,
     CodeActionContext,
     CodeActionKind,
+    CodeActionProvider,
+    Position,
+    Range,
+    Selection,
+    TextDocument,
+    TextDocumentChangeEvent,
+    window,
+    workspace,
 } from "vscode";
+import { SystemdCommands } from "./commands/vscode-commands";
+import { ExtensionConfig } from "./config/vscode-config-loader";
 import {
     SystemdDiagnostic,
     SystemdDiagnosticManager,
     SystemdDiagnosticType,
-    getDiagnosticForDeprecated,
-    getDiagnosticForValue,
     getDiagnosticForUnknown,
+    getDiagnosticForValue,
 } from "./diagnostics";
+import type { HintDataManagers } from "./hint-data/manager/multiple";
 import { getDirectiveKeys } from "./parser/get-directive-keys";
 import { languageId } from "./syntax/const-language-conf";
-import { ExtensionConfig } from "./config/vscode-config-loader";
-import { HintDataManagers } from "./hint-data/manager/multiple";
-import { SystemdCommands } from "./commands/vscode-commands";
-import { SystemdDocumentManager } from "./vscode-documents";
+import type { SystemdDocumentManager } from "./vscode-documents";
 
 export class SystemdLint implements CodeActionProvider {
     // NodeJS.Timer or number
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     private timer: any;
-    constructor(private config: ExtensionConfig, private readonly managers: HintDataManagers) {}
+    constructor(
+        private readonly config: ExtensionConfig,
+        private readonly managers: HintDataManagers,
+        private readonly documents: SystemdDocumentManager
+    ) {
+        config.event(this.afterChangedConfig);
+        documents.event((doc) => {
+            const docs = workspace.textDocuments.filter((it) => it.fileName === doc.fileName);
+            for (const doc of docs) this.lintDocumentAsync(doc);
+        });
+    }
+
+    private readonly afterChangedConfig = () => {
+        if (this.config.lintDirectiveKeys) this.lintAll();
+        else SystemdDiagnosticManager.get().clear();
+    };
 
     readonly onDidChangeTextDocument = (ev: TextDocumentChangeEvent) => {
         if (!this.config.lintDirectiveKeys) return;
@@ -68,7 +83,7 @@ export class SystemdLint implements CodeActionProvider {
         const dirs = getDirectiveKeys(document.getText());
         const { config } = this;
         const { customDirectiveKeys, customDirectiveRegexps } = config;
-        const fileType = SystemdDocumentManager.instance.getType(document);
+        const fileType = this.documents.getType(document);
 
         const managers = this.managers.subset(fileType);
         dirs.forEach((it) => {

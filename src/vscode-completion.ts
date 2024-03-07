@@ -36,7 +36,9 @@ export class SystemdCompletionProvider implements CompletionItemProvider {
     ];
     private fileTypeToSections: Array<Array<CompletionItem>> = [];
     private booleanItems: CompletionItem[] | undefined;
-    constructor(private readonly config: ExtensionConfig, private readonly managers: HintDataManagers) {}
+    constructor(private readonly config: ExtensionConfig, private readonly managers: HintDataManagers) {
+        config.event(this.afterChangedConfig);
+    }
 
     getSectionItems(fileType: SystemdFileType) {
         const cache = this.fileTypeToSections;
@@ -52,8 +54,9 @@ export class SystemdCompletionProvider implements CompletionItemProvider {
         );
     }
 
-    afterChangedConfig() {
-        this.fileTypeToSections = [];
+    // clear cache after config is changed
+    private readonly afterChangedConfig = () => {
+        // this.fileTypeToSections = [];
         this.booleanItems = undefined;
     }
 
