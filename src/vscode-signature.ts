@@ -7,22 +7,17 @@ import {
     SignatureHelpProvider,
     TextDocument,
     Range,
-    SignatureInformation,
     Hover,
-    MarkdownString,
     languages,
 } from "vscode";
-import { isNonEmptyArray } from "./utils/data-types";
 import { getCursorInfoFromSystemdConf } from "./parser";
 import { CursorType } from "./parser/types";
 import { HintDataManagers } from "./hint-data/manager/multiple";
 import { languageId } from "./syntax/const-language-conf";
-import { DocsContext, ManPageInfo } from "./hint-data/types-runtime";
 import { SystemdDocumentManager } from "./vscode-documents";
 import { SystemdCapabilities } from "./hint-data/manager/capabilities";
-import { createMarkdown } from "./utils/vscode";
-import { PredefinedSignature } from "./hint-data/types-manifest";
 import { ExtensionConfig } from "./config/vscode-config-loader";
+import { genHoverDocsForDirective, genSignatureDocsForDirective } from "./hint-data/manager/generate-docs";
 
 const zeroPos = new Position(0, 0);
 export class SystemdSignatureProvider implements SignatureHelpProvider, HoverProvider {
@@ -38,13 +33,6 @@ export class SystemdSignatureProvider implements SignatureHelpProvider, HoverPro
         );
     }
 
-    private getManPageLink(manPage: ManPageInfo, docs?: DocsContext | false) {
-        let url = manPage.url.toString();
-        if (docs && docs.ref) url += docs.ref;
-        const markdown = `[${manPage.title}](${url})`;
-        return markdown;
-    }
-
     provideSignatureHelp(
         document: TextDocument,
         position: Position,
@@ -58,41 +46,15 @@ export class SystemdSignatureProvider implements SignatureHelpProvider, HoverPro
         const fileType = SystemdDocumentManager.instance.getType(document);
         const { managers } = this;
         const directive = (cursor.directiveKey || "").trim();
-        const dirs = managers.getDirectiveList(directive, {
-            section: cursor.section,
-            file: fileType,
-        });
-        if (!isNonEmptyArray(dirs)) return null;
 
-        const help = new SignatureHelp();
-        const signatures: SignatureInformation[] = [];
-        for (const directive of dirs) {
-            const docsInfo = managers.getDirectiveDocs(directive);
-            if (!docsInfo) continue;
-
-            const { manPage, section, docs } = docsInfo;
-            let docsMarkdown = "";
-            if (manPage) docsMarkdown = this.getManPageLink(manPage, docs);
-            docsMarkdown += docs ? docs.str.value : "";
-
-            const signStrings: string[] = [];
-            if (directive.signatures === PredefinedSignature.Boolean) {
-                signStrings.push(this.config.booleanStyle.split("-").join("|"));
-            } else if (isNonEmptyArray(directive.signatures)) {
-                signStrings.push(...signStrings);
-            }
-
-            if (!signStrings[0]) {
-                let defaultSign = `${directive.directiveName}=`;
-                if (section) defaultSign = `[${section.name}] ${defaultSign}`;
-                signStrings[0] = defaultSign;
-            }
-            for (const signString of signStrings)
-                signatures.push(new SignatureInformation(signString, createMarkdown(docsMarkdown)));
+        const signatures = genSignatureDocsForDirective(managers, this.config, directive, cursor.section, fileType);
+        if (signatures) {
+            const help = new SignatureHelp();
+            help.activeSignature = 0;
+            help.signatures = signatures;
+            return help;
         }
-        help.activeSignature = 0;
-        help.signatures = signatures;
-        return help;
+        return null;
     }
 
     provideHover(document: TextDocument, position: Position): Hover | null {
@@ -106,27 +68,9 @@ export class SystemdSignatureProvider implements SignatureHelpProvider, HoverPro
         switch (cursor.type) {
             case CursorType.directiveKey: {
                 const directive = document.getText(range);
-                const dirs = managers.getDirectiveList(directive, {
-                    section: cursor.section,
-                    file: fileType,
-                });
-                if (!isNonEmptyArray(dirs)) return null;
-
-                const manPages = new Set<string>();
-                const markdowns: Array<MarkdownString> = [];
-                dirs.forEach((it) => {
-                    const docsInfo = managers.getDirectiveDocs(it);
-                    if (!docsInfo) return;
-                    const { manPage, docs, section } = docsInfo;
-                    if (manPage) {
-                        let help = section ? `[${section.name}] in ` : "";
-                        help += this.getManPageLink(manPage, docs);
-                        manPages.add(help);
-                    }
-                    if (docs) markdowns.push(docs.str);
-                });
-                const helpText1 = new MarkdownString(Array.from(manPages).join("; "));
-                return new Hover([helpText1, ...markdowns], range);
+                const docs = genHoverDocsForDirective(managers, directive, cursor.section, fileType);
+                if (docs) return new Hover(docs, range);
+                break;
             }
             case CursorType.directiveValue: {
                 // Capabilities
