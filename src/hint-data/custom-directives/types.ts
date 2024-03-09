@@ -15,8 +15,8 @@ export type CustomSystemdDirective = {
      * 2. These directives would be not shown in auto-completion list
      */
     internal?: boolean;
-    /** `true` or a systemd version string represents this directive is deprecated */
-    deprecated?: boolean | string;
+    /** a systemd version string represents this directive is deprecated */
+    deprecated?: number;
     fixHelp?: string;
 
     /** The name of the man page */

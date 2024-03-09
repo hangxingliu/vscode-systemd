@@ -1,4 +1,3 @@
-import { SectionGroupName } from "../../syntax/const-sections";
 import { manpageURLs } from "../manpage-url";
 import { CustomSystemdDirective } from "./types";
 
@@ -8,10 +7,12 @@ const url = manpageURLs.base + "systemd.network.html";
 export const directives: CustomSystemdDirective[] = [
     {
         name: "CriticalConnection",
+        renamedTo: "KeepConfiguration",
+        signature: "boolean",
         docs: "When true, the connection will never be torn down even if the DHCP lease expires. This is contrary to the DHCP specification, but may be the best choice if, say, the root filesystem relies on this connection. Defaults to false.",
         fixHelp:
             "It is replaced by a new `KeepConfiguration=` setting which allows more detailed configuration of the IP configuration to keep in place.",
-        deprecated: "243",
+        deprecated: 243,
         section: [`DHCPv4`, "DHCPv6", "DHCP"],
         manPage,
         url,
@@ -22,7 +23,7 @@ export const directives: CustomSystemdDirective[] = [
         docs: 'Whether to enable or disable Router Advertisement sending on a link. Allowed values are "`static`" which distributes prefixes as defined in the \\[IPv6PrefixDelegation\\] and any \\[IPv6Prefix\\] sections, "`dhcpv6`" which requests prefixes using a DHCPv6 client configured for another link and any values configured in the \\[IPv6PrefixDelegation\\] section while ignoring all static prefix configuration sections, "`yes`" which uses both static configuration and DHCPv6, and "`false`" which turns off IPv6 prefix delegation altogether. Defaults to "`false`". See the \\[IPv6PrefixDelegation\\] and the \\[IPv6Prefix\\] sections for more configuration options.',
         fixHelp:
             "`IPv6PrefixDelegation=` options has been renamed as `IPv6SendRA=` (the old names are still accepted for backwards compatibility).",
-        deprecated: "247",
+        deprecated: 247,
         section: ["Network"],
         manPage,
         url,
@@ -33,22 +34,23 @@ export const directives: CustomSystemdDirective[] = [
         fixHelp:
             "The `[IPv6AcceptRA]` section gained the `Token=` setting for its replacement. The `[IPv6Prefix]` section also gained the `Token=` setting. The `Token=` setting gained 'eui64' mode to explicitly configure an address with the EUI64 algorithm based on the interface MAC address. The 'prefixstable' mode can now optionally take a secret key. The `Token=` setting in the `[DHCPPrefixDelegation]` section now supports all algorithms supported by the same settings in the other sections.",
         section: ["Network"],
-        deprecated: "250",
+        deprecated: 250,
         manPage,
         url,
     },
     {
         name: "PrefixRoute",
         // renamedTo: 'AddPrefixRoute',
+        signature: "boolean",
         docs: "Takes a boolean. When adding or modifying an IPv6 address, the userspace application needs a way to suppress adding a prefix route. This is for example relevant together with IFA\\_F\\_MANAGERTEMPADDR, where userspace creates autoconf generated addresses, but depending on on-link, no route for the prefix should be added. Defaults to false.",
         fixHelp: "It has been deprecated, and replaced by `AddPrefixRoute=`, with its sense inverted.",
         section: ["Address"],
-        deprecated: "245",
+        deprecated: 245,
         manPage,
         url,
     },
     {
-        dead: true,
+        // dead: true,
         name: [
             "NetworkEmulatorDelaySec",
             "NetworkEmulatorDelayJitterSec",
@@ -62,18 +64,18 @@ export const directives: CustomSystemdDirective[] = [
             'been renamed to `[NetworkEmulator]` with the "NetworkEmulator" prefix' +
             "dropped from the individual setting names.",
         fixHelp: 'Please move this setting into the section `NetworkEmulator` and remove its "NetworkEmulator" prefix',
-        deprecated: "245",
+        deprecated: 245,
         manPage,
         url,
     },
     {
-        dead: true,
+        // dead: true,
         name: ["InitialQuantum", "Quantum"],
         renamedTo: ["InitialQuantumBytes", "QuantumBytes"],
         docs: "Please see `InitialQuantumBytes=` and `QuantumBytes=`",
         fixHelp: "They were renamed with a `Bytes` suffix.",
         section: "FairQueueing",
-        deprecated: "246",
+        deprecated: 246,
         manPage,
         url,
     },
@@ -95,7 +97,7 @@ export const directives: CustomSystemdDirective[] = [
         renamedTo: "UseDomains",
         docs: "When true (not the default), the domain name received from the DHCP server will be used for DNS resolution over this link.",
         fixHelp: "Please rename `UseDomainName=` to `UseDomains=`",
-        deprecated: true,
+        deprecated: 216,
         section: ["DHCP", "DHCPv4"],
         manPage,
         url,
@@ -111,17 +113,18 @@ export const directives: CustomSystemdDirective[] = [
             "renamed `IPv6AcceptRA=`, without altering its behaviour. The old" +
             "setting name remains available for compatibility reasons.",
         section: "Network",
-        deprecated: "231",
+        deprecated: 231,
         manPage,
         url,
     },
     {
         name: "DHCPv6PrefixDelegation",
         renamedTo: "DHCPPrefixDelegation",
+        signature: "boolean",
         docs: "Takes a boolean value. When enabled, requests prefixes using a DHCPv6 client configured on another link. By default, an address within each delegated prefix will be assigned, and the prefixes will be announced through IPv6 Router Advertisement when `IPv6SendRA=` is enabled. Such default settings can be configured in \\[DHCPv6PrefixDelegation\\] section. Defaults to disabled.",
         fixHelp: "Please rename it to `DHCPPrefixDelegation=`",
         section: "Network",
-        deprecated: "250",
+        deprecated: 250,
         manPage,
         url,
     },
@@ -134,7 +137,7 @@ export const directives: CustomSystemdDirective[] = [
             "`[IPv6AcceptRA]` sections have been renamed `DenyList=`. The old names" +
             "are still understood to provide compatibility.",
         section: ["IPv6AcceptRA", "DHCPv4"],
-        deprecated: "246",
+        deprecated: 246,
         manPage,
         url,
     },
@@ -145,6 +148,7 @@ export const directives: CustomSystemdDirective[] = [
         renamedTo: "BurstBytes",
         docs: "Specifies the size of the bucket. This is the maximum amount of bytes that tokens can be available for instantaneous transfer. When the size is suffixed with K, M, or G, it is parsed as Kilobytes, Megabytes, or Gigabytes, respectively, to the base of 1000. Defaults to unset.",
         section: "TokenBucketFilter",
+        deprecated: 246,
         manPage,
         url,
     },
@@ -160,13 +164,16 @@ export const directives: CustomSystemdDirective[] = [
     },
     {
         name: "IgnoreUserspaceMulticastGroups",
-        docs: "",
+        renamedTo: "IgnoreUserspaceMulticastGroup",
+        docs: "`IgnoreUserspaceMulticastGroup` takes a boolean value. When true, the kernel ignores multicast groups handled by userspace. Defaults to unset, and the kernel's default is used.",
         section: "IPoIB",
+        deprecated: 250,
         manPage,
         url,
     },
     {
         name: "ForceDHCPv6PDOtherInformation",
+        signature: "boolean",
         docs: "Takes a boolean that enforces DHCPv6 stateful mode when the 'Other information' bit is set in Router Advertisement messages. By default setting only the 'O' bit in Router Advertisements makes DHCPv6 request network information in a stateless manner using a two-message Information Request and Information Reply message exchange. [RFC 7084](https://tools.ietf.org/html/rfc7084), requirement WPD-4, updates this behavior for a Customer Edge router so that stateful DHCPv6 Prefix Delegation is also requested when only the 'O' bit is set in Router Advertisements. This option enables such a CE behavior as it is impossible to automatically distinguish the intention of the 'O' bit otherwise. By default this option is set to false, enable it if no prefixes are delegated when the device should be acting as a CE router.",
         fixHelp:
             "The `ForceDHCPv6PDOtherInformation=` setting in the `[DHCPv6]` section" +
@@ -175,7 +182,7 @@ export const directives: CustomSystemdDirective[] = [
             "`[IPv6AcceptRA]` section to control when the DHCPv6 client is started" +
             "and how the delegated prefixes are handled by the DHCPv6 client.",
         section: ["DHCPv6", "DHCP"],
-        deprecated: "v250",
+        deprecated: 250,
         manPage,
         url,
     },
@@ -185,11 +192,12 @@ export const directives: CustomSystemdDirective[] = [
         // the same name directive is active in the section [Bridge]
         name: "ProxyARP",
         renamedTo: "IPV4ProxyARP",
+        signature: "boolean",
         docs: 'A boolean. Configures proxy ARP. Proxy ARP is the technique in which one host, usually a router, answers ARP requests intended for another machine. By "faking" its identity, the router accepts responsibility for routing packets to the "real" destination. (see [RFC 1027](https://tools.ietf.org/html/rfc1027). Defaults to unset.',
         fixHelp:
             "The systemd-networkd `ProxyARP=` option has been renamed to `IPV4ProxyARP=`. The old names continue to be available for compatibility.",
         section: "Network",
-        deprecated: "233",
+        deprecated: 233,
         manPage,
         url,
     },

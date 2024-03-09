@@ -1,4 +1,3 @@
-import { SectionGroupName } from "../../syntax/const-sections";
 import { manpageURLs } from "../manpage-url";
 import { CustomSystemdDirective } from "./types";
 
@@ -11,7 +10,7 @@ export const directives: CustomSystemdDirective[] = [
         name: "StartLimitInterval",
         renamedTo: "StartLimitIntervalSec",
         docs: "It was renamed to `StartLimitIntervalSec=`",
-        deprecated: "230",
+        deprecated: 230,
         section: "Unit",
         manPage,
         url,
@@ -37,7 +36,7 @@ export const directives: CustomSystemdDirective[] = [
             "too, but it will also warn, asking users to fix the unit" +
             "files accordingly. Removal of these dependency types should" +
             "only affect a negligible number of unit files in the wild.",
-        deprecated: "228",
+        deprecated: 228,
         section: "Unit",
         manPage,
         url,
@@ -47,7 +46,7 @@ export const directives: CustomSystemdDirective[] = [
         name: ["PropagateReloadTo", "PropagateReloadFrom"],
         renamedTo: ["PropagatesReloadTo", "ReloadPropagatedFrom"],
         docs: "Lists one or more units where reload requests on the unit will be propagated to/on the other unit will be propagated from. Issuing a reload request on a unit will automatically also enqueue a reload request on all units that the reload request shall be propagated to via these two settings.",
-        deprecated: "187",
+        deprecated: 187,
         section: "Unit",
         manPage,
         url,
@@ -59,10 +58,11 @@ export const directives: CustomSystemdDirective[] = [
         dead: true,
         name: "OnFailureIsolate",
         renamedTo: "OnFailureJobMode",
+        signature: "boolean",
         docs: "Takes a boolean argument. If `true`, the unit listed in `OnFailure=` will be enqueued in isolation mode, i.e. all units that are not its dependency will be stopped. If this is set, only a single unit may be listed in `OnFailure=`. Defaults to `false`.",
         fixHelp:
             "Please replace `OnFailureIsolate=` setting by a more generic `OnFailureJobMode=` setting and make use of it where applicable",
-        deprecated: "209",
+        deprecated: 209,
         section: "Unit",
         manPage,
         url,
@@ -73,7 +73,7 @@ export const directives: CustomSystemdDirective[] = [
         docs: "Configures requirement dependencies, very similar in style to `Requires=`, however in addition to this behaviour it also declares that this unit is stopped when any of the units listed suddenly disappears. Units can suddenly, unexpectedly disappear if a service terminates on its own choice, a device is unplugged or a mount point unmounted without involvement of systemd.",
         fixHelp: "It is renamed to `BindsTo`",
         renamedTo: "BindsTo",
-        deprecated: "187",
+        deprecated: 187,
         section: "Unit",
         manPage,
         url,
@@ -82,9 +82,10 @@ export const directives: CustomSystemdDirective[] = [
     {
         // DISABLED_LEGACY
         name: "IgnoreOnSnapshot",
+        signature: "boolean",
         docs: "Takes a boolean argument. If `true`, this unit will not be included in snapshots. Defaults to `true` for device and snapshot units, `false` for the others.",
         fixHelp: "Support for option `IgnoreOnSnapshot=` has been removed and it is ignored",
-        deprecated: "228",
+        deprecated: 228,
         section: "Unit",
         manPage,
         url,

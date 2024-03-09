@@ -12,7 +12,7 @@
     </dict>
     <dict>
       <key>begin</key>
-      <string>^\s*(InaccessableDirectories|InaccessibleDirectories|ReadOnlyDirectories|ReadWriteDirectories|Capabilities|UDPSegmentationOffload|TableId|GatewayBandwithDown|GatewayBandwithUp|NetworkEmulatorDelaySec|NetworkEmulatorDelayJitterSec|NetworkEmulatorLossRate|NetworkEmulatorDuplicateRate|NetworkEmulatorPacketLimit|InitialQuantum|Quantum|UseDomainName|IPv6AcceptRouterAdvertisements|SysVStartPriority|StartLimitInterval|RequiresOverridable|RequisiteOverridable|PropagateReloadTo|PropagateReloadFrom|OnFailureIsolate|BindTo)\s*(=)[ \t]*</string>
+      <string>^\s*(InaccessableDirectories|InaccessibleDirectories|ReadOnlyDirectories|ReadWriteDirectories|Capabilities|TableId|UseDomainName|IPv6AcceptRouterAdvertisements|SysVStartPriority|StartLimitInterval|RequiresOverridable|RequisiteOverridable|PropagateReloadTo|PropagateReloadFrom|OnFailureIsolate|BindTo)\s*(=)[ \t]*</string>
       <key>end</key>
       <string>(?&lt;!\\)\n</string>
       <key>beginCaptures</key>

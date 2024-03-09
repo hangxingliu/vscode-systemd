@@ -1,0 +1,38 @@
+[Match]
+Name=enp1s0
+
+[Network]
+DHCP=ipv6
+
+# The below setting is optional, to also assign an address in the delegated prefix
+# to the upstream interface. If not necessary, then comment out the line below and
+# the [DHCPPrefixDelegation] section.
+DHCPPrefixDelegation=yes
+
+# If the upstream network provides Router Advertisement with Managed bit set,
+# then comment out the line below and WithoutRA= setting in the [DHCPv6] section.
+IPv6AcceptRA=no
+
+[DHCPv6]
+WithoutRA=solicit
+
+[DHCPPrefixDelegation]
+UplinkInterface=:self
+SubnetId=0
+Announce=no
+# /etc/systemd/network/55-dhcpv6-pd-downstream.network
+[Match]
+Name=enp2s0
+
+[Network]
+DHCPPrefixDelegation=yes
+IPv6SendRA=yes
+
+# It is expected that the host is acting as a router. So, usually it is not
+# necessary to receive Router Advertisement from other hosts in the downstream network.
+IPv6AcceptRA=no
+
+[DHCPPrefixDelegation]
+UplinkInterface=enp1s0
+SubnetId=1
+Announce=yes

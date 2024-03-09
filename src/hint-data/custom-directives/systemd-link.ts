@@ -1,4 +1,3 @@
-import { SectionGroupName } from "../../syntax/const-sections";
 import { manpageURLs } from "../manpage-url";
 import { CustomSystemdDirective } from "./types";
 
@@ -9,12 +8,12 @@ const section = "Link";
 export const directives: CustomSystemdDirective[] = [
     {
         // 2018-06-22
-        dead: true,
+        // dead: true,
         name: "UDPSegmentationOffload",
         docs: 'The UDP Segmentation Offload (USO) when true enables UDP segmentation offload. Takes a boolean value. Defaults to "unset".',
         fixHelp:
             "Support for `UDPSegmentationOffload=` has been removed, given its limited support in hardware, and waning software support.",
-        deprecated: "239",
+        deprecated: 239,
         section,
         manPage,
         url,
