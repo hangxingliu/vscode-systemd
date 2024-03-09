@@ -35,6 +35,7 @@ export class HintDataManager {
     readonly manPageBaseUri: Uri;
 
     readonly manPages: Array<ManPageInfo> = [];
+    private readonly manPageIndexes = new Map<string, number>();
     readonly hiddenManPages = new Set<number>();
     readonly docsMarkdown: Array<DocsContext> = [];
     /** key is lowercase name of the section */
@@ -64,18 +65,18 @@ export class HintDataManager {
     }
     addItem(item: unknown[]) {
         if (isManifestItemForManPageInfo(item)) {
-            const title = item[2];
+            const [, manPageIndex, title, descText, rawUri] = item;
             const base = this.manPageBaseUri;
-            const desc = createMarkdown(item[3], base);
-            const rawUri = item[4];
+            const desc = createMarkdown(descText, base);
             let url: Uri;
             if (rawUri.match(/^\w+\:\/\//)) url = Uri.parse(rawUri);
             else url = Uri.joinPath(base, rawUri);
-            this.manPages[item[1]] = { title, desc, url };
+            this.manPages[manPageIndex] = { title, desc, url };
+            this.manPageIndexes.set(title, manPageIndex);
             // `man man`:
             // 5      File Formats and Conventions
             // /etc/vconsole.conf
-            if (!title.includes("(5)") || hiddenManPageTitles.has(title)) this.hiddenManPages.add(item[1]);
+            if (!title.includes("(5)") || hiddenManPageTitles.has(title)) this.hiddenManPages.add(manPageIndex);
             return;
         }
 
@@ -151,6 +152,8 @@ export class HintDataManager {
         if (!item) return;
         const names: string[] = [];
         const namesLC: string[] = [];
+        let renames: string[] = [];
+        if (item.renamedTo) renames = Array.isArray(item.renamedTo) ? item.renamedTo : [item.renamedTo];
         const array = Array.isArray(item.name) ? item.name : [item.name];
         for (let i = 0; i < array.length; i++) {
             const name = array[i];
@@ -159,6 +162,21 @@ export class HintDataManager {
             names.push(name);
             namesLC.push(nameLC);
         }
+
+        let manPageIndex: number | undefined;
+        let manPageInfo: ManPageInfo | undefined;
+        if (typeof item.manPage === "string" && item.url) {
+            const { manPage, url } = item;
+            manPageIndex = this.manPageIndexes.get(manPage);
+            if (typeof manPageIndex === "number") {
+                manPageInfo = this.manPages[manPageIndex];
+            } else {
+                manPageInfo = { title: manPage, url: Uri.parse(url) };
+                manPageIndex = this.manPages.push(manPageInfo) - 1;
+                this.manPageIndexes.set(manPage, manPageIndex);
+            }
+        }
+
         let docsIndex: number | undefined;
         if (typeof item.docs === "string") {
             const markdown = createMarkdown(item.docs, this.manPageBaseUri);
@@ -187,6 +205,7 @@ export class HintDataManager {
                 const extraProps: ExtraProps<RequiredDirectiveCompletionItem> = {
                     category: this.category,
                     sectionIndex,
+                    manPage: manPageIndex,
                     directiveNameLC,
                     directiveName,
                     docsIndex,
@@ -194,15 +213,26 @@ export class HintDataManager {
                 if (item.dead || item.internal) extraProps.hidden = true;
 
                 const label: CompletionItemLabel = { label: directiveName };
-                if (item.signature) label.detail = " " + item.signature;
+                if (item.signature) {
+                    label.detail = " " + item.signature;
+                    extraProps.signatures =
+                        item.signature === "boolean" ? PredefinedSignature.Boolean : [item.signature];
+                }
 
-                const ci: RequiredDirectiveCompletionItem = Object.assign(
-                    new CompletionItem(label, CompletionItemKind.Property),
-                    extraProps
-                );
-                if (item.deprecated) ci.tags = [CompletionItemTag.Deprecated];
-                this.directivesMap.push(directiveNameLC, ci);
-                this.directives.push(ci);
+                const ci = new CompletionItem(label, CompletionItemKind.Property);
+                if (item.deprecated) {
+                    extraProps.deprecated = item.deprecated;
+                    ci.tags = [CompletionItemTag.Deprecated];
+                }
+                if (item.fixHelp || renames[i]) {
+                    extraProps.fix = {
+                        help: item.fixHelp || item.docs || '',
+                        rename: renames[i],
+                    };
+                }
+                const rci: RequiredDirectiveCompletionItem = Object.assign(ci, extraProps);
+                this.directivesMap.push(directiveNameLC, rci);
+                this.directives.push(rci);
             }
         }
     }

@@ -46,7 +46,7 @@ export const enum DirectiveCategory {
 
 export type ManPageInfo = {
     title: string;
-    desc: MarkdownString;
+    desc?: MarkdownString;
     url: Uri;
 };
 export type DocsContext = {
@@ -58,6 +58,9 @@ export type DocsContext = {
 };
 
 export type DirectiveCompletionItem = CompletionItem & {
+    /**
+     * The category ID of this item can be used to reverse-lookup the manager to whom it belongs
+     */
     category?: DirectiveCategory;
     sectionIndex?: number;
     directiveNameLC?: string;
@@ -69,6 +72,12 @@ export type DirectiveCompletionItem = CompletionItem & {
     hidden?: boolean;
     /** Since version */
     since?: number;
+    /**
+     * This field indicates the version in which this item was deprecated
+     * if it has already been deprecated.
+     */
+    deprecated?: number;
+    fix?: { help: string; rename?: string };
 };
 export type RequiredDirectiveCompletionItem = PartialRequired<
     DirectiveCompletionItem,

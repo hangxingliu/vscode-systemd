@@ -1,4 +1,4 @@
-import { CompletionItem } from "vscode";
+import { CompletionItem, CompletionItemTag } from "vscode";
 import { manpageURLs } from "../manpage-url";
 import {
     DirectiveCategory,
@@ -17,6 +17,8 @@ import { sectionGroups, similarSections } from "../../syntax/const-sections";
 import { SectionGroupMatcher } from "../../syntax/sections-utils";
 import { CustomSystemdDirective, directives } from "../custom-directives";
 import { createMarkdown } from "../../utils/vscode";
+import { genVersionDocs } from "../../docs/base";
+import { ValueEnumExtendsFn } from "../value-enum-manager";
 
 function mergeItems<T>(base: T[] | undefined, newItems: T[] | undefined): T[] | undefined {
     if (newItems && newItems.length > 0) return base ? base.concat(newItems) : newItems;
@@ -37,6 +39,8 @@ export type HintDataFilterRule = {
 export class HintDataManagers {
     private readonly managers: Array<HintDataManager | undefined> = [];
     private readonly groups = new SectionGroupMatcher(sectionGroups);
+    // key: directive name, value: since version
+    private readonly allDeprecatedNames = new Map<string, number>();
 
     private initManager(manager: HintDataManager, items?: unknown[][]) {
         if (items) manager.addItems(items);
@@ -51,7 +55,12 @@ export class HintDataManagers {
     }
     private addCustom(category: DirectiveCategory, items: CustomSystemdDirective[]) {
         const manager = this.managers[category];
-        for (const it of items) manager!.addCustomDirective(it);
+        const deprecated = this.allDeprecatedNames;
+        for (const it of items) {
+            if (!it.dead && !it.deprecated) continue;
+            for (const name of Array.isArray(it.name) ? it.name : [it.name]) deprecated.set(name, it.deprecated || 0);
+            manager!.addCustomDirective(it);
+        }
     }
     subset(fileType?: SystemdFileType) {
         if (typeof fileType !== "number") return this;
@@ -117,6 +126,16 @@ export class HintDataManagers {
         let specifiers: Array<SpecifierCompletionItem> | undefined;
         for (const it of this.managers) if (it) specifiers = mergeItems(specifiers, it.specifiers);
         return specifiers;
+    }
+
+    getDeprecatedNames(currentVersion?: number) {
+        if (!currentVersion) return new Set(this.allDeprecatedNames.keys());
+        const names = new Set<string>();
+        for (const [name, version] of this.allDeprecatedNames) {
+            if (version > currentVersion) continue;
+            names.add(name);
+        }
+        return names;
     }
 
     hasDirective(directiveNameLC: string) {
@@ -211,10 +230,10 @@ export class HintDataManagers {
         return directives;
     }
 
-    filterValueEnum(cursorContext: CursorInfo, fileType: SystemdFileType) {
+    filterValueEnum(cursorContext: CursorInfo, fileType: SystemdFileType, extendsFn?: ValueEnumExtendsFn) {
         let items: Array<CompletionItem> | undefined;
         for (const it of this.managers)
-            if (it && it.resolveEnum) items = mergeItems(items, it.resolveEnum(cursorContext, fileType));
+            if (it && it.resolveEnum) items = mergeItems(items, it.resolveEnum(cursorContext, fileType, extendsFn));
         return items;
     }
 
@@ -246,8 +265,9 @@ export class HintDataManagers {
         if (item.docsIndex) docs = src.docsMarkdown[item.docsIndex];
         if (docs) {
             const { str } = docs;
-            if (item.since) {
-                const markdown = createMarkdown(`*Added in version ${item.since}*   \n`, str.baseUri);
+            const prefix = genVersionDocs(item, true);
+            if (prefix) {
+                const markdown = createMarkdown(prefix, str.baseUri);
                 markdown.appendMarkdown(str.value);
                 item.documentation = markdown;
             } else {
