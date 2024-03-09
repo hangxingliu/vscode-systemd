@@ -17,7 +17,8 @@ import { languageId } from "./syntax/const-language-conf";
 import { SystemdDocumentManager } from "./vscode-documents";
 import { SystemdCapabilities } from "./hint-data/manager/capabilities";
 import { ExtensionConfig } from "./config/vscode-config-loader";
-import { genHoverDocsForDirective, genSignatureDocsForDirective } from "./hint-data/manager/generate-docs";
+import { genHoverDocsForDirective } from "./docs/hover";
+import { genSignatureDocsForDirective } from "./docs/signature";
 
 const zeroPos = new Position(0, 0);
 export class SystemdSignatureProvider implements SignatureHelpProvider, HoverProvider {
