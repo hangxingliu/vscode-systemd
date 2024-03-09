@@ -12,11 +12,14 @@ import { SystemdDocumentManager } from "./vscode-documents";
 import { SystemdCapabilities } from "./hint-data/manager/capabilities";
 
 export function activate(context: ExtensionContext) {
-    const hintDataManager = new HintDataManagers();
+    const selector = [languageId] as const;
+
     const config = ExtensionConfig.init(context);
+    const hintDataManager = new HintDataManagers();
     hintDataManager.init();
     SystemdCapabilities.init();
 
+    const diagnostics = SystemdDiagnosticManager.init();
     const docs = SystemdDocumentManager.init(context, config);
     const completion = new SystemdCompletionProvider(config, hintDataManager);
     const signature = new SystemdSignatureProvider(config, hintDataManager);
@@ -25,7 +28,7 @@ export function activate(context: ExtensionContext) {
     const commands = new SystemdCommands();
 
     const subs = context.subscriptions;
-    subs.push(docs, config);
+    subs.push(docs, config, diagnostics);
     //
     subs.push(completion.register());
     subs.push(signature.register());
