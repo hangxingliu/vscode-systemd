@@ -3,6 +3,7 @@ import { SystemdFileType } from "../parser/file-info";
 import { SystemdValueEnum } from "./value-enum";
 import { CompletionItem, CompletionItemKind, MarkdownString, SnippetString } from "vscode";
 
+export type ValueEnumExtendsFn = (valueEnum: SystemdValueEnum) => CompletionItem[] | null | undefined;
 export class ValueEnumManager {
     private byName = new Map<string, SystemdValueEnum[]>();
 
@@ -16,7 +17,7 @@ export class ValueEnumManager {
         }
     }
 
-    resolve(cursor: CursorInfo, file: SystemdFileType) {
+    resolve(cursor: CursorInfo, file: SystemdFileType, extendsFn?: ValueEnumExtendsFn) {
         const key = cursor.directiveKey;
         if (!key) return;
 
@@ -24,7 +25,8 @@ export class ValueEnumManager {
         let enums = this.byName.get(keyLC);
         if (!enums) return;
 
-        const resultText = new Set<string>();
+        const result: CompletionItem[] = [];
+        const resultText: string[] = [];
         const desc: Record<string, string> = {};
 
         let section = cursor.section || "";
@@ -41,11 +43,18 @@ export class ValueEnumManager {
         for (const valueEnum of enums) {
             if (valueEnum.section && valueEnum.section !== section) continue;
             if (typeof valueEnum.file === "number" && !files[valueEnum.file]) continue;
-            for (const value of valueEnum.values) resultText.add(value);
-            if (valueEnum.desc) Object.assign(desc, valueEnum.desc);
+            if (valueEnum.extends && extendsFn) {
+                const items = extendsFn(valueEnum);
+                if (items && items.length > 0) result.push(...items);
+            }
+            if (valueEnum.values) resultText.push(...valueEnum.values);
+            if (valueEnum.desc) {
+                resultText.push(...Object.keys(valueEnum.desc));
+                Object.assign(desc, valueEnum.desc);
+            }
         }
 
-        return Array.from(resultText).map((it) => {
+        for (const it of new Set(resultText)) {
             const ci = new CompletionItem(it, CompletionItemKind.Enum);
             const docs = desc[it];
             if (it.match(/\$\{/)) {
@@ -53,7 +62,8 @@ export class ValueEnumManager {
                 ci.insertText = new SnippetString(it.replace(/\$\{(\w+)\}/g, (_, key) => `\${${i++}:${key}}`));
             }
             if (docs) ci.documentation = new MarkdownString(docs);
-            return ci;
-        });
+            result.push(ci);
+        }
+        return result;
     }
 }
