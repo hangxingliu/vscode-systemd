@@ -7,9 +7,11 @@ import {
     window,
     QuickPickItem,
     QuickPickItemKind,
+    ThemeIcon,
 } from "vscode";
-import { SystemdFileType, systemdFileTypeNames } from "../parser/file-info";
+import { SystemdFileType, parseSystemdFilePath, systemdFileTypeNames } from "../parser/file-info";
 import { SystemdDocumentManager } from "../vscode-documents";
+import { ExtensionConfig } from "../config/vscode-config-loader";
 
 export const vscodeCommandNS = "systemd";
 export type CmdFullName = `${typeof vscodeCommandNS}.${CmdName}`;
@@ -50,39 +52,47 @@ export class SystemdCommands {
         const currentType = manager.getType(document);
         const entries = Object.entries(systemdFileTypeNames);
 
-        type ItemType = QuickPickItem & { typeStr: string };
+        type ItemType = QuickPickItem & { typeStr?: string };
         const firstItems: Array<ItemType> = [];
         const items: Array<ItemType> = [];
 
-        const networkTypeStr = String(SystemdFileType.network);
-        const podmanNetworkTypeStr = String(SystemdFileType.podman_network);
+        const recommendedProps = {
+            iconPath: new ThemeIcon("star"),
+            description: "recommended",
+        } as const;
+
+        const recommended = new Set<string>();
+        const defaultType = parseSystemdFilePath(document.fileName, ExtensionConfig.instance.podmanCompletion);
+        if (defaultType) recommended.add(String(defaultType));
+        if (defaultType === SystemdFileType.network) recommended.add(String(SystemdFileType.podman_network));
+        else if (defaultType === SystemdFileType.podman_network) recommended.add(String(SystemdFileType.network));
+
         const currentTypeStr = String(currentType);
         for (const [typeStr, typeName] of entries) {
             const item: ItemType = { label: typeName, typeStr };
             if (typeStr === currentTypeStr) {
+                item.iconPath = new ThemeIcon("check");
                 item.description = "current";
                 firstItems.unshift(item);
                 continue;
             }
-            if (typeStr === podmanNetworkTypeStr && currentTypeStr === networkTypeStr) {
+            if (recommended.has(typeStr)) {
+                Object.assign(item, recommendedProps);
                 firstItems.push(item);
                 continue;
             }
             items.push(item);
         }
-        firstItems.push({
-            label: "separator",
-            kind: QuickPickItemKind.Separator,
-            typeStr: "",
-        });
+        firstItems.push({ label: "", kind: QuickPickItemKind.Separator });
 
         const selected = await window.showQuickPick(firstItems.concat(items), {
             title: "Please select a type:",
         });
-        if (!selected) return;
+        if (!selected || typeof selected.typeStr !== "string") return;
 
         const newType = parseInt(selected.typeStr, 10) as SystemdFileType;
-        manager.setType(document, newType);
+        if (defaultType === newType) manager.setAutoType(document);
+        else manager.setType(document, newType);
         workspace.openTextDocument(document.uri);
     }
 }

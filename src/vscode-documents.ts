@@ -109,4 +109,11 @@ export class SystemdDocumentManager extends EventEmitter<SetDocumentTypeEvent> {
         this.modified.add(doc.fileName);
         this.fire(doc);
     };
+    readonly setAutoType = (doc: Pick<TextDocument, "fileName">) => {
+        const type = parseSystemdFilePath(doc.fileName, this.podmanEnabled);
+        this.types.set(doc.fileName, type);
+        this.modified.delete(doc.fileName);
+        this.removeSavedType([doc.fileName]);
+        this.fire(doc);
+    }
 }
