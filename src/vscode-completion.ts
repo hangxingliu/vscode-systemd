@@ -63,7 +63,11 @@ export class SystemdCompletionProvider implements CompletionItemProvider {
             this.fileTypeToSections = [];
         }
         this.booleanItems = undefined;
-    }
+    };
+
+    private readonly extendsValueEnum: ValueEnumExtendsFn = (rule) => {
+        if (rule.extends === PredefinedSignature.Boolean) return this.getBooleanCompletion();
+    };
 
     getBooleanCompletion() {
         if (this.booleanItems) return this.booleanItems;
@@ -73,6 +77,7 @@ export class SystemdCompletionProvider implements CompletionItemProvider {
             ci.sortText = `bool${index}`;
             return ci;
         });
+        return this.booleanItems;
     }
 
     provideCompletionItems(
@@ -115,7 +120,7 @@ export class SystemdCompletionProvider implements CompletionItemProvider {
                     if (calendarWords) return calendarWords;
                 }
 
-                const items = this.managers.filterValueEnum(cursorContext, file);
+                const items = this.managers.filterValueEnum(cursorContext, file, this.extendsValueEnum);
                 if (items) return items;
 
                 if (directive && section) {
