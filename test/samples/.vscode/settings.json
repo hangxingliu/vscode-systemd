@@ -1,3 +1,5 @@
 {
-    "systemd.lintDirectiveKeys": true
+    "systemd.directive-keys.lint": true,
+    "systemd.style.boolean": "true-false",
+    "systemd.podman.completion": true
 }

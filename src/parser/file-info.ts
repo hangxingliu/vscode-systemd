@@ -86,6 +86,15 @@ export const enum SystemdFileType {
     podman_pod = 69,
 }
 
+export const podmanFileTypes = new Set([
+    SystemdFileType.podman_container,
+    SystemdFileType.podman_volume,
+    SystemdFileType.podman_kube,
+    SystemdFileType.podman_network,
+    SystemdFileType.podman_image,
+    SystemdFileType.podman_pod,
+]);
+
 export const systemdFileTypeNames: { [type in SystemdFileType]: string } = {
     [SystemdFileType.unknown]: "Unspecified",
     //

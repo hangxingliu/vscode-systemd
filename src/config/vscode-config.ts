@@ -1,3 +1,4 @@
+import { manpageURLs } from "../hint-data/manpage-url";
 import { ConfigItem, VSCodeConfigs } from "./vscode-config-types";
 import type { WorkspaceConfiguration } from "vscode";
 
@@ -22,12 +23,15 @@ export const all: VSCodeConfigs<AllRuntimeConfigs, typeof vscodeConfigNS> = {
         title: "Enable auto completion related to Podman Quadlet",
         type: "boolean",
         default: true,
-        description:
-            "Please set this configuration to false if you don't use Podman Quadlet and don't want to see the useless Podman option in the auto-completion list",
         markdownDescription:
-            "Setting this configuration to `false` can remove all auto-completion related to " +
-            "[Podman Quadlet](https://docs.podman.io/en/latest/markdown/podman-systemd.unit.5.html)" +
-            "\n\nHowever, syntax highlighting for supported Podman Quadlet unit files would **not be affected** by this configuration",
+            "Setting this configuration to `false` can remove ambiguous auto-completion items " +
+            `related to [Podman Quadlet](${manpageURLs.podman}).   \n` +
+            "It is useful **if you don't work with Podman Quadlet**.\n\n" +
+            "You can still manually change the unit type to Podman-related types and " +
+            "get auto completion in some unambiguous Podman unit files (e.g., *.container) " +
+            "even if this configuration is set to `false`.   \n" +
+            "Moreover, this configuration would not affect the syntax highlighting for " +
+            "Podman unit files and documentation for Podman related directives/options.",
     },
     "systemd.style.boolean": {
         title: "Set default boolean value style",

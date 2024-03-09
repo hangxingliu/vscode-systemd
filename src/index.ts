@@ -17,10 +17,7 @@ export function activate(context: ExtensionContext) {
     hintDataManager.init();
     SystemdCapabilities.init();
 
-    const selector = [languageId];
-    const diagnostics = SystemdDiagnosticManager.get();
-
-    const docs = SystemdDocumentManager.init(context);
+    const docs = SystemdDocumentManager.init(context, config);
     const completion = new SystemdCompletionProvider(config, hintDataManager);
     const signature = new SystemdSignatureProvider(config, hintDataManager);
     const lint = new SystemdLint(config, hintDataManager, docs);

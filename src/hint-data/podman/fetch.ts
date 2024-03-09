@@ -20,8 +20,9 @@ import {
 import { Cheerio, Element } from "cheerio";
 import { extractDirectiveSignature } from "../extract-directive-signature";
 import { _PODMAN_BOOLEAN_DIRECTIVES } from "./boolean-directives";
+import { manpageURLs } from "../manpage-url";
 
-const url = "https://docs.podman.io/en/latest/markdown/podman-systemd.unit.5.html";
+const url = manpageURLs.podman;
 const targetFile = resolve(manifestDir, "podman.json");
 
 let jsonFile: JsonFileWriter<ManifestItem> | undefined;

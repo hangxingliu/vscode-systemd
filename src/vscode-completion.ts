@@ -36,13 +36,15 @@ export class SystemdCompletionProvider implements CompletionItemProvider {
     ];
     private fileTypeToSections: Array<Array<CompletionItem>> = [];
     private booleanItems: CompletionItem[] | undefined;
+    private podmanEnabled: boolean;
     constructor(private readonly config: ExtensionConfig, private readonly managers: HintDataManagers) {
+        this.podmanEnabled = config.podmanCompletion;
         config.event(this.afterChangedConfig);
     }
 
     getSectionItems(fileType: SystemdFileType) {
         const cache = this.fileTypeToSections;
-        if (!cache[fileType]) cache[fileType] = getSectionCompletionItems(fileType, true);
+        if (!cache[fileType]) cache[fileType] = getSectionCompletionItems(fileType, this.podmanEnabled);
         return cache[fileType];
     }
 
@@ -56,7 +58,10 @@ export class SystemdCompletionProvider implements CompletionItemProvider {
 
     // clear cache after config is changed
     private readonly afterChangedConfig = () => {
-        // this.fileTypeToSections = [];
+        if (this.podmanEnabled !== this.config.podmanCompletion) {
+            this.podmanEnabled = this.config.podmanCompletion;
+            this.fileTypeToSections = [];
+        }
         this.booleanItems = undefined;
     }
 
