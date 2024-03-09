@@ -1,9 +1,10 @@
 import { manpageURLs } from "../hint-data/manpage-url";
-import { ConfigItem, VSCodeConfigs } from "./vscode-config-types";
+import { ConfigItem, ConfigScope, VSCodeConfigs } from "./vscode-config-types";
 import type { WorkspaceConfiguration } from "vscode";
 
 export type BooleanStyleEnum = "yes-no" | "true-false" | "on-off" | "1-0";
 export type AllRuntimeConfigs = {
+    version: number | "latest";
     "podman.completion": boolean;
     "style.boolean": BooleanStyleEnum;
     "directive-keys.lint": boolean;
@@ -19,6 +20,31 @@ export const vscodeConfigNS = "systemd";
 export type VSCodeConfigPath = `${typeof vscodeConfigNS}.${keyof AllRuntimeConfigs}`;
 
 export const all: VSCodeConfigs<AllRuntimeConfigs, typeof vscodeConfigNS> = {
+    "systemd.version": {
+        title: "Systemd version",
+        type: ["number", "string"],
+        default: "latest",
+        examples: [255, "v255", "latest"],
+        scope: ConfigScope.machineOverridable,
+        markdownDescription:
+            "By adjusting this configuration, the extension will exclusively offer " +
+            "directive/option completions that are compatiable with this version." +
+            "\n\n" +
+            "This configuration impacts auto-completion and linting features, but **it doesn't" +
+            "affect syntax highlighting**." +
+            "\n\n" +
+            "This configuration accepts various types of version strings or version number " +
+            'and a special value: `"latest"`. And you can determine the version of systemd ' +
+            "installed on your OS by running the command: `systemctl --version`.   \n" +
+            "Here are some sample values that this configuration accepts:" +
+            "\n\n" +
+            "- `latest`\n" +
+            '- `255`, `"255"`, `"v255"`\n' +
+            // https://packages.debian.org/search?keywords=systemd
+            '- `"252.22-1~deb12u1"`, `"255.4-1"`\n' +
+            // https://launchpad.net/systemd/+packages
+            '- `"255.4-1ubuntu4"`\n',
+    },
     "systemd.podman.completion": {
         title: "Enable auto completion related to Podman Quadlet",
         type: "boolean",

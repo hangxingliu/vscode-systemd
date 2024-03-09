@@ -114,6 +114,21 @@
             {
                 "title": "Systemd",
                 "properties": {
+                    "systemd.version": {
+                        "title": "Systemd version",
+                        "type": [
+                            "number",
+                            "string"
+                        ],
+                        "default": "latest",
+                        "examples": [
+                            255,
+                            "v255",
+                            "latest"
+                        ],
+                        "scope": "machine-overridable",
+                        "markdownDescription": "By adjusting this configuration, the extension will exclusively offer directive/option completions that are compatiable with this version.\n\nThis configuration impacts auto-completion and linting features, but **it doesn'taffect syntax highlighting**.\n\nThis configuration accepts various types of version strings or version number and a special value: `\"latest\"`. And you can determine the version of systemd installed on your OS by running the command: `systemctl --version`.   \nHere are some sample values that this configuration accepts:\n\n- `latest`\n- `255`, `\"255\"`, `\"v255\"`\n- `\"252.22-1~deb12u1\"`, `\"255.4-1\"`\n- `\"255.4-1ubuntu4\"`\n"
+                    },
                     "systemd.podman.completion": {
                         "title": "Enable auto completion related to Podman Quadlet",
                         "type": "boolean",

@@ -18,14 +18,16 @@ export class ExtensionConfig extends EventEmitter<ReloadedConfigEvent> {
     }
     private readonly subscriptions: Disposable[] = [];
 
+    //
     //#region vscode configurations
-    lintDirectiveKeys: boolean;
+    version: number;
     podmanCompletion: boolean;
     booleanStyle: BooleanStyleEnum;
-
+    lintDirectiveKeys: boolean;
     readonly customDirectiveKeys: string[] = [];
     readonly customDirectiveRegexps: RegExp[] = [];
     //#endregion vscode configurations
+    //
     constructor(private context: ExtensionContext) {
         super();
         this.reload(false);
@@ -48,6 +50,13 @@ export class ExtensionConfig extends EventEmitter<ReloadedConfigEvent> {
         this.booleanStyle = getRuntimeConfigValue(config, "style.boolean");
 
         {
+            const rawVersion = getRuntimeConfigValue(config, "version");
+            const version = parseSystemdVersion(rawVersion);
+            this.version = version ? version.major : 0;
+            // console.log(`systemd version: ${this.version || "latest"}`);
+        }
+
+        {
             const key = "directive-keys.lint" as const;
             this.lintDirectiveKeys = config.has(key)
                 ? getRuntimeConfigValue(config, key)
@@ -61,6 +70,7 @@ export class ExtensionConfig extends EventEmitter<ReloadedConfigEvent> {
                 ? getRuntimeConfigValue(config, key)
                 : getRuntimeConfigValue(config, "customDirectiveKeys");
         }
+
         const { customDirectiveKeys, customDirectiveRegexps } = this;
         customDirectiveKeys.length = 0;
         customDirectiveRegexps.length = 0;
