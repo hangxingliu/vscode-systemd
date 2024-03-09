@@ -24,16 +24,22 @@ export class SystemdCommands {
         return { title, command: fullName, arguments: args };
     }
 
+    registerAll() {
+        return [
+            this.register('addUnknownDirective'),
+            this.register('changeUnitFileType'),
+        ]
+    }
     register(name: CmdName) {
         const fullName: CmdFullName = `${vscodeCommandNS}.${name}`;
         return commands.registerCommand(fullName, this[name].bind(this));
     }
 
     async addUnknownDirective(directive: string, scope: "Global" | "Workspace" | "WorkspaceFolder") {
-        const key = "systemd.customDirectiveKeys".split(".");
+        const key = "systemd.directive-keys.custom".split(".");
 
         const conf = workspace.getConfiguration(key[0]);
-        const value = new Set<string>(conf.get(key[1], []));
+        const value = new Set<string>(conf.get(key.slice(1).join('.'), []));
         value.add(directive);
 
         let scopeValue = ConfigurationTarget[scope];
