@@ -148,7 +148,7 @@
                         "description": "This configuration affects how boolean values are auto-completed"
                     },
                     "systemd.directive-keys.lint": {
-                        "title": "Enable linter feature for directive keys",
+                        "title": "Enable lint(checker) feature for directive keys",
                         "type": "boolean",
                         "default": true,
                         "description": "Give you warnings if any directive keys don't exist in the systemd"
@@ -167,10 +167,10 @@
                                 "custom-key"
                             ]
                         ],
-                        "description": "An array contains case-sensitive strings or regex expressions. The extension will add them to the completion list and linter."
+                        "description": "An array contains case-sensitive strings or regex expressions. The extension will add them to the completion list and lint."
                     },
                     "systemd.lintDirectiveKeys": {
-                        "title": "Enable linter feature for directive keys",
+                        "title": "Enable lint(checker) feature for directive keys",
                         "type": "boolean",
                         "default": true,
                         "markdownDeprecationMessage": "This config was renamed to `directive-keys.lint`. It will be removed in early 2025"

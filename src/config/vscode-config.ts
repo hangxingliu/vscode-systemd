@@ -67,7 +67,7 @@ export const all: VSCodeConfigs<AllRuntimeConfigs, typeof vscodeConfigNS> = {
         description: "This configuration affects how boolean values are auto-completed",
     },
     "systemd.directive-keys.lint": {
-        title: "Enable linter feature for directive keys",
+        title: "Enable lint(checker) feature for directive keys",
         type: "boolean",
         default: true,
         description: "Give you warnings if any directive keys don't exist in the systemd",
@@ -78,7 +78,7 @@ export const all: VSCodeConfigs<AllRuntimeConfigs, typeof vscodeConfigNS> = {
         default: ["/^[A-Z_]+$/"],
         examples: [["/^[A-Z_]+$/"], ["custom-key"]],
         description:
-            "An array contains case-sensitive strings or regex expressions. The extension will add them to the completion list and linter.",
+            "An array contains case-sensitive strings or regex expressions. The extension will add them to the completion list and lint.",
     },
 };
 
