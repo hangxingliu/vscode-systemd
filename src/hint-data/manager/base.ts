@@ -94,6 +94,7 @@ export class HintDataManager {
             this.sectionIdMap.push(nameLC, sectionId);
             this.sections[sectionId] = { name, nameLC };
             if (sectionId > this.maxSectionId) this.maxSectionId = sectionId;
+            return;
         }
 
         if (isManifestItemForDirective(item)) {

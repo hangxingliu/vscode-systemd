@@ -1,4 +1,4 @@
-import { readFileSync, writeFileSync } from "fs";
+import { writeFileSync } from "fs";
 import { blue, dim, red, resolveURL } from "../utils/crawler-utils";
 import { manpageURLs } from "../hint-data/manpage-url";
 import {
