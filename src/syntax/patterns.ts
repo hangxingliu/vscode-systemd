@@ -14,7 +14,7 @@ const jinjaPattern: TextMateGrammarPattern<RepositoryNames> | undefined = ENABLE
  * this is an array with the actual rules used to parse the document. In this example there are two rules (line 6-8 and 9-17). Rules will be explained in the next section.
  */
 export const syntaxPatterns: TextMateGrammarPatterns<RepositoryNames> = [
-    { include: "#commnets" },
+    { include: "#comments" },
     jinjaPattern,
     {
         begin: "^\\s*(" + Array.from(allDeadNames).join("|") + ")\\s*(=)[ \\t]*",
@@ -24,7 +24,7 @@ export const syntaxPatterns: TextMateGrammarPatterns<RepositoryNames> = [
             "2": names.operator.assignment,
         },
         patterns: [
-            { include: "#commnets" },
+            { include: "#comments" },
             jinjaPattern,
             { include: "#variables" },
             { include: "#quotedString" },
@@ -43,7 +43,7 @@ export const syntaxPatterns: TextMateGrammarPatterns<RepositoryNames> = [
             "2": names.operator.assignment,
         },
         patterns: [
-            { include: "#commnets" },
+            { include: "#comments" },
             jinjaPattern,
             {
                 match: /(?<=\G|[\s"'])([A-Za-z0-9\_]+)(=)(?=[^\s"'])/,
@@ -66,7 +66,7 @@ export const syntaxPatterns: TextMateGrammarPatterns<RepositoryNames> = [
             "2": names.operator.assignment,
         },
         patterns: [
-            { include: "#commnets" },
+            { include: "#comments" },
             jinjaPattern,
             { include: "#variables" },
             { include: "#calendarShorthands" },
@@ -81,7 +81,7 @@ export const syntaxPatterns: TextMateGrammarPatterns<RepositoryNames> = [
             "1": names.entityName.configKey,
             "2": names.operator.assignment,
         },
-        patterns: [{ include: "#commnets" }, jinjaPattern, { include: "#capabilities" }],
+        patterns: [{ include: "#comments" }, jinjaPattern, { include: "#capabilities" }],
     },
     {
         name: names.meta.configEntry,
@@ -91,7 +91,7 @@ export const syntaxPatterns: TextMateGrammarPatterns<RepositoryNames> = [
             "1": names.entityName.configKey,
             "2": names.operator.assignment,
         },
-        patterns: [{ include: "#commnets" }, jinjaPattern, { include: "#variables" }, { include: "#restartOptions" }],
+        patterns: [{ include: "#comments" }, jinjaPattern, { include: "#variables" }, { include: "#restartOptions" }],
     },
     {
         name: names.meta.configEntry,
@@ -101,7 +101,7 @@ export const syntaxPatterns: TextMateGrammarPatterns<RepositoryNames> = [
             "1": names.entityName.configKey,
             "2": names.operator.assignment,
         },
-        patterns: [{ include: "#commnets" }, jinjaPattern, { include: "#variables" }, { include: "#typeOptions" }],
+        patterns: [{ include: "#comments" }, jinjaPattern, { include: "#variables" }, { include: "#typeOptions" }],
     },
     {
         name: names.meta.configEntry,
@@ -112,7 +112,7 @@ export const syntaxPatterns: TextMateGrammarPatterns<RepositoryNames> = [
             "2": names.operator.assignment,
         },
         patterns: [
-            { include: "#commnets" },
+            { include: "#comments" },
             jinjaPattern,
             { include: "#executablePrefixes" },
             { include: "#variables" },
@@ -130,7 +130,7 @@ export const syntaxPatterns: TextMateGrammarPatterns<RepositoryNames> = [
             "2": names.operator.assignment,
         },
         patterns: [
-            { include: "#commnets" },
+            { include: "#comments" },
             jinjaPattern,
             { include: "#variables" },
             { include: "#quotedString" },

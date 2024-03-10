@@ -5,7 +5,7 @@ import { capabilityNamesRegExp } from "./const-capabilities";
 import { getOrderedSectionNames } from "./sections-utils";
 
 export type RepositoryNames =
-    | "commnets"
+    | "comments"
     | "sections"
     | "timeSpans"
     | "calendarShorthands"
@@ -58,7 +58,7 @@ export function getQuotedStringPatterns(patterns?: TextMateGrammarPatterns<Repos
  * a dictionary (i.e. key/value pairs) of rules which can be included from other places in the grammar. The key is the name of the rule and the value is the actual rule. Further explanation (and example) follow with the description of the include rule key.
  */
 export const syntaxRepository: TextMateGrammarRepository<RepositoryNames> = {
-    commnets: {
+    comments: {
         patterns: [
             {
                 match: /^\s*[#;].*\n/,

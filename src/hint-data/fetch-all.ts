@@ -55,8 +55,8 @@ async function main() {
     const { total, directives, manPages } = await fetchDirectivesList();
     print.info(`found ${directives.size} directives (total=${total}) and ${manPages.length} man pages`);
 
-    const wellknow = Object.entries(wellknownManPages);
-    const nameToWriter = new Map(wellknow.map(([name, pageName]) => [pageName, new ManifestWriter(name)]));
+    const wellknown = Object.entries(wellknownManPages);
+    const nameToWriter = new Map(wellknown.map(([name, pageName]) => [pageName, new ManifestWriter(name)]));
     const defaultWriter = new ManifestWriter("default");
     specifiers.forEach((it) => defaultWriter.writeItem(it));
 

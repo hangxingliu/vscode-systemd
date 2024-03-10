@@ -2,15 +2,15 @@ import { SystemdDirectiveWithLocation } from "../parser/get-directive-keys";
 import { MapList } from "../utils/data-types";
 import { LintDirectiveValueRule, lintDirectiveValueRules } from "./lint-directive-value-rules";
 
-let nametoRule: MapList<LintDirectiveValueRule> | undefined;
+let nameToRule: MapList<LintDirectiveValueRule> | undefined;
 
 export function lintDirectiveValue(directive: SystemdDirectiveWithLocation) {
-    if (!nametoRule) {
-        nametoRule = new MapList();
-        for (const rule of lintDirectiveValueRules) nametoRule.push(rule.name, rule);
+    if (!nameToRule) {
+        nameToRule = new MapList();
+        for (const rule of lintDirectiveValueRules) nameToRule.push(rule.name, rule);
     }
 
-    const rules = nametoRule.get(directive.directiveKey);
+    const rules = nameToRule.get(directive.directiveKey);
     if (!rules) return;
 
     for (const rule of rules) {

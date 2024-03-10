@@ -56,7 +56,7 @@ export const valueEnum: SystemdValueEnum[] = [
         file,
         desc: {
             //#region
-            // these help text are extarcted from
+            // these help text are extracted from
             // https://www.freedesktop.org/software/systemd/man/latest/systemd.service.html#
             // by the author
             simple: "*Typically, `Type=exec` is the better choice* (the default if `ExecStart=` is specified but neither `Type=` nor `BusName=` are). The service manager will consider the unit started immediately after the main service process has been forked off",

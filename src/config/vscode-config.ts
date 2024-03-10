@@ -28,7 +28,7 @@ export const all: VSCodeConfigs<AllRuntimeConfigs, typeof vscodeConfigNS> = {
         scope: ConfigScope.machineOverridable,
         markdownDescription:
             "By adjusting this configuration, the extension will exclusively offer " +
-            "directive/option completions that are compatiable with this version." +
+            "directive/option completions that are compatible with this version." +
             "\n\n" +
             "This configuration impacts auto-completion and linting features, but **it doesn't" +
             "affect syntax highlighting**." +

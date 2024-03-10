@@ -1,0 +1,63 @@
+# https://cspell.org/
+language: en
+ignorePaths:
+  - src/hint-data/manifests
+  - src/hint-data/wellknown-targets.ts
+  - ./src/hint-data/podman/boolean-directives.ts
+  - src/hint-data/custom-value-enum/systemd-*.ts
+  - src/hint-data/custom-value-enum/common.ts
+  - src/hint-data/custom-value-enum/index.ts
+  - src/hint-data/custom-directives/systemd-*.ts
+  - src/hint-data/*.json
+  - "*.tmLanguage"
+ignoreRegExpList:
+  - /@\w+/       # usernames
+  - /\w+:/       # property keys
+  - /"\w+"/      # a word in a string
+  - /<\/?\w+>/   # HTML tags
+  - /[A-Z]{4,}/  # all uppercase
+  - /\/.+\//     # in RegExp
+  - /HTMLSupported|JSONSchema/
+words:
+  - automount
+  - bearmini
+  - coredump
+  - crypttab
+  - dbus
+  - dnssd
+  - endregion
+  - firstboot
+  - hangxingliu
+  - headerlink
+  - HOWTO
+  - ifname
+  - iftype
+  - inputbox
+  - iocost
+  - IPVTAP
+  - logind
+  - MACVTAP
+  - netdev
+  - networkd
+  - nspawn
+  - oneshot
+  - oomd
+  - pstore
+  - Quadlet
+  - refnamediv
+  - refsect
+  - repartd
+  - sysupdated
+  - timesyncd
+  - vsix
+  - wlan
+  - manpages
+  - variablelist
+  - veritytab
+  - sysupdate
+  - netdevs
+  - rhtml
+  - vconsole
+  - verstr
+  - repart
+  - foldings
