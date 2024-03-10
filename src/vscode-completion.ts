@@ -9,6 +9,7 @@ import {
     TextDocument,
     languages,
     CompletionItemKind,
+    CompletionItemTag,
 } from "vscode";
 import { getCursorInfoFromSystemdConf } from "./parser";
 import { CursorType } from "./parser/types";
@@ -23,8 +24,10 @@ import { getCalendarCompletion } from "./hint-data/get-calendar-completion";
 import { SystemdDocumentManager } from "./vscode-documents";
 import { SystemdCapabilities } from "./hint-data/manager/capabilities";
 import { PredefinedSignature } from "./hint-data/types-manifest";
+import { ValueEnumExtendsFn } from "./hint-data/value-enum-manager";
 
 const zeroPos = new Position(0, 0);
+const deprecatedTags = [CompletionItemTag.Deprecated];
 
 export class SystemdCompletionProvider implements CompletionItemProvider {
     static readonly triggerCharacters: string[] = [
@@ -95,10 +98,19 @@ export class SystemdCompletionProvider implements CompletionItemProvider {
             case CursorType.directiveKey: {
                 const pending = getPendingText();
 
-                const directives = this.managers.filterDirectives(pending, { section, file });
+                let directives = this.managers.filterDirectives(pending, { section, file });
                 if (!directives) return;
+
                 const range = new Range(position.translate(0, -pending.length), position);
-                directives.forEach((it) => (it.range = range));
+                const version = this.config.version;
+                if (version) {
+                    directives = directives.filter((it) => {
+                        if (it.since && it.since > version) return false;
+                        if (it.deprecated) it.tags = it.deprecated > version ? [] : deprecatedTags;
+                        return true;
+                    });
+                }
+                for (const it of directives) it.range = range;
                 return directives;
             }
             case CursorType.section: {
