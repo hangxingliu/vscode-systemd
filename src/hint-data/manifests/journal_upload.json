@@ -1,14 +1,14 @@
 [
 [3,59,"journal-upload.conf(5)","journal-upload.conf, journal-upload.conf.d — Configuration files for the journal upload service","journal-upload.conf.html"],
 [6,1,"Upload"],
-[4,1,"The URL to upload the journal entries to. See the description of `--url=` option in [systemd-journal-upload(8)](systemd-journal-upload.html) for the description of possible values. There is no default value, so either this option or the command-line option must be always present to make an upload.\n\nAdded in version 232.","#URL="],
-[4,2,"SSL key in PEM format.\n\nAdded in version 232.","#ServerKeyFile="],
-[4,3,"SSL CA certificate in PEM format.\n\nAdded in version 232.","#ServerCertificateFile="],
-[4,4,"SSL CA certificate.\n\nAdded in version 232.","#TrustedCertificateFile="],
-[4,5,"When network connectivity to the server is lost, this option configures the time to wait for the connectivity to get restored. If the server is not reachable over the network for the configured time, **systemd-journal-upload** exits. Takes a value in seconds (or in other time units if suffixed with \"ms\", \"min\", \"h\", etc). For details, see [systemd.time(5)](systemd.time.html).\n\nAdded in version 249.","#NetworkTimeoutSec="],
-[2,"NetworkTimeoutSec","",5,59,1],
-[2,"ServerCertificateFile","",3,59,1],
-[2,"ServerKeyFile","",2,59,1],
-[2,"TrustedCertificateFile","",4,59,1],
-[2,"URL","",1,59,1]
+[4,1,"The URL to upload the journal entries to. See the description of `--url=` option in [systemd-journal-upload(8)](systemd-journal-upload.html) for the description of possible values. There is no default value, so either this option or the command-line option must be always present to make an upload.","#URL=",232],
+[4,2,"SSL key in PEM format.","#ServerKeyFile=",232],
+[4,3,"SSL CA certificate in PEM format.","#ServerCertificateFile=",232],
+[4,4,"SSL CA certificate.","#TrustedCertificateFile=",232],
+[4,5,"When network connectivity to the server is lost, this option configures the time to wait for the connectivity to get restored. If the server is not reachable over the network for the configured time, **systemd-journal-upload** exits. Takes a value in seconds (or in other time units if suffixed with \"ms\", \"min\", \"h\", etc). For details, see [systemd.time(5)](systemd.time.html).","#NetworkTimeoutSec=",249],
+[2,"NetworkTimeoutSec",[],5,59,1],
+[2,"ServerCertificateFile",[],3,59,1],
+[2,"ServerKeyFile",[],2,59,1],
+[2,"TrustedCertificateFile",[],4,59,1],
+[2,"URL",[],1,59,1]
 ]

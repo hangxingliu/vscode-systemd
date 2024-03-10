@@ -116,6 +116,7 @@ export class HintDataManagers {
         this.addCustom(DirectiveCategory.default, directives.resource_control);
         this.addCustom(DirectiveCategory.service, directives.service);
         this.addCustom(DirectiveCategory.system, directives.system);
+        this.addCustom(DirectiveCategory.sleep, directives.sleep);
         this.addCustom(DirectiveCategory.default, directives.unit);
 
         const fallback = new HintDataManager(DirectiveCategory.fallback, manpageURLs.base);

@@ -7,6 +7,7 @@ import { directives as nspawn } from "./systemd-nspawn";
 import { directives as resource_control } from "./systemd-resource-control";
 import { directives as service } from "./systemd-service";
 import { directives as system } from "./systemd-system";
+import { directives as sleep } from "./systemd-sleep";
 import { directives as unit } from "./systemd-unit";
 import { CustomSystemdDirective } from "./types";
 
@@ -22,6 +23,7 @@ export const directives = {
     resource_control,
     service,
     system,
+    sleep,
     unit,
 };
 export const customDirectives: CustomSystemdDirective[] = [];
