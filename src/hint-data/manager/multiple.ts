@@ -1,4 +1,4 @@
-import { CompletionItem, CompletionItemTag } from "vscode";
+import { CompletionItem } from "vscode";
 import { manpageURLs } from "../manpage-url";
 import {
     DirectiveCategory,
@@ -9,7 +9,7 @@ import {
 import { HintDataManager } from "./base";
 import { CursorInfo } from "../../parser";
 import { isValidArrayIndex } from "../../utils/data-types";
-import { systemdValueEnum } from "../value-enum";
+import { systemdValueEnum } from "../custom-value-enum";
 import { podmanValueEnum } from "../podman/value-enum";
 import { SystemdFileType } from "../../parser/file-info";
 import { getSubsetOfManagers } from "./subset";

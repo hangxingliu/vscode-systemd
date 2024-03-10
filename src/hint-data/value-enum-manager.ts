@@ -1,6 +1,6 @@
 import { CursorInfo } from "../parser";
 import { SystemdFileType } from "../parser/file-info";
-import { SystemdValueEnum } from "./value-enum";
+import { SystemdValueEnum } from "./custom-value-enum/types";
 import { CompletionItem, CompletionItemKind, MarkdownString, SnippetString } from "vscode";
 
 export type ValueEnumExtendsFn = (valueEnum: SystemdValueEnum) => CompletionItem[] | null | undefined;
@@ -61,7 +61,11 @@ export class ValueEnumManager {
                 let i = 1;
                 ci.insertText = new SnippetString(it.replace(/\$\{(\w+)\}/g, (_, key) => `\${${i++}:${key}}`));
             }
-            if (docs) ci.documentation = new MarkdownString(docs);
+            if (docs) {
+                // if docs has a word only
+                if (docs.match(/^\w+$/)) ci.label = { label: it, detail: ' ' + docs };
+                else ci.documentation = new MarkdownString(docs);
+            }
             result.push(ci);
         }
         return result;

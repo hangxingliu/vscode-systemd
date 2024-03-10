@@ -1,8 +1,10 @@
-import { SystemdValueEnum, systemdValueEnum } from "../hint-data/value-enum";
+import { systemdValueEnum } from "../hint-data/custom-value-enum";
+import { SystemdValueEnum } from "../hint-data/custom-value-enum/types";
 import { MapList } from "../utils/data-types";
 
 const duplicate = new MapList<SystemdValueEnum>();
 systemdValueEnum.forEach((it) => {
+    if (!it.values) return;
     const encoded = JSON.stringify(Array.from(it.values).sort());
     duplicate.push(encoded, it);
 });
