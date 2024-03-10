@@ -1,10 +1,16 @@
 import { SystemdFileType } from "../../parser/file-info";
-import { wlanInterfaceTypes } from "./common";
+import { supportedNetdevKinds, wlanInterfaceTypes } from "./common";
 import { SystemdValueEnum } from "./types";
 
 const file = SystemdFileType.netdev;
 
 export const valueEnum: SystemdValueEnum[] = [
+    {
+        directive: "Kind",
+        section: "NetDev",
+        file,
+        desc: supportedNetdevKinds,
+    },
     {
         directive: "EncapsulationType",
         section: "L2TP",
