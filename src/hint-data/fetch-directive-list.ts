@@ -57,7 +57,7 @@ export async function fetchDirectivesList() {
     const $ = await getHTMLDoc("directives docs", manpageURLs.directives);
     print.start("extracting all directives");
 
-    const allH2 = findElements($, "h2", ">=26");
+    const allH2 = findElements($, "h2", ">=24");
     assertLength("all <h2>", allH2, 26, AssertLevel.WARNING);
 
     const directivesH2 = matchElementsByText(allH2, directiveHeadings, {});

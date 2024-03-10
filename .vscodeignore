@@ -64,5 +64,6 @@ examples
 ._*
 
 # logs
+/logs
 *.log
 #endregion main

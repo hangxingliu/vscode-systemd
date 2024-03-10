@@ -41,6 +41,7 @@ const ignoredH2Sections: string[] = [
     "Specifiers",
     "Process Exit Codes",
     "Implicit Dependencies",
+    "Credentials\nsystemd-firstboot(1)",
 ];
 
 export async function fetchDirectiveDetailsFromManPage(
@@ -84,6 +85,7 @@ export async function fetchDirectiveDetailsFromManPage(
         const $h2 = $(h2);
         const h2text = getText($h2);
         if (ignoredH2Sections.includes(h2text)) continue;
+        if (ignoredH2Sections.includes(`${h2text}\n${pageName}`)) continue;
 
         // print.debug(h2text);
         const sectionName = extractSectionNameFromDocs(h2text, pageName);

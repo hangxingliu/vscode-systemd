@@ -1,5 +1,5 @@
 // author: hangxingliu
-// version: 2024-03-07
+// version: 2024-03-08
 import axios, { AxiosResponse } from "axios";
 import { load, CheerioAPI, Element, Cheerio } from "cheerio";
 export { load as loadHtml } from "cheerio";
@@ -437,7 +437,7 @@ export function enableHTMLSupportedInMarkdown(enabled = true) {
 export function toMarkdown(html: string): string {
     if (!turndownService) {
         const Turndown = require("turndown");
-        const { gfm } = require('turndown-plugin-gfm');
+        const { gfm } = require("turndown-plugin-gfm");
         turndownService = new Turndown({ headingStyle: "atx", hr: "***" });
         turndownService.use(gfm);
     }
@@ -497,11 +497,11 @@ export class JsonFileWriter<ItemType = unknown> {
     writeItems(items: ItemType[]) {
         for (const item of items) this.writeItem(item);
     }
-    close() {
+    async close() {
         if (!this.stream) return;
         const stream = this.stream;
         this.stream = undefined;
         stream.write("\n]");
-        stream.close();
+        await new Promise<void>((resolve, reject) => stream.close((err) => (err ? reject(err) : resolve())));
     }
 }

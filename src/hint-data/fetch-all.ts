@@ -1,21 +1,33 @@
 #!/usr/bin/env node
 
-import { cacheDir, manifestDir } from "../config/fs";
+import { cacheDir, logsDir, manifestDir } from "../config/fs";
 import { manpageURLs } from "./manpage-url";
 import { fetchSpecifiersList } from "../hint-data/fetch-specifier-list";
-import { print, SimpleHttpCache, resolveURL, JsonFileWriter, enableHTMLSupportedInMarkdown } from "../utils/crawler-utils";
+import {
+    print,
+    SimpleHttpCache,
+    resolveURL,
+    JsonFileWriter,
+    enableHTMLSupportedInMarkdown,
+} from "../utils/crawler-utils";
 import { ManifestItem } from "./types-manifest";
 import { fetchDirectivesList } from "../hint-data/fetch-directive-list";
 import { fetchDirectiveDetailsFromManPage } from "../hint-data/fetch-directive-details";
 import { wellknownManPages } from "./wellknown-manpages";
 import { resolve } from "path";
-import { existsSync, mkdirSync } from "fs";
+import { existsSync, mkdirSync, writeFileSync } from "fs";
+import { HintDataChanges } from "./fetch-changes";
 
 class ManifestWriter extends JsonFileWriter<ManifestItem> {
     nextIds = { docs: 1, sections: 1 };
+    from: HintDataChanges;
     constructor(name: string) {
         super(resolve(manifestDir, name + ".json"));
         if (!existsSync(manifestDir)) mkdirSync(manifestDir);
+        this.from = HintDataChanges.fromFile(this.filePath);
+    }
+    getChanges(version?: number) {
+        return HintDataChanges.getChanges(this.from, HintDataChanges.fromFile(this.filePath), version);
     }
 }
 
@@ -27,6 +39,15 @@ main().catch((error) => {
 async function main() {
     SimpleHttpCache.init(cacheDir);
     enableHTMLSupportedInMarkdown();
+
+    let verstr: string | undefined;
+    let version: number | undefined;
+    const mtx = manpageURLs.base.match(/\/man\/(\d+|latest)/i);
+    if (mtx) {
+        verstr = mtx[1]
+        version = parseInt(verstr, 10);
+        if (!Number.isSafeInteger(version)) version = undefined;
+    }
 
     const specifiers = await fetchSpecifiersList();
     print.info(`found ${specifiers.length} specifiers`);
@@ -56,9 +77,25 @@ async function main() {
         }
         writer.nextIds = manPageResult.nextIds;
     }
-    defaultWriter.close();
-    nameToWriter.forEach((writer, name) => {
+    await defaultWriter.close();
+    const { logs, removed } = defaultWriter.getChanges(version);
+    if (logs.length > 0) logs.push("\n\n");
+
+    for (const [name, writer] of nameToWriter) {
         if (writer.nextIds.docs === 1 || writer.nextIds.sections === 1) print.warn(`No any manifest in ${name}`);
-        writer.close();
-    });
+        await writer.close();
+
+        const r = writer.getChanges(version);
+        if (r.logs.length > 0) r.logs.push("\n\n");
+        logs.push(...r.logs);
+        removed.push(...r.removed);
+    }
+
+    if (!existsSync(logsDir)) mkdirSync(logsDir);
+    const logFile = resolve(logsDir, `v${verstr}-changes.log`);
+    const logFile2 = resolve(logsDir, `v${verstr}-removed.json`);
+    writeFileSync(logFile, logs.join("\n"));
+    writeFileSync(logFile2, JSON.stringify(removed, null, 2));
+    print.info(logFile);
+    print.info(logFile2);
 }
