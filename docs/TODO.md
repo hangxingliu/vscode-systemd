@@ -8,23 +8,26 @@
 
 ## 2.2.0
 
-- [ ] Update data for custom directives (todo: check it)
-- [ ] Add more deprecated/removed/renamed directives from `CHANGELOG` in systemd repo
-- [ ] boolean value completion
-- [ ] Settings for enabling/disabling Podman
+- [x] Update data for custom directives
+- [x] boolean value completion
+- [x] Settings for enabling/disabling Podman
 - [x] Fix incorrect markdown styles in docs (italic with formatted code)
-- [ ] Fix completion for `MACVTAP`/`IPVTAP`/`Tap`
+- [x] Fix completion for `MACVTAP`/`IPVTAP`/`Tap`
+- [x] Fix linting directives
+- [x] Settings for systemd version
 
 ## 2.3.0
 
-- [ ] Settings for systemd version
-- [ ] Add support for `jinja2`
+- [ ] Add docs about new folders (e.g., `custom-directives`) and how to update hint data after systemd released new version
+- [ ] Support value prefixes and `sep` field in value enum rules
 - [ ] Systemd 256: `IPv4ProxyARPPrivateVLAN=`
+- [ ] Add more deprecated/removed/renamed directives from `CHANGELOG` in systemd repo
 - [ ] Add completion for predefined filters in <https://www.freedesktop.org/software/systemd/man/latest/systemd.exec.html#>
     - <https://man7.org/linux/man-pages/man2/syscalls.2.html>
 
 ## 2.4.0
 
+- [ ] Add support for `jinja2`
 - [ ] Settings for running `systemd` commands 
 - [ ] Lint/Test by `systemd-analyze`
 - [ ] Click and jump to unit file

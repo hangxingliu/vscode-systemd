@@ -20,19 +20,3 @@ WithoutRA=solicit
 UplinkInterface=:self
 SubnetId=0
 Announce=no
-# /etc/systemd/network/55-dhcpv6-pd-downstream.network
-[Match]
-Name=enp2s0
-
-[Network]
-DHCPPrefixDelegation=yes
-IPv6SendRA=yes
-
-# It is expected that the host is acting as a router. So, usually it is not
-# necessary to receive Router Advertisement from other hosts in the downstream network.
-IPv6AcceptRA=no
-
-[DHCPPrefixDelegation]
-UplinkInterface=enp1s0
-SubnetId=1
-Announce=yes
