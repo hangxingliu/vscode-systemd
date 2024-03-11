@@ -1,5 +1,30 @@
 # CHANGELOG
 
+### 2.2.0 (2024-03-xx)
+
+- Add auto-completion and signature hint support for boolean values for directives
+- Add support for a new unit file `iocost.conf`
+- Add more completion/documentation for directive value
+- Add more documentation for deprecated/renamed/removed directives
+- Add version information into the documentation to indicate the first supported version and the version at which the directive became deprecated/removed
+- Add a new configuration named `systemd.podman.completion` to enable/disable providing completion items related to Podman Quadlet by default
+- Add a new configuration named `systemd.version` to ensure the extension only offers compatible auto-completion and provides more precise linting feature
+- Add a new configuration named `systemd.style.boolean` to specify the preferred boolean value format for auto-completion
+- Fixed a bug where the documentation for some directives was not displayed
+- Fixed some errors in the documentation, including incorrect markup tags, tables that are not 
+displaying properly and unexpected email addresses
+- Fixed auto-completion feature for directives in the following sections: `MACVTAP`/`IPVTAP`/`Tap`
+- Renamed the following configurations: (The old names will still be supported in 2024)
+    - `systemd.lintDirectiveKeys` => `systemd.directive-keys.lint`
+    - `systemd.customDirectiveKeys` => `systemd.directive-keys.custom`
+- Updated diagnostics to display detailed deprecation information and providing quick fixes for automatically renaming deprecated directives.
+- Updated documentation to the latest
+- Improved the process of changing unit file types
+    - Highlighting recommended types in the type picker for easier selection
+    - Retaining manually changed types in the workspace state to ensure they are remembered upon reopening the editor
+- The unit file type of Podman Quadlet has been divided into several more specific types, such as `container`, `image`, ...
+
+
 ### 2.1.0 (2024-02-28)
 
 - Add CodeLens for files to show the type of the unit file and allow user to change the type

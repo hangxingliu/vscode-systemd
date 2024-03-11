@@ -22,6 +22,11 @@ date: 2024-02-26
     - URL: <https://open-vsx.org/user-settings/extensions>
     - **ONLY** Publish vsix file built through CI from: <https://github.com/hangxingliu/vscode-systemd/actions/workflows/ci.yaml>
 
+## Update data to new systemd version
+
+- Add deprcated directives from `logs/v*-removed.json`
+- Check `logs/v*-changes.json` to update documentation in `src/hint-data/custom-value-enum`
+
 ## Test extension in Visual Studio Code Web
 
 ``` bash

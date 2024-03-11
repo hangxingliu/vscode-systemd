@@ -16,21 +16,24 @@
 - [x] Fix linting directives
 - [x] Settings for systemd version
 - [x] Add more deprecated/removed/renamed directives from `CHANGELOG` in systemd repo
+- [x] Update `extensionKind` to `["workspace", "ui"]` to allow user install it from local to remote
 
 ## 2.3.0
 
-- [ ] Add docs about new folders (e.g., `custom-directives`) and how to update hint data after systemd released new version
-- [ ] Support value prefixes and `sep` field in value enum rules
-- [ ] Update for Systemd 256 (e.g., `IPv4ProxyARPPrivateVLAN=`)
-- [ ] Add completion for predefined filters in <https://www.freedesktop.org/software/systemd/man/latest/systemd.exec.html#>
-    - <https://man7.org/linux/man-pages/man2/syscalls.2.html>
+- [ ] Add docs about new folders (e.g., `custom-directives`)
+- [ ] Add and check all value completions
+- [ ] Add support for value prefixes and `sep` field in value enum rules
+- [ ] Add completion for predefined filters and syscalls in <https://www.freedesktop.org/software/systemd/man/latest/systemd.exec.html#> and <https://man7.org/linux/man-pages/man2/syscalls.2.html>
+- [ ] Update documents for `Asset*` directives in systemd.unit(5) for more human-readable
 
-## 2.4.0
+## 2.x
 
-- [ ] Update `extensionKind` to `["workspace", "ui"]` to allow user install it from local to remote
+- [ ] Update to Systemd 256 (e.g., `IPv4ProxyARPPrivateVLAN=`)
+
+## 3.x
+
 - [ ] Add support for `jinja2`
 - [ ] Settings for running `systemd` commands 
 - [ ] Lint/Test by `systemd-analyze`
 - [ ] Click and jump to unit file
-- [ ] Completion for path
-- [ ] View, search and edit remote unit files
+- [ ] Completion for unit file names

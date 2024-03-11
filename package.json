@@ -5,7 +5,7 @@
     "icon": "out/assets/icon.png",
     "main": "out/index.js",
     "browser": "out/index.js",
-    "version": "2.1.0",
+    "version": "2.2.0",
     "preview": false,
     "publisher": "hangxingliu",
     "author": "hangxingliu",

@@ -19,6 +19,7 @@ testParseSystemdVersion("252.22-1~deb12u1", { major: 252, minor: 22 });
 testParseSystemdVersion("255.4-1", { major: 255, minor: 4 });
 testParseSystemdVersion("255.4-1ubuntu4", { major: 255, minor: 4 });
 testParseSystemdVersion("systemd 249", { major: 249 });
+testParseSystemdVersion("systemd 255 (255.2-3-arch)", { major: 255 });
 testParseSystemdVersion(255, { major: 255 });
 testParseSystemdVersion(255.4, { major: 255, minor: 4 });
 testParseSystemdVersion(0, undefined);
