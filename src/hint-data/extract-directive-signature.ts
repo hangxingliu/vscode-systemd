@@ -26,7 +26,7 @@ export function extractDirectiveSignature(signatureString: string): ReadonlyArra
 export function isBooleanArgument(docs: string | undefined) {
     if (!docs) return false;
     // mistake: Takes an boolean value. When true, the kernel ignores multicast groups handled by userspace. ...
-    if (docs.match(/\btakes?\s+(an?\s+)?bool(?:ean)\s+(value|arguments?)/i)) return true;
+    if (docs.match(/\btakes?\s+(an?\s+)?bool(?:ean)\s+(value|arguments?|parameter)/i)) return true;
     if (docs.match(/\btakes\s+an?\s+bool(?:ean)\./i)) return true;
     return false;
 }
