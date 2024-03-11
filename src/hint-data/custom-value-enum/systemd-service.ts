@@ -9,9 +9,9 @@ export const valueEnum: SystemdValueEnum[] = [
         directive: "ExitType",
         section,
         file,
-        values: ["cgroup", "main"],
-        desc: {
-            main: "(the default) The service manager will consider the unit stopped when the main process, which is determined according to the `Type=`, exits. Consequently, it cannot be used with `Type=oneshot`.",
+        tips: { main: "default" },
+        docs: {
+            main: "The service manager will consider the unit stopped when the main process, which is determined according to the `Type=`, exits. Consequently, it cannot be used with `Type=oneshot`.",
             cgroup: "The service will be considered running as long as at least one process in the cgroup has not exited.",
         },
     },
@@ -54,7 +54,7 @@ export const valueEnum: SystemdValueEnum[] = [
         directive: "Type",
         section,
         file,
-        desc: {
+        docs: {
             //#region
             // these help text are extracted from
             // https://www.freedesktop.org/software/systemd/man/latest/systemd.service.html#

@@ -1,7 +1,8 @@
 import { CursorInfo } from "../parser";
 import { SystemdFileType } from "../parser/file-info";
+import { getArray } from "../utils/data-types";
 import { SystemdValueEnum } from "./custom-value-enum/types";
-import { CompletionItem, CompletionItemKind, MarkdownString, SnippetString } from "vscode";
+import { CompletionItem, CompletionItemKind, CompletionItemTag, MarkdownString, SnippetString } from "vscode";
 
 export type ValueEnumExtendsFn = (valueEnum: SystemdValueEnum) => CompletionItem[] | null | undefined;
 export class ValueEnumManager {
@@ -10,10 +11,13 @@ export class ValueEnumManager {
     constructor(allValueEnum: ReadonlyArray<SystemdValueEnum>) {
         const byName = this.byName;
         for (const valueEnum of allValueEnum) {
-            const lc = valueEnum.directive.toLowerCase();
-            const list = byName.get(lc);
-            if (!list) byName.set(lc, [valueEnum]);
-            else list.push(valueEnum);
+            const names = getArray(valueEnum.directive)
+            for (const name of names) {
+                const lc = name.toLowerCase();
+                const list = byName.get(lc);
+                if (!list) byName.set(lc, [valueEnum]);
+                else list.push(valueEnum);
+            }
         }
     }
 
@@ -27,7 +31,8 @@ export class ValueEnumManager {
 
         const result: CompletionItem[] = [];
         const resultText: string[] = [];
-        const desc: Record<string, string> = {};
+        const docs: Record<string, string> = {};
+        const tips: Record<string, string> = {};
 
         let section = cursor.section || "";
         if (section) section = section.replace(/[\[\]]/g, "");
@@ -48,24 +53,24 @@ export class ValueEnumManager {
                 if (items && items.length > 0) result.push(...items);
             }
             if (valueEnum.values) resultText.push(...valueEnum.values);
-            if (valueEnum.desc) {
-                resultText.push(...Object.keys(valueEnum.desc));
-                Object.assign(desc, valueEnum.desc);
+            if (valueEnum.tips) Object.assign(tips, valueEnum.tips);
+            if (valueEnum.docs) {
+                resultText.push(...Object.keys(valueEnum.docs));
+                Object.assign(docs, valueEnum.docs);
             }
         }
 
         for (const it of new Set(resultText)) {
-            const ci = new CompletionItem(it, CompletionItemKind.Enum);
-            const docs = desc[it];
+            const tip = tips[it];
+            const documentation = docs[it];
+
+            const ci = new CompletionItem(tip ? { label: it, detail: ` ${tip}` } : it, CompletionItemKind.Enum);
             if (it.match(/\$\{/)) {
                 let i = 1;
                 ci.insertText = new SnippetString(it.replace(/\$\{(\w+)\}/g, (_, key) => `\${${i++}:${key}}`));
             }
-            if (docs) {
-                // if docs has a word only
-                if (docs.match(/^\w+$/)) ci.label = { label: it, detail: ' ' + docs };
-                else ci.documentation = new MarkdownString(docs);
-            }
+            if (tip && tip === "deprecated") ci.tags = [CompletionItemTag.Deprecated];
+            if (documentation) ci.documentation = new MarkdownString(documentation);
             result.push(ci);
         }
         return result;

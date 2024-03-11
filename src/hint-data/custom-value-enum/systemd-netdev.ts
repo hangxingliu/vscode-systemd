@@ -9,7 +9,7 @@ export const valueEnum: SystemdValueEnum[] = [
         directive: "Kind",
         section: "NetDev",
         file,
-        desc: supportedNetdevKinds,
+        docs: supportedNetdevKinds,
     },
     {
         directive: "EncapsulationType",
@@ -63,7 +63,7 @@ export const valueEnum: SystemdValueEnum[] = [
         directive: "Type",
         section: "WLAN",
         file,
-        desc: wlanInterfaceTypes,
+        docs: wlanInterfaceTypes,
         sep: " ",
         prefixes: ["!"],
     },

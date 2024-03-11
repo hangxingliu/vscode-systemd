@@ -8,14 +8,14 @@ const file = SystemdFileType.network;
 /** https://www.freedesktop.org/software/systemd/man/latest/systemd.network.html#%5BNetworkEmulator%5D%20Section%20Options */
 const qdsicParentEnum4 = {
     values: ["root", "ingress", "clsact", "${class_identifier}"],
-    desc: {
+    tips: {
         root: "default",
     },
 };
 /** https://www.freedesktop.org/software/systemd/man/latest/systemd.network.html#%5BHierarchyTokenBucketClass%5D%20Section%20Options */
 const qdsicParentEnum2 = {
     values: ["root", "${qdisc_identifier}"],
-    desc: {
+    tips: {
         root: "default",
     },
 };
@@ -67,7 +67,7 @@ export const valueEnum: SystemdValueEnum[] = [
         directive: "WLANInterfaceType",
         section: "Match",
         file,
-        desc: wlanInterfaceTypes,
+        docs: wlanInterfaceTypes,
         sep: " ",
         prefixes: ["!"],
     },
@@ -76,7 +76,7 @@ export const valueEnum: SystemdValueEnum[] = [
         section: "Network",
         file,
         values: ["yes", "no", "ipv4", "ipv6"],
-        desc: { no: "default" },
+        docs: { no: "default" },
     },
     {
         directive: "LinkLocalAddressing",
@@ -187,7 +187,7 @@ export const valueEnum: SystemdValueEnum[] = [
         section: "CAKE",
         file,
         values: [],
-        desc: {
+        docs: {
             none: "The flow isolation is disabled, and all traffic passes through a single queue",
             "src-host":
                 'Flows are defined only by source address. Equivalent to the "`srchost`" option for **tc qdisc** command',

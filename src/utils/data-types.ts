@@ -18,3 +18,8 @@ export function isValidArrayIndex(x: unknown): x is number {
 export function isNonEmptyArray<Item>(arr?: Item[]): arr is Item[] {
     return Array.isArray(arr) && arr.length > 0;
 }
+export function getArray<T>(input: T | T[]): T[] {
+    if (Array.isArray(input)) return input;
+    if (input === undefined) return [];
+    return [input];
+}

@@ -204,7 +204,7 @@ export const systemdValueEnum: ReadonlyArray<SystemdValueEnum> = [
             "cvm",
             "measured-uki",
         ],
-        desc: {
+        docs: {
             selinux: "SELinux MAC",
             apparmor: "AppArmor MAC",
             tomoyo: "Tomoyo MAC",

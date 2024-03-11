@@ -138,8 +138,12 @@ export class HintDataChanges {
             resolvedTo[index] = true;
 
             const dir2 = to.directives[index];
-            if (dir.docs !== dir2.docs || JSON.stringify(dir.signatures) !== JSON.stringify(dir2.signatures)) {
+            if (dir.docs !== dir2.docs) {
                 logs2.push(createLogs(dir, "CHANGED"));
+                continue;
+            }
+            if (JSON.stringify(dir.signatures) !== JSON.stringify(dir2.signatures)) {
+                logs2.push(createLogs(dir, "CHANGED(SIGNATURE)"));
                 continue;
             }
         }
