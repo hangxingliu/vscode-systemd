@@ -5,6 +5,8 @@ import { valueEnum as service } from "./systemd-service";
 import { valueEnum as socket } from "./systemd-socket";
 import { valueEnum as unit } from "./systemd-unit";
 import { valueEnum as exec } from "./systemd-exec";
+import { valueEnum as kill } from "./systemd-kill";
+import { valueEnum as link } from "./systemd-link";
 import { valueEnum as resource_control } from "./systemd-resource-control";
 
 export const systemdValueEnum: ReadonlyArray<SystemdValueEnum> = [
@@ -15,6 +17,8 @@ export const systemdValueEnum: ReadonlyArray<SystemdValueEnum> = [
     ...netdev,
     ...network,
     ...socket,
+    ...kill,
+    ...link,
     {
         directive: "OOMPolicy",
         manPage: "systemd.scope(5)",
@@ -36,12 +40,6 @@ export const systemdValueEnum: ReadonlyArray<SystemdValueEnum> = [
         section: "Home",
         manPage: "homed.conf(5)",
         values: ["luks", "fscrypt", "directory", "subvolume", "cifs"],
-    },
-    {
-        directive: "MDI",
-        section: "Link",
-        manPage: "systemd.link(5)",
-        values: ["straight", "mdi", "crossover", "mdi-x", "mdix", "auto"],
     },
     {
         directive: "DNSStubListener",
@@ -184,39 +182,5 @@ export const systemdValueEnum: ReadonlyArray<SystemdValueEnum> = [
         section: "Source",
         manPage: "sysupdate.d(5)",
         values: ["url-file", "url-tar", "tar", "regular-file", "directory", "subvolume"],
-    },
-    {
-        directive: "KillMode",
-        values: ["control-group", "mixed", "process" /*"none"*/],
-        manPage: "systemd.kill(5)",
-    },
-    {
-        directive: "ConditionSecurity",
-        values: [
-            "selinux",
-            "apparmor",
-            "tomoyo",
-            "smack",
-            "ima",
-            "audit",
-            "uefi-secureboot",
-            "tpm2",
-            "cvm",
-            "measured-uki",
-        ],
-        docs: {
-            selinux: "SELinux MAC",
-            apparmor: "AppArmor MAC",
-            tomoyo: "Tomoyo MAC",
-            smack: "SMACK MAC",
-            ima: "Integrity Measurement Architecture (IMA)",
-            audit: "Linux Audit Framework",
-            "uefi-secureboot": "UEFI SecureBoot",
-            tpm2: "Trusted Platform Module 2.0 (TPM2)",
-            cvm: "Confidential virtual machine (SEV/TDX)",
-            "measured-uki":
-                "Unified Kernel Image with PCR 11 Measurements, as per [systemd-stub(7)](systemd-stub.html).\nAdded in version 255.",
-        },
-        manPage: "systemd.unit(5)",
     },
 ];

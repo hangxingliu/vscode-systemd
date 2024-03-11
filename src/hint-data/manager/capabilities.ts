@@ -8,13 +8,15 @@ export type SystemdCapabilityItem = {
     docs: MarkdownString;
 };
 
-const directiveKeysLC = new Set([
+const directiveKeys = new Set([
     /** https://www.freedesktop.org/software/systemd/man/latest/systemd.exec.html */
-    "capabilityboundingset",
-    "ambientcapabilities",
+    "CapabilityBoundingSet",
+    "AmbientCapabilities",
+    "ConditionCapability",
+    "AssertCapability",
     /** https://docs.podman.io/en/latest/markdown/podman-systemd.unit.5.html#addcapability */
-    "addcapability",
-    "dropcapability",
+    "AddCapability",
+    "DropCapability",
 ]);
 
 export class SystemdCapabilities {
@@ -44,7 +46,7 @@ export class SystemdCapabilities {
     }
 
     testDirectiveKey(directive?: string) {
-        return typeof directive === "string" ? directiveKeysLC.has(directive.toLowerCase()) : false;
+        return typeof directive === "string" ? directiveKeys.has(directive) : false;
     }
 
     getByName(capName: string) {
@@ -53,8 +55,7 @@ export class SystemdCapabilities {
 
     getCompletionItems(directiveKey: string) {
         if (!directiveKey) return;
-        const lc = directiveKey.toLocaleLowerCase();
-        if (!directiveKeysLC.has(lc)) return;
+        if (!directiveKeys.has(directiveKey)) return;
 
         if (!this.cached) {
             const allItems = Array.from(this.byName.values());

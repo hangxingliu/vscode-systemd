@@ -1,9 +1,11 @@
+import { SystemdValueEnum } from "../custom-value-enum/types";
+
 /**
  * https://www.freedesktop.org/software/systemd/man/latest/systemd.network.html#WLANInterfaceType=
  *
  * `enum nl80211_iftype`
  */
-export const wlanInterfaceTypes: Record<string, string> = {
+export const wlanInterfaceTypes: SystemdValueEnum["docs"] = {
     "ad-hoc": "independent BSS member",
     station: "managed BSS member",
     ap: "access point",
@@ -61,3 +63,59 @@ export const supportedNetdevKinds: Record<string, string> = {
     ipoib: "An IP over Infiniband subinterface.",
     wlan: "A virtual wireless network (WLAN) interface.",
 };
+
+const signalActions = {
+    Term: "Default action is to terminate the process.",
+    Ign: "Default action is to ignore the signal.",
+    Core: "Default action is to terminate the process and dump core. (see core(5)).",
+    Stop: "Default action is to stop the process.",
+    Cont: "Default action is to continue the process if it is currently stopped.",
+};
+const posix1990 = "POSIX.1-1990   \n";
+const posix2001 = "the signal was added in SUSv2 and POSIX.1-2001   \n";
+/**
+ * https://man7.org/linux/man-pages/man7/signal.7.html
+ *
+ * `Standard signals`
+ */
+export const standardSignals: SystemdValueEnum["docs"] = {
+    SIGABRT: `Abort signal from abort(3)\n\n${posix1990}${signalActions.Core}`,
+    SIGALRM: `Timer signal from alarm(2)\n\n${posix1990}${signalActions.Term}`,
+    SIGBUS: `Bus error (bad memory access)\n\n${posix2001}${signalActions.Core}`,
+    SIGCHLD: `Child stopped or terminated\n\n${posix1990}${signalActions.Ign}`,
+    SIGCLD: `A synonym for \`SIGCHLD\`\n\n${signalActions.Ign}`,
+    SIGCONT: `Continue if stopped\n\n${posix1990}${signalActions.Cont}`,
+    SIGEMT: `Emulator trap\n\n${signalActions.Term}`,
+    SIGFPE: `Floating-point exception\n\n${posix1990}${signalActions.Core}`,
+    SIGHUP: `Hangup detected on controlling terminal or death of controlling process\n\n${posix1990}${signalActions.Term}`,
+    SIGILL: `Illegal Instruction\n\n${posix1990}${signalActions.Core}`,
+    SIGINFO: `A synonym for \`SIGPWR\``,
+    SIGINT: `Interrupt from keyboard\n\n${posix1990}${signalActions.Term}`,
+    SIGIO: `I/O now possible (4.2BSD)\n\n${signalActions.Term}`,
+    SIGIOT: `IOT trap. A synonym for \`SIGABRT\`\n\n${signalActions.Core}`,
+    SIGKILL: `Kill signal\n\n${posix1990}${signalActions.Term}`,
+    SIGLOST: `File lock lost (unused)\n\n${signalActions.Term}`,
+    SIGPIPE: `Broken pipe: write to pipe with no readers; see pipe(7)\n\n${posix1990}${signalActions.Term}`,
+    SIGPOLL: `Pollable event (Sys V); synonym for \`SIGIO\`\n\n${posix2001}${signalActions.Term}`,
+    SIGPROF: `Profiling timer expired\n\n${posix2001}${signalActions.Term}`,
+    SIGPWR: `Power failure (System V)\n\n${signalActions.Term}`,
+    SIGQUIT: `Quit from keyboard\n\n${posix1990}${signalActions.Core}`,
+    SIGSEGV: `Invalid memory reference\n\n${posix1990}${signalActions.Core}`,
+    SIGSTKFLT: `Stack fault on coprocessor (unused)\n\n${signalActions.Term}`,
+    SIGSTOP: `Stop process\n\n${posix1990}${signalActions.Stop}`,
+    SIGTSTP: `Stop typed at terminal\n\n${posix1990}${signalActions.Stop}`,
+    SIGSYS: `Bad system call (SVr4); see also seccomp(2)\n\n${posix2001}${signalActions.Core}`,
+    SIGTERM: `Termination signal\n\n${posix1990}${signalActions.Term}`,
+    SIGTRAP: `Trace/breakpoint trap\n\n${posix2001}${signalActions.Core}`,
+    SIGTTIN: `Terminal input for background process\n\n${posix1990}${signalActions.Stop}`,
+    SIGTTOU: `Terminal output for background process\n\n${posix1990}${signalActions.Stop}`,
+    SIGUNUSED: `Synonymous with \`SIGSYS\`\n\n${signalActions.Core}`,
+    SIGURG: `Urgent condition on socket (4.2BSD)\n\n${posix2001}${signalActions.Ign}`,
+    SIGUSR1: `User-defined signal 1\n\n${posix1990}${signalActions.Term}`,
+    SIGUSR2: `User-defined signal 2\n\n${posix1990}${signalActions.Term}`,
+    SIGVTALRM: `Virtual alarm clock (4.2BSD)\n\n${posix2001}${signalActions.Term}`,
+    SIGXCPU: `CPU time limit exceeded (4.2BSD); see setrlimit(2)\n\n${posix2001}${signalActions.Core}`,
+    SIGXFSZ: `File size limit exceeded (4.2BSD); see setrlimit(2)\n\n${posix2001}${signalActions.Core}`,
+    SIGWINCH: `Window resize signal (4.3BSD, Sun)\n\n${signalActions.Ign}`,
+};
+
