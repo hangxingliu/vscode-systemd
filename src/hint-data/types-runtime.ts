@@ -77,7 +77,7 @@ export type DirectiveCompletionItem = CompletionItem & {
      * if it has already been deprecated.
      */
     deprecated?: number;
-    fix?: { help: string; rename?: string };
+    fix?: { help: string; url?: string; rename?: string };
 };
 export type RequiredDirectiveCompletionItem = PartialRequired<
     DirectiveCompletionItem,

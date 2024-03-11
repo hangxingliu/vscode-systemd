@@ -12,6 +12,7 @@ export const directives: CustomSystemdDirective[] = [
         docs: "Takes a boolean argument. If true, the permission-related execution options, as configured with `User=` and similar options (see [systemd.exec(5)](https://www.freedesktop.org/software/systemd/man/latest/systemd.exec.html) for more information), are only applied to the process started with `ExecStart=`, and not to the various other `ExecStartPre=`, `ExecStartPost=`, `ExecReload=`, `ExecStop=`, and `ExecStopPost=` commands. If false, the setting is applied to all configured commands the same way. Defaults to false.",
         fixHelp:
             'It is deprecated but still supported for backwards compatibility. The same functionality is provided by the more flexible "`+`", "`!`", and "`!!`" prefixes to `ExecStart=` and other commands.',
+        fixURL: 'https://superuser.com/questions/1504114/permissionsstartonly-alternative-in-systemd',
         deprecated: 240,
         section,
         manPage,

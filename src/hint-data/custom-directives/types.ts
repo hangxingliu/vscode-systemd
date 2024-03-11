@@ -18,6 +18,8 @@ export type CustomSystemdDirective = {
     /** a systemd version string represents this directive is deprecated */
     deprecated?: number;
     fixHelp?: string;
+    /** an external URL that contains more fix information */
+    fixURL?: string;
 
     /** The name of the man page */
     manPage?: string;

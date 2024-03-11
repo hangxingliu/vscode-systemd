@@ -20,13 +20,15 @@ export type SystemdDiagnostic = Diagnostic & {
     /** This is used for the code action provider to know the name of this directive */
     directive?: string;
     /** This is used by the code action provider to add a possible fix to rename this deprecated directive */
-    renamedTo?: string;
+    rename?: string;
+    url?: string;
 };
 export function saveExtraPropsForDiagnostic(diagnostic: SystemdDiagnostic) {
     diagnostic.code = JSON.stringify({
         type: diagnostic.type,
         directive: diagnostic.directive,
-        renamedTo: diagnostic.renamedTo,
+        rename: diagnostic.rename,
+        url: diagnostic.url,
     });
 }
 

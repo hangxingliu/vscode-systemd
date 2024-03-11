@@ -9,6 +9,7 @@ import {
     Selection,
     TextDocument,
     TextDocumentChangeEvent,
+    Uri,
     WorkspaceEdit,
     window,
     workspace,
@@ -143,9 +144,10 @@ export class SystemdLint implements CodeActionProvider {
 
                         const d = getDiagnosticForDeprecated(getRange(), directiveName);
                         if (it.fix) {
-                            const { help, rename } = it.fix;
+                            const { help, rename, url } = it.fix;
                             d.message = help;
-                            if (rename) d.renamedTo = rename;
+                            if (rename) d.rename = rename;
+                            if (url) d.url = url;
                         }
                         d.message += `\nSince version "${it.deprecated}"`;
                         return items.push(d);
@@ -186,7 +188,7 @@ export class SystemdLint implements CodeActionProvider {
         for (let i = 0; i < context.diagnostics.length; i++) {
             const ds = context.diagnostics[i];
             if (typeof ds.code !== "string" || ds.code[0] !== "{") continue;
-            const { type, directive, renamedTo } = JSON.parse(ds.code);
+            const { type, directive, rename, url } = JSON.parse(ds.code) as SystemdDiagnostic;
             const { range } = ds;
             if (!directive) continue;
             if (type === SystemdDiagnosticType.unknownDirective) {
@@ -201,18 +203,34 @@ export class SystemdLint implements CodeActionProvider {
                 continue;
             }
 
-            if (type === SystemdDiagnosticType.deprecatedDirective && renamedTo) {
-                const title = `Rename to "${renamedTo}"`;
-                const action = new CodeAction(title, CodeActionKind.QuickFix);
-                const edit = new WorkspaceEdit();
-                edit.replace(document.uri, range, renamedTo, {
-                    label: `Rename deprecated directive`,
-                    needsConfirmation: false,
-                });
-                action.edit = edit;
-                action.diagnostics = [ds];
-                result.push(action);
-                continue;
+            if (type === SystemdDiagnosticType.deprecatedDirective) {
+                if (rename) {
+                    const title = `Rename to "${rename}"`;
+                    const action = new CodeAction(title, CodeActionKind.QuickFix);
+                    const edit = new WorkspaceEdit();
+                    edit.replace(document.uri, range, rename, {
+                        label: `Rename deprecated directive`,
+                        needsConfirmation: false,
+                    });
+                    action.edit = edit;
+                    action.diagnostics = [ds];
+                    result.push(action);
+                    continue;
+                }
+
+                if (url) {
+                    const uri = Uri.parse(url);
+                    const title = `Show external help on "${uri.authority}"`;
+                    const action = new CodeAction(title, CodeActionKind.QuickFix);
+                    action.command = {
+                        title,
+                        command: 'vscode.open',
+                        arguments: [uri]
+                    };
+                    action.diagnostics = [ds];
+                    result.push(action);
+                    continue;
+                }
             }
         }
         return result;
