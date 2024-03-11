@@ -23,8 +23,8 @@
         "Configurations"
     ],
     "extensionKind": [
-        "ui",
-        "workspace"
+        "workspace",
+        "ui"
     ],
     "capabilities": {
         "untrustedWorkspaces": {
