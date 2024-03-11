@@ -21,6 +21,13 @@ export class ValueEnumManager {
         }
     }
 
+    has(cursor: CursorInfo, file: SystemdFileType) {
+        const key = cursor.directiveKey;
+        if (!key) return false;
+
+        const keyLC = key.trim().toLowerCase();
+        return this.byName.has(keyLC);
+    }
     resolve(cursor: CursorInfo, file: SystemdFileType, extendsFn?: ValueEnumExtendsFn) {
         const key = cursor.directiveKey;
         if (!key) return;

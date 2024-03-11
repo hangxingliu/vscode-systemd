@@ -36,6 +36,8 @@ export class SystemdCompletionProvider implements CompletionItemProvider {
         // "\n",
         "%",
         ".",
+        // todo: enable the following character after implemented the property ValueEnum#sep
+        // " "
     ];
     private fileTypeToSections: Array<Array<CompletionItem>> = [];
     private booleanItems: CompletionItem[] | undefined;

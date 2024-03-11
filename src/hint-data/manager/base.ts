@@ -50,6 +50,7 @@ export class HintDataManager {
 
     private enumManager: ValueEnumManager | undefined;
     resolveEnum?: ValueEnumManager["resolve"];
+    hasEnum?: ValueEnumManager["has"];
 
     constructor(readonly category: DirectiveCategory, manPageBaseUri: string) {
         this.manPageBaseUri = Uri.parse(manPageBaseUri);
@@ -58,6 +59,7 @@ export class HintDataManager {
         const manager = new ValueEnumManager(enums);
         this.enumManager = manager;
         this.resolveEnum = manager.resolve.bind(manager);
+        this.hasEnum = manager.has.bind(manager);
     }
 
     addItems(items: unknown[][]) {
@@ -228,6 +230,7 @@ export class HintDataManager {
                 if (item.fixHelp || renames[i]) {
                     extraProps.fix = {
                         help: item.fixHelp || item.docs || '',
+                        url: item.fixURL,
                         rename: renames[i],
                     };
                 }

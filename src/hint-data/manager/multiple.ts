@@ -237,6 +237,10 @@ export class HintDataManagers {
             if (it && it.resolveEnum) items = mergeItems(items, it.resolveEnum(cursorContext, fileType, extendsFn));
         return items;
     }
+    hasValueEnum(cursorContext: CursorInfo, fileType: SystemdFileType) {
+        for (const it of this.managers) if (it && it.hasEnum) if (it.hasEnum(cursorContext, fileType)) return true;
+        return false;
+    }
 
     getDirectiveDocs(
         item: Pick<RequiredDirectiveCompletionItem, "category" | "manPage" | "docsIndex" | "sectionIndex">

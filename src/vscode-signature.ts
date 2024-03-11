@@ -48,6 +48,8 @@ export class SystemdSignatureProvider implements SignatureHelpProvider, HoverPro
         const { managers } = this;
         const directive = (cursor.directiveKey || "").trim();
 
+        /** hide signature if there are any value enum available */
+        if (managers.hasValueEnum(cursor, fileType)) return null;
         const signatures = genSignatureDocsForDirective(managers, this.config, directive, cursor.section, fileType);
         if (signatures) {
             const help = new SignatureHelp();
