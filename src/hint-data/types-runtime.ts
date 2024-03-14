@@ -84,6 +84,11 @@ export type RequiredDirectiveCompletionItem = PartialRequired<
     "category" | "directiveNameLC" | "directiveName" | "sectionIndex"
 >;
 
+export type SpecialUnitCompletionItem = CompletionItem & {
+    /** Since version */
+    since?: number;
+};
+
 export type SpecifierCompletionItem = CompletionItem & {
     category: DirectiveCategory;
     specifierChar: string;

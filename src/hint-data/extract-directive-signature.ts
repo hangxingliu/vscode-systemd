@@ -30,3 +30,19 @@ export function isBooleanArgument(docs: string | undefined) {
     if (docs.match(/\btakes\s+an?\s+bool(?:ean)\./i)) return true;
     return false;
 }
+
+/**
+ * https://github.com/systemd/systemd/blob/9529ae85f0a31720b7b17b71aef9ef4513473506/man/version-info.xml
+ */
+export function extractVersionInfoFromMarkdown(name: string, docsMarkdown: string) {
+    let sinceVersion: number | undefined;
+    docsMarkdown = docsMarkdown.replace(/\s*Added\s+in\s+version\s+(\d+)\.?\s*$/gi, (_, _v) => {
+        const version = parseInt(_v, 10);
+        if (!Number.isInteger(version) || version < 183)
+            throw new Error(`Invalid version "${_v}" of the directive "${name}"`);
+        // if (typeof sinceVersion === "number") throw new Error(`Duplicate version in the directive "${text}"`);
+        sinceVersion = version;
+        return "";
+    });
+    return { markdown: docsMarkdown, version: sinceVersion };
+}

@@ -6,6 +6,11 @@ export const enum ManifestItemType {
     Section = 6,
     /** Linux capabilities */
     Capability = 7,
+    /**
+     * Special Systemd unit
+     * https://www.freedesktop.org/software/systemd/man/latest/systemd.special.html
+     */
+    SpecialUnit = 8,
 }
 export type ManifestItem =
     | ManifestItemForDirective
@@ -13,8 +18,6 @@ export type ManifestItem =
     | ManifestItemForDocsMarkdown
     | ManifestItemForSpecifier
     | ManifestItemForSection;
-
-export type ManifestItemForCapability = [type: ManifestItemType.Capability, name: string, docs: string];
 
 export const enum PredefinedSignature {
     Boolean = "b",
@@ -25,7 +28,7 @@ export type ManifestItemForDirective = [
     signature: string[] | PredefinedSignature,
     docsMarkdown: number,
     manPageIndex: number,
-    sectionIndex: number | null,
+    sectionIndex: number | null
 ];
 export type ManifestItemForManPageInfo = [
     type: ManifestItemType.ManPageInfo,
@@ -40,7 +43,7 @@ export type ManifestItemForDocsMarkdown = [
     markdown: string,
     /** Example: "Type=" in "...html#Type=" */
     urlRefId: string,
-    sinceVersion?: number,
+    sinceVersion?: number
 ];
 export type ManifestItemForSpecifier = [
     type: ManifestItemType.Specifier,
@@ -54,6 +57,19 @@ export type ManifestItemForSection = [
     type: ManifestItemType.Section,
     sectionIndex: number,
     sectionName: string
+];
+export type ManifestItemForCapability = [
+    //
+    type: ManifestItemType.Capability,
+    name: string,
+    docs: string
+];
+export type ManifestItemForSpecialUnit = [
+    //
+    type: ManifestItemType.SpecialUnit,
+    name: string | string[],
+    docs: string,
+    sinceVersion?: number
 ];
 
 export function isManifestItemForDirective(row: unknown[]): row is ManifestItemForDirective {
@@ -73,4 +89,7 @@ export function isManifestItemForSection(row: unknown[]): row is ManifestItemFor
 }
 export function isManifestItemForCapability(row: unknown[]): row is ManifestItemForCapability {
     return row && row[0] === ManifestItemType.Capability;
+}
+export function isManifestItemForSpecialUnit(row: unknown[]): row is ManifestItemForSpecialUnit {
+    return row && row[0] === ManifestItemType.SpecialUnit;
 }

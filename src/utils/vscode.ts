@@ -1,6 +1,6 @@
-import { CompletionItem, MarkdownString, Uri } from "vscode";
+import { CompletionContext, CompletionItem, CompletionTriggerKind, MarkdownString, Uri } from "vscode";
 
-export function cloneCompletionItem<T extends CompletionItem>(ci: T): T{
+export function cloneCompletionItem<T extends CompletionItem>(ci: T): T {
     if (!ci) return ci;
     const newCI = new CompletionItem(ci.label, ci.kind);
     Object.assign(newCI, ci);
@@ -13,4 +13,11 @@ export function createMarkdown(markdown: string, baseUri?: Uri) {
     result.supportHtml = true;
     if (baseUri) result.baseUri = baseUri;
     return result;
+}
+
+export function createCompletionTriggerCharFilter(allowedTriggerCharacters: string) {
+    return (context: CompletionContext) => {
+        if (context.triggerKind !== CompletionTriggerKind.TriggerCharacter) return true;
+        return context.triggerCharacter && allowedTriggerCharacters.includes(context.triggerCharacter);
+    };
 }
