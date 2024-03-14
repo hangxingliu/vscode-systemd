@@ -2,15 +2,18 @@
 # if I don't ignore node_modules, `vsce` will pack optional dependencies into the extension
 node_modules
 out/**/*.json
-/ts
+ts
 
 #
 #region main
 # template:  .vscodeignore
 # author:    hangxingliu
 # license:   MIT
-# version:   2024-03-10
+# version:   2024-03-14
 #
+
+# spellchecker
+cspell.yml
 
 # output files
 artifacts
@@ -64,6 +67,6 @@ examples
 ._*
 
 # logs
-/logs
+logs
 *.log
 #endregion main

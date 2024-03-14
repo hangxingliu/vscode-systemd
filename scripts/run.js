@@ -6,14 +6,14 @@
 // template:    run-cjs.js
 // author:      hangxingliu
 // license:     MIT
-// version:     2023-11-23
+// version:     2024-03-12
 const { platform } = require("os");
 const { existsSync } = require("fs");
 const { resolve, basename, dirname } = require("path");
 const { spawn, spawnSync } = require("child_process");
 const runFromPackageScript = !!process.env.npm_execpath;
 const runFromYarn = /yarn\/bin/.test(process.env.npm_execpath || "");
-const isWin32 = platform() === 'win32';
+const isWin32 = platform() === "win32";
 
 /** @see https://stackoverflow.com/questions/14031763 */
 const cleanupCallbacks = [];
@@ -154,49 +154,45 @@ function isTrue(str) {
 }
 
 /**
+ * Run scripts defined in package.json
  * @param {string[]} args
  */
-async function run(args) {
-    // eslint-disable-next-line
-    const [nodejs, thisFile, action, ...restArgs] = args;
-    if (!action) return;
-    if (action === "scripts") {
-        let parallel = false;
-        if (!runFromPackageScript) throw `Action "scripts" is required to be run by npm/yarn`;
-        const scripts = [];
-        for (let i = 0; i < restArgs.length; i++) {
-            const arg = restArgs[i];
-            if (arg === "--parallel") {
+async function runPackageScripts(args) {
+    /** @type {string[]} */
+    const scripts = [];
+    let parallel = false;
+    for (let i = 0; i < args.length; i++) {
+        const arg = args[i];
+        switch (arg) {
+            case "--parallel":
                 parallel = true;
-                continue;
-            }
-            if (arg === "--") {
-                scripts.push(...restArgs.slice(i + 1));
                 break;
-            }
-            scripts.push(arg);
+            case "--env":
+                // debug env
+                for (const key of Object.keys(process.env).sort()) console.log(`${key}=${process.env[key]}`);
+                return;
+            case "--":
+                scripts.push(...args.slice(i + 1));
+                break;
+            default:
+                scripts.push(arg);
         }
-        const base = [runFromYarn ? "yarn" : "npm", "run", "--silent"];
-        if (runFromYarn) base.splice(1, 0, "--ignore-engines");
-        if (parallel) return Promise.all(scripts.map((script) => exec([...base, script]).promise));
-        for (const script of scripts) execSync([...base, script]);
-        return;
     }
-    if (action === "env") {
-        const envKeys = Object.keys(process.env).sort();
-        for (const key of envKeys) console.log(`${key}=${process.env[key]}`);
-        return;
-    }
-    throw `Unknown action: "${action}"`;
+    if (scripts.length === 0) return;
+    const base = [runFromYarn ? "yarn" : "npm", "run", "--silent"];
+    if (runFromYarn) base.splice(1, 0, "--ignore-engines");
+    if (parallel) return Promise.all(scripts.map((script) => exec([...base, script]).promise));
+    for (const script of scripts) execSync([...base, script]);
+    return;
 }
 
 exports.isWin32 = isWin32;
 exports.exec = exec;
 exports.execSync = execSync;
 exports.isTrue = isTrue;
-exports.run = run;
+exports.run = runPackageScripts;
 if (typeof require !== "undefined" && require.main === module) {
-    run(process.argv).catch((error) => {
+    runPackageScripts(process.argv.slice(2)).catch((error) => {
         console.error(typeof error === "string" ? `Error: ${error}` : error);
         process.exit(1);
     });

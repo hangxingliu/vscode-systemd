@@ -1,5 +1,8 @@
 # https://cspell.org/
 language: en
+dictionaries:
+  - softwareTerms
+  - bash
 ignorePaths:
   - src/hint-data/manifests
   - src/hint-data/wellknown-targets.ts
@@ -11,13 +14,14 @@ ignorePaths:
   - src/hint-data/*.json
   - "*.tmLanguage"
 ignoreRegExpList:
-  - /@\w+/       # usernames
   - /\w+:/       # property keys
   - /"\w+"/      # a word in a string
   - /<\/?\w+>/   # HTML tags
   - /[A-Z]{4,}/  # all uppercase
   - /\/.+\//     # in RegExp
-  - /HTMLSupported|JSONSchema/
+  - /`[\w\-=]+`/      # code in markdown
+  - /@\w+(?:\s*\(.+?\))/        # usernames
+  - /HTMLSupported|JSONSchema/  # compound words
 words:
   - automount
   - bearmini
@@ -61,3 +65,8 @@ words:
   - verstr
   - repart
   - foldings
+  - userspace
+  - testdir
+  - syscalls
+  - unescaping
+  - balabalabala

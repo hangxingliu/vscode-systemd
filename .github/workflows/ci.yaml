@@ -23,7 +23,7 @@ jobs:
       - name: Lint
         run: yarn lint
       - name: Bundle and Pack Package
-        run: yarn run release
+        run: yarn build:vsix
       - uses: actions/upload-artifact@v4
         with:
           name: vscode-extension
