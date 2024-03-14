@@ -1,7 +1,7 @@
-import { CursorInfo } from "../parser";
-import { SystemdFileType } from "../parser/file-info";
-import { getArray } from "../utils/data-types";
-import { SystemdValueEnum } from "./custom-value-enum/types";
+import { CursorInfo } from "../../parser";
+import { SystemdFileType } from "../../parser/file-info";
+import { getArray } from "../../utils/data-types";
+import { SystemdValueEnum } from "../custom-value-enum/types";
 import { CompletionItem, CompletionItemKind, CompletionItemTag, MarkdownString, SnippetString } from "vscode";
 
 export type ValueEnumExtendsFn = (valueEnum: SystemdValueEnum) => CompletionItem[] | null | undefined;

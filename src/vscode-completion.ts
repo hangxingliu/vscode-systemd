@@ -23,7 +23,7 @@ import { getCalendarCompletion } from "./hint-data/get-calendar-completion";
 import { SystemdDocumentManager } from "./vscode-documents";
 import { SystemdCapabilities } from "./hint-data/manager/capabilities";
 import { PredefinedSignature } from "./hint-data/types-manifest";
-import { ValueEnumExtendsFn } from "./hint-data/value-enum-manager";
+import { ValueEnumExtendsFn } from "./hint-data/manager/value-enum";
 import { SystemdUnitsManager } from "./hint-data/manager/special-units";
 
 const zeroPos = new Position(0, 0);

@@ -18,7 +18,7 @@ import { SectionGroupMatcher } from "../../syntax/sections-utils";
 import { CustomSystemdDirective, directives } from "../custom-directives";
 import { createMarkdown } from "../../utils/vscode";
 import { genVersionDocs } from "../../docs/base";
-import { ValueEnumExtendsFn } from "../value-enum-manager";
+import { ValueEnumExtendsFn } from "./value-enum";
 
 function mergeItems<T>(base: T[] | undefined, newItems: T[] | undefined): T[] | undefined {
     if (newItems && newItems.length > 0) return base ? base.concat(newItems) : newItems;

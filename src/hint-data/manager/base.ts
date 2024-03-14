@@ -8,7 +8,7 @@ import {
     SpecifierCompletionItem,
 } from "../types-runtime";
 import { MapList } from "../../utils/data-types";
-import { ValueEnumManager } from "../value-enum-manager";
+import { ValueEnumManager } from "./value-enum";
 import { SystemdValueEnum } from "../custom-value-enum/types";
 import {
     PredefinedSignature,
