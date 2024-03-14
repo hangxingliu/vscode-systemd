@@ -1,8 +1,17 @@
+import { systemCallFilter } from "./common-syscalls";
+import { knownArchs } from "./common-unit-condition";
 import { SystemdValueEnum } from "./types";
 
 const manPage = "systemd.exec(5)";
 
 export const valueEnum: SystemdValueEnum[] = [
+    systemCallFilter,
+    {
+        directive: 'SystemCallArchitectures',
+        manPage,
+        values: knownArchs,
+        sep: ' ',
+    },
     {
         directive: "CPUSchedulingPolicy",
         manPage,
