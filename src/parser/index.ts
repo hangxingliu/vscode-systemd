@@ -20,11 +20,6 @@ export class CursorInfo {
 }
 
 export function getCursorInfoFromSystemdConf(conf: string, opts?: ParserOptions) {
-    let looseComment = false;
-    if (opts) {
-        if (opts.looseComment) looseComment = true;
-    }
-
     const cursor = new CursorInfo();
     cursor.type = CursorType.directiveKey;
 

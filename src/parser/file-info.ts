@@ -197,12 +197,14 @@ export function parseSystemdFilePath(filePath: string | undefined | null, enable
         if (filePath.includes("timesyncd.conf")) return SystemdFileType.timesyncd;
         if (filePath.includes("networkd.conf")) return SystemdFileType.networkd;
         if (filePath.includes("coredump.conf")) return SystemdFileType.coredump;
+        if (filePath.includes("sysupdate.d")) return SystemdFileType.sysupdated;
         if (filePath.includes("iocost.conf")) return SystemdFileType.iocost;
         if (filePath.includes("logind.conf")) return SystemdFileType.logind;
         if (filePath.includes("pstore.conf")) return SystemdFileType.timesyncd;
         if (filePath.includes("sleep.conf")) return SystemdFileType.sleep;
         if (filePath.includes("homed.conf")) return SystemdFileType.homed;
         if (filePath.includes("oomd.conf")) return SystemdFileType.oomd;
+        if (filePath.includes("repart.d")) return SystemdFileType.repartd;
     }
 
     return SystemdFileType.unknown;
