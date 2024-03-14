@@ -1,4 +1,4 @@
-import { manpageURLs } from "./manpage-url";
+import { manpageURLs } from "../manpage-url";
 import {
     AssertLevel,
     assertInnerText,
@@ -7,8 +7,8 @@ import {
     getHTMLDoc,
     getMarkdownHelpFromElement,
     print,
-} from "../utils/crawler-utils";
-import { ManifestItemForSpecifier, ManifestItemType } from "./types-manifest";
+} from "../../utils/crawler-utils";
+import { ManifestItemForSpecifier, ManifestItemType } from "../types-manifest";
 
 export async function fetchSpecifiersList() {
     const $ = await getHTMLDoc("specifiers docs", manpageURLs.specifiers);

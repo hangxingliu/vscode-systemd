@@ -1,5 +1,5 @@
 import { readFileSync } from "fs";
-import { CustomSystemdDirective } from "./custom-directives/types";
+import { CustomSystemdDirective } from "../custom-directives/types";
 import {
     PredefinedSignature,
     isManifestItemForDirective,
@@ -7,7 +7,7 @@ import {
     isManifestItemForManPageInfo,
     isManifestItemForSection,
     isManifestItemForSpecifier,
-} from "./types-manifest";
+} from "../types-manifest";
 
 type ManPageInfo = {
     title: string;

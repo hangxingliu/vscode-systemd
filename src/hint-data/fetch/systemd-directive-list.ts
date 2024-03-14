@@ -1,4 +1,4 @@
-import { manpageURLs } from "./manpage-url";
+import { manpageURLs } from "../manpage-url";
 import {
     AssertLevel,
     assertLength,
@@ -6,8 +6,8 @@ import {
     getHTMLDoc,
     matchElementsByText,
     print,
-} from "../utils/crawler-utils";
-import { MapList } from "../utils/data-types";
+} from "../../utils/crawler-utils";
+import { MapList } from "../../utils/data-types";
 
 const directiveHeadings: string[] = [
     // Name

@@ -8,8 +8,8 @@ import {
     getMarkdownHelpFromElement,
     print,
     toMarkdown,
-} from "../utils/crawler-utils";
-import { RawManPageInfo } from "./fetch-directive-list";
+} from "../../utils/crawler-utils";
+import { RawManPageInfo } from "./systemd-directive-list";
 import {
     ManifestItem,
     ManifestItemForDirective,
@@ -18,14 +18,14 @@ import {
     ManifestItemForSection,
     ManifestItemType,
     PredefinedSignature,
-} from "./types-manifest";
+} from "../types-manifest";
 import {
     extractDirectiveSignature,
     extractVersionInfoFromMarkdown,
     isBooleanArgument,
-} from "./extract-directive-signature";
-import { similarSections } from "../syntax/const-sections";
-import { extractSectionNameFromDocs } from "./extract-section-names";
+} from "./utils/directive-signature";
+import { similarSections } from "../../syntax/const-sections";
+import { extractSectionNameFromDocs } from "./utils/section-names";
 
 const ignoredH2Sections: string[] = [
     "Commands",

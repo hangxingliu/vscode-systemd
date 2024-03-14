@@ -1,8 +1,8 @@
 #!/usr/bin/env node
 
 import type { Cheerio, Element } from "cheerio";
-import { cacheDir, manifestDir } from "../config/fs";
-import { manpageURLs } from "./manpage-url";
+import { cacheDir, manifestDir } from "../../config/fs";
+import { manpageURLs } from "../manpage-url";
 import {
     print,
     SimpleHttpCache,
@@ -12,11 +12,11 @@ import {
     assertLength,
     enableHTMLSupportedInMarkdown,
     getMarkdownHelpFromElement,
-} from "../utils/crawler-utils";
-import { ManifestItemForSpecialUnit, ManifestItemType } from "./types-manifest";
+} from "../../utils/crawler-utils";
+import { ManifestItemForSpecialUnit, ManifestItemType } from "../types-manifest";
 import { resolve } from "path";
 import { existsSync, mkdirSync } from "fs";
-import { extractVersionInfoFromMarkdown } from "./extract-directive-signature";
+import { extractVersionInfoFromMarkdown } from "./utils/directive-signature";
 
 class ManifestWriter extends JsonFileWriter<ManifestItemForSpecialUnit> {
     constructor(name: string) {
@@ -25,12 +25,14 @@ class ManifestWriter extends JsonFileWriter<ManifestItemForSpecialUnit> {
     }
 }
 
-let jsonFile: ManifestWriter | undefined;
-main().catch((error) => {
-    if (jsonFile) jsonFile.close();
-    console.error(error.stack);
-});
-async function main() {
+if (require.main === module) {
+    main().catch((error) => {
+        console.error(error.stack);
+        process.exit(1);
+    });
+}
+
+export async function main() {
     SimpleHttpCache.init(cacheDir);
     enableHTMLSupportedInMarkdown();
 

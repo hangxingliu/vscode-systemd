@@ -10,7 +10,7 @@ import { HintDataManager } from "./base";
 import { CursorInfo } from "../../parser";
 import { isValidArrayIndex } from "../../utils/data-types";
 import { systemdValueEnum } from "../custom-value-enum";
-import { podmanValueEnum } from "../podman/value-enum";
+import { podmanValueEnum } from "../custom-value-enum/podman-quadlet";
 import { SystemdFileType } from "../../parser/file-info";
 import { getSubsetOfManagers } from "./subset";
 import { sectionGroups, similarSections } from "../../syntax/const-sections";

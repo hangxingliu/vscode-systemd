@@ -1,4 +1,4 @@
-import type { SystemdValueEnum } from "../custom-value-enum/types";
+import type { SystemdValueEnum } from "./types";
 
 export const podmanValueEnum: ReadonlyArray<SystemdValueEnum> = [
     {

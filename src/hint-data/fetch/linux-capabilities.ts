@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
-import { cacheDir, manifestDir } from "../config/fs";
-import { manpageURLs } from "./manpage-url";
+import { cacheDir, manifestDir } from "../../config/fs";
+import { manpageURLs } from "../manpage-url";
 import {
     print,
     SimpleHttpCache,
@@ -11,8 +11,8 @@ import {
     assertLength,
     toMarkdown,
     enableHTMLSupportedInMarkdown,
-} from "../utils/crawler-utils";
-import { ManifestItemForCapability, ManifestItemType } from "./types-manifest";
+} from "../../utils/crawler-utils";
+import { ManifestItemForCapability, ManifestItemType } from "../types-manifest";
 import { resolve } from "path";
 import { existsSync, mkdirSync } from "fs";
 

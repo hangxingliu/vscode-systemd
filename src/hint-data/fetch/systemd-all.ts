@@ -1,22 +1,23 @@
 #!/usr/bin/env node
 
-import { cacheDir, logsDir, manifestDir } from "../config/fs";
-import { manpageURLs } from "./manpage-url";
-import { fetchSpecifiersList } from "../hint-data/fetch-specifier-list";
+import { cacheDir, logsDir, manifestDir } from "../../config/fs";
+import { manpageURLs } from "../manpage-url";
+import { fetchSpecifiersList } from "./systemd-specifier-list";
 import {
     print,
     SimpleHttpCache,
     resolveURL,
     JsonFileWriter,
     enableHTMLSupportedInMarkdown,
-} from "../utils/crawler-utils";
-import { ManifestItem } from "./types-manifest";
-import { fetchDirectivesList } from "../hint-data/fetch-directive-list";
-import { fetchDirectiveDetailsFromManPage } from "../hint-data/fetch-directive-details";
-import { wellknownManPages } from "./wellknown-manpages";
+} from "../../utils/crawler-utils";
+import { ManifestItem } from "../types-manifest";
+import { fetchDirectivesList } from "./systemd-directive-list";
+import { fetchDirectiveDetailsFromManPage } from "./systemd-directive-details";
+import { wellknownManPages } from "./utils/wellknown-manpages";
 import { resolve } from "path";
 import { existsSync, mkdirSync, writeFileSync } from "fs";
-import { HintDataChanges } from "./fetch-changes";
+import { HintDataChanges } from "./systemd-changes";
+import { main as fetchSpecialUtils } from "./systemd-special-units";
 
 class ManifestWriter extends JsonFileWriter<ManifestItem> {
     nextIds = { docs: 1, sections: 1 };
@@ -40,11 +41,13 @@ async function main() {
     SimpleHttpCache.init(cacheDir);
     enableHTMLSupportedInMarkdown();
 
+    await fetchSpecialUtils();
+
     let verstr: string | undefined;
     let version: number | undefined;
     const mtx = manpageURLs.base.match(/\/man\/(\d+|latest)/i);
     if (mtx) {
-        verstr = mtx[1]
+        verstr = mtx[1];
         version = parseInt(verstr, 10);
         if (!Number.isSafeInteger(version)) version = undefined;
     }

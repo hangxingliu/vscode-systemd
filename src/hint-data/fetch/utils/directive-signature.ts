@@ -1,3 +1,26 @@
+const _PODMAN_BOOLEAN_DIRECTIVES = new Set([
+    "[Container]EnvironmentHost",
+    "[Container]NoNewPrivileges",
+    "[Container]Notify",
+    "[Container]ReadOnly",
+    "[Container]ReadOnlyTmpfs",
+    "[Container]RunInit",
+
+    "[Kube]KubeDownForce",
+
+    "[Network]DisableDNS",
+    "[Network]Internal",
+    "[Network]IPv6",
+
+    "[Volume]Copy",
+
+    "[Image]AllTags",
+    "[Image]TLSVerify",
+]);
+export function doesPodmanDirectiveAcceptsBoolean(section: string, directive: string) {
+    return _PODMAN_BOOLEAN_DIRECTIVES.has(`[${section}]${directive}`);
+}
+
 /**
  * @param signatureString The text from the elements "dt" on the man pages
  */
@@ -23,6 +46,9 @@ export function extractDirectiveSignature(signatureString: string): ReadonlyArra
     return entries.map(([name, params]) => ({ name, params }));
 }
 
+/**
+ * Check if a directive accepts boolean value from its documentation
+ */
 export function isBooleanArgument(docs: string | undefined) {
     if (!docs) return false;
     // mistake: Takes an boolean value. When true, the kernel ignores multicast groups handled by userspace. ...

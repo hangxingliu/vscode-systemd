@@ -18,8 +18,7 @@ import {
     PredefinedSignature,
 } from "../types-manifest";
 import { Cheerio, Element } from "cheerio";
-import { extractDirectiveSignature } from "../extract-directive-signature";
-import { _PODMAN_BOOLEAN_DIRECTIVES } from "./boolean-directives";
+import { doesPodmanDirectiveAcceptsBoolean, extractDirectiveSignature } from "./utils/directive-signature";
 import { manpageURLs } from "../manpage-url";
 
 const url = manpageURLs.podman;
@@ -97,7 +96,7 @@ async function main() {
 
             const [sign] = signs;
             let signParams: string[] | PredefinedSignature | undefined;
-            if (_PODMAN_BOOLEAN_DIRECTIVES.has(`[${sectionName}]${sign.name}`)) {
+            if (doesPodmanDirectiveAcceptsBoolean(sectionName, sign.name)) {
                 signParams = PredefinedSignature.Boolean;
             }
 
