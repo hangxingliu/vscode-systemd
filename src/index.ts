@@ -10,6 +10,7 @@ import { SystemdCommands } from "./commands/vscode-commands";
 import { SystemdCodeLens } from "./vscode-codelens";
 import { SystemdDocumentManager } from "./vscode-documents";
 import { SystemdCapabilities } from "./hint-data/manager/capabilities";
+import { SystemdUnitsManager } from "./hint-data/manager/special-units";
 
 export function activate(context: ExtensionContext) {
     const selector = [languageId] as const;
@@ -18,6 +19,7 @@ export function activate(context: ExtensionContext) {
     const hintDataManager = new HintDataManagers();
     hintDataManager.init();
     SystemdCapabilities.init();
+    SystemdUnitsManager.init();
 
     const diagnostics = SystemdDiagnosticManager.init();
     const docs = SystemdDocumentManager.init(context, config);

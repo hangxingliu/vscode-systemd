@@ -19,6 +19,7 @@ import { SystemdCapabilities } from "./hint-data/manager/capabilities";
 import { ExtensionConfig } from "./config/vscode-config-loader";
 import { genHoverDocsForDirective } from "./docs/hover";
 import { genSignatureDocsForDirective } from "./docs/signature";
+import { SystemdUnitsManager } from "./hint-data/manager/special-units";
 
 const zeroPos = new Position(0, 0);
 export class SystemdSignatureProvider implements SignatureHelpProvider, HoverProvider {
@@ -50,6 +51,8 @@ export class SystemdSignatureProvider implements SignatureHelpProvider, HoverPro
 
         /** hide signature if there are any value enum available */
         if (managers.hasValueEnum(cursor, fileType)) return null;
+        if (SystemdUnitsManager.instance.has(cursor.directiveKey)) return null;
+
         const signatures = genSignatureDocsForDirective(managers, this.config, directive, cursor.section, fileType);
         if (signatures) {
             const help = new SignatureHelp();

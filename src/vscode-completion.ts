@@ -19,12 +19,12 @@ import { HintDataManagers } from "./hint-data/manager/multiple";
 import { RequiredDirectiveCompletionItem } from "./hint-data/types-runtime";
 import { SystemdFileType } from "./parser/file-info";
 import { getSectionCompletionItems } from "./hint-data/get-section-completion";
-import { getUnitNameCompletionItems } from "./hint-data/get-unit-name-completion";
 import { getCalendarCompletion } from "./hint-data/get-calendar-completion";
 import { SystemdDocumentManager } from "./vscode-documents";
 import { SystemdCapabilities } from "./hint-data/manager/capabilities";
 import { PredefinedSignature } from "./hint-data/types-manifest";
 import { ValueEnumExtendsFn } from "./hint-data/value-enum-manager";
+import { SystemdUnitsManager } from "./hint-data/manager/special-units";
 
 const zeroPos = new Position(0, 0);
 const deprecatedTags = [CompletionItemTag.Deprecated];
@@ -91,10 +91,12 @@ export class SystemdCompletionProvider implements CompletionItemProvider {
         token: CancellationToken,
         context: CompletionContext
     ): CompletionItem[] | undefined {
+        // console.log(`char=${JSON.stringify(context.triggerCharacter)} kind=${context.triggerKind}`);
         const beforeText = document.getText(new Range(zeroPos, position));
         const cursorContext = getCursorInfoFromSystemdConf(beforeText);
         const file = SystemdDocumentManager.instance.getType(document);
         const { section } = cursorContext;
+        const version = this.config.version;
 
         switch (cursorContext.type) {
             case CursorType.directiveKey: {
@@ -104,7 +106,6 @@ export class SystemdCompletionProvider implements CompletionItemProvider {
                 if (!directives) return;
 
                 const range = new Range(position.translate(0, -pending.length), position);
-                const version = this.config.version;
                 if (version) {
                     directives = directives.filter((it) => {
                         if (it.since && it.since > version) return false;
@@ -127,8 +128,16 @@ export class SystemdCompletionProvider implements CompletionItemProvider {
                     const capabilities = SystemdCapabilities.instance.getCompletionItems(directive);
                     if (capabilities) return capabilities;
 
-                    const units = getUnitNameCompletionItems(directive);
-                    if (units) return units;
+                    const units = SystemdUnitsManager.instance.getCompletionItems(
+                        directive,
+                        pending,
+                        position,
+                        context
+                    );
+                    if (units) {
+                        if (version) return units.filter((it) => !(it.since && it.since > version));
+                        return units;
+                    }
 
                     const calendarWords = getCalendarCompletion(directive, pending);
                     if (calendarWords) return calendarWords;
