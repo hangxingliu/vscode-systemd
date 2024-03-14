@@ -1,5 +1,7 @@
 import { SystemdValueEnum } from "../custom-value-enum/types";
 
+export const knownMatchTypes: SystemdValueEnum["values"] = ["ether", "loopback", "wlan", "wwan", "${UDEV_DEVTYPE}"];
+
 /**
  * https://www.freedesktop.org/software/systemd/man/latest/systemd.network.html#WLANInterfaceType=
  *
@@ -119,3 +121,38 @@ export const standardSignals: SystemdValueEnum["docs"] = {
     SIGWINCH: `Window resize signal (4.3BSD, Sun)\n\n${signalActions.Ign}`,
 };
 
+/**
+ * https://www.freedesktop.org/software/systemd/man/latest/repart.d.html#%5BPartition%5D%20Section%20Options
+ */
+export const gptPartitionTypeIds: SystemdValueEnum["docs"] = {
+    esp: "EFI System Partition",
+    xbootldr: "Extended Boot Loader Partition",
+    swap: "Swap partition",
+    home: "Home (`/home/`) partition",
+    srv: "Server data (`/srv/`) partition",
+    var: "Variable data (`/var/`) partition",
+    tmp: "Temporary data (`/var/tmp/`) partition",
+    "linux-generic": "Generic Linux file system partition",
+    root: "Root file system partition type appropriate for the local architecture (an alias for an architecture root file system partition type listed below, e.g. `root-x86-64`)",
+    "root-verity": "Verity data for the root file system partition for the local architecture",
+    "root-verity-sig": "Verity signature data for the root file system partition for the local architecture",
+    "root-secondary":
+        "Root file system partition of the secondary architecture of the local architecture (usually the matching 32-bit architecture for the local 64-bit architecture)",
+    "root-secondary-verity": "Verity data for the root file system partition of the secondary architecture",
+    "root-secondary-verity-sig":
+        "Verity signature data for the root file system partition of the secondary architecture",
+    "root-${arch}": "Root file system partition of the given architecture (such as `root-x86-64` or `root-riscv64`)",
+    "root-${arch}-verity": "Verity data for the root file system partition of the given architecture",
+    "root-${arch}-verity-sig": "Verity signature data for the root file system partition of the given architecture",
+    usr: "`/usr/` file system partition type appropriate for the local architecture (an alias for an architecture `/usr/` file system partition type listed below, e.g. `usr-x86-64`)",
+    "usr-verity": "Verity data for the `/usr/` file system partition for the local architecture",
+    "usr-verity-sig": "Verity signature data for the `/usr/` file system partition for the local architecture",
+    "usr-secondary":
+        "`/usr/` file system partition of the secondary architecture of the local architecture (usually the matching 32-bit architecture for the local 64-bit architecture)",
+    "usr-secondary-verity": "Verity data for the `/usr/` file system partition of the secondary architecture",
+    "usr-secondary-verity-sig":
+        "Verity signature data for the `/usr/` file system partition of the secondary architecture",
+    "usr-${arch}": "`/usr/` file system partition of the given architecture     ",
+    "usr-${arch}-verity": "Verity data for the `/usr/` file system partition of the given architecture",
+    "usr-${arch}-verity-sig": "Verity signature data for the `/usr/` file system partition of the given architecture",
+};

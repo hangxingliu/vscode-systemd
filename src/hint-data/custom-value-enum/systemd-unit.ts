@@ -10,8 +10,13 @@ const manPage = "systemd.unit(5)";
  * the unit will be executed if all of them apply (i.e. a logical AND is applied).
  * Condition checks can use a pipe symbol ("`|`") after the equals sign ("`Condition…=|…`"),
  * which causes the condition to become a *triggering* condition.
+ *
+ * The test may be negated by prepending an exclamation mark.
+ *
+ * If you prefix an argument with the pipe symbol and an exclamation mark,
+ * the pipe symbol must be passed first, the exclamation second.
  */
-const prefixChars = "|";
+const prefixChars = "|!";
 
 export const valueEnum: SystemdValueEnum[] = [
     {

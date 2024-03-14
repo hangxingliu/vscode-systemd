@@ -1,6 +1,6 @@
 import { SystemdFileType } from "../../parser/file-info";
 import { PredefinedSignature } from "../types-manifest";
-import { wlanInterfaceTypes } from "./common";
+import { knownMatchTypes, wlanInterfaceTypes } from "./common";
 import { SystemdValueEnum } from "./types";
 
 const file = SystemdFileType.network;
@@ -21,6 +21,22 @@ const qdsicParentEnum2 = {
 };
 
 export const valueEnum: SystemdValueEnum[] = [
+    {
+        directive: "Type",
+        section: "Match",
+        file,
+        values: knownMatchTypes,
+        sep: " ",
+        prefixChars: "!",
+    },
+    {
+        directive: "WLANInterfaceType",
+        section: "Match",
+        file,
+        docs: wlanInterfaceTypes,
+        sep: " ",
+        prefixChars: "!",
+    },
     {
         directive: "ActivationPolicy",
         section: "Link",
@@ -62,14 +78,6 @@ export const valueEnum: SystemdValueEnum[] = [
         section: "NextHop",
         file,
         values: ["ipv4", "ipv6"],
-    },
-    {
-        directive: "WLANInterfaceType",
-        section: "Match",
-        file,
-        docs: wlanInterfaceTypes,
-        sep: " ",
-        prefixChars: "!",
     },
     {
         directive: "DHCP",

@@ -28,6 +28,15 @@ export const valueEnum: SystemdValueEnum[] = [
         ].map((it) => `${it}:\${program_path}`),
     },
     {
+        directive: "DevicePolicy",
+        manPage,
+        docs: {
+            strict: "means to only allow types of access that are explicitly specified. Added in version 208.",
+            closed: " in addition, allows access to standard pseudo devices including `/dev/null`, `/dev/zero`, `/dev/full`, `/dev/random`, and `/dev/urandom`. Added in version 208.",
+            auto: "in addition, allows access to all devices if no explicit `DeviceAllow=` is present. This is the default. Added in version 208.",
+        },
+    },
+    {
         directive: "MemoryPressureWatch",
         manPage,
         values: ["off", "on", "auto", "skip"],

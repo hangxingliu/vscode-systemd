@@ -15,7 +15,7 @@ export const valueEnum: SystemdValueEnum[] = [
         directive: "IPTOS",
         section,
         file,
-        values: ["low-delay", "throughput", "reliability", "low-cost"],
+        values: ["low-delay", "throughput", "reliability", "low-cost", "${number}"],
     },
     {
         directive: "SocketProtocol",

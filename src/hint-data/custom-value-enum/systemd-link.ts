@@ -1,8 +1,7 @@
-import { PredefinedSignature } from "../types-manifest";
 import { SystemdValueEnum } from "./types";
 import * as common from "./common-unit-condition";
 import { SystemdFileType } from "../../parser/file-info";
-import { supportedNetdevKinds } from "./common";
+import { knownMatchTypes, supportedNetdevKinds } from "./common";
 
 const manPage = "systemd.link(5)";
 const file = SystemdFileType.link;
@@ -13,7 +12,7 @@ export const valueEnum: SystemdValueEnum[] = [
         section: "Match",
         file,
         manPage,
-        values: ["ether", "loopback", "wlan", "wwan", "${UDEV_DEVTYPE}"],
+        values: knownMatchTypes,
         sep: " ",
         prefixChars: "!",
     },
@@ -71,6 +70,7 @@ export const valueEnum: SystemdValueEnum[] = [
         section: "Link",
         file,
         manPage,
+        sep: ' ',
         docs: {
             kernel: "If the kernel claims that the name it has set for a device is predictable, then no renaming is performed. Added in version 216.",
             database:
