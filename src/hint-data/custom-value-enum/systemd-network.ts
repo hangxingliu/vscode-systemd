@@ -69,7 +69,7 @@ export const valueEnum: SystemdValueEnum[] = [
         file,
         docs: wlanInterfaceTypes,
         sep: " ",
-        prefixes: ["!"],
+        prefixChars: "!",
     },
     {
         directive: "DHCP",

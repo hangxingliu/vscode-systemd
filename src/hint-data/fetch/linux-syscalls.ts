@@ -189,7 +189,7 @@ async function main() {
         "export const systemCallFilter: SystemdValueEnum = {",
         '    manPage: "systemd.exec(5)",',
         '    directive: "SystemCallFilter",',
-        '    prefixes: ["~"],',
+        '    prefixChars: "~",',
         '    sep: " ",',
         "    docs: " + JSON.stringify(docs, null, 4) + ",",
         "    tips: " + JSON.stringify(tips, null, 4) + ",",

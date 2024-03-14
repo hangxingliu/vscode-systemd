@@ -15,7 +15,7 @@ export const valueEnum: SystemdValueEnum[] = [
         manPage,
         values: ["ether", "loopback", "wlan", "wwan", "${UDEV_DEVTYPE}"],
         sep: " ",
-        prefixes: ["!"],
+        prefixChars: "!",
     },
     {
         directive: "Kind",
@@ -24,7 +24,7 @@ export const valueEnum: SystemdValueEnum[] = [
         manPage,
         docs: supportedNetdevKinds,
         sep: " ",
-        prefixes: ["!"],
+        prefixChars: "!",
     },
     {
         directive: "Virtualization",
@@ -33,7 +33,7 @@ export const valueEnum: SystemdValueEnum[] = [
         manPage,
         docs: common.knownVirtualizationTechs,
         sep: " ",
-        prefixes: ["!"],
+        prefixChars: "!",
     },
     {
         directive: "Architecture",
@@ -42,7 +42,7 @@ export const valueEnum: SystemdValueEnum[] = [
         manPage,
         values: common.knownArchs,
         sep: " ",
-        prefixes: ["!"],
+        prefixChars: "!",
     },
     {
         directive: "Firmware",
@@ -51,7 +51,7 @@ export const valueEnum: SystemdValueEnum[] = [
         manPage,
         docs: common.knownFirmwareConds,
         sep: " ",
-        prefixes: ["!"],
+        prefixChars: "!",
     },
     // [Link]
     {

@@ -3,7 +3,7 @@ import { SystemdValueEnum } from "./types";
 export const systemCallFilter: SystemdValueEnum = {
     manPage: "systemd.exec(5)",
     directive: "SystemCallFilter",
-    prefixes: ["~"],
+    prefixChars: "~",
     sep: " ",
     docs: {
         _llseek: "reposition read/write file offset",

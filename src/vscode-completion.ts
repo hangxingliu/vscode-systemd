@@ -37,7 +37,8 @@ export class SystemdCompletionProvider implements CompletionItemProvider {
         "%",
         ".",
         // todo: enable the following character after implemented the property ValueEnum#sep
-        // " "
+        " ",
+        "@",
     ];
     private fileTypeToSections: Array<Array<CompletionItem>> = [];
     private booleanItems: CompletionItem[] | undefined;
@@ -143,7 +144,14 @@ export class SystemdCompletionProvider implements CompletionItemProvider {
                     if (calendarWords) return calendarWords;
                 }
 
-                const items = this.managers.filterValueEnum(cursorContext, file, this.extendsValueEnum);
+                const items = this.managers.filterValueEnum({
+                    cursor: cursorContext,
+                    file,
+                    position,
+                    pendingText: pending,
+                    extendsFn: this.extendsValueEnum,
+                    ...context,
+                });
                 if (items) return items;
 
                 if (directive && section) {

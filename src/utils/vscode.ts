@@ -1,4 +1,4 @@
-import { CompletionContext, CompletionItem, CompletionTriggerKind, MarkdownString, Uri } from "vscode";
+import { CompletionContext, CompletionItem, CompletionTriggerKind, MarkdownString, Position, Range, Uri } from "vscode";
 
 export function cloneCompletionItem<T extends CompletionItem>(ci: T): T {
     if (!ci) return ci;
@@ -20,4 +20,14 @@ export function createCompletionTriggerCharFilter(allowedTriggerCharacters: stri
         if (context.triggerKind !== CompletionTriggerKind.TriggerCharacter) return true;
         return context.triggerCharacter && allowedTriggerCharacters.includes(context.triggerCharacter);
     };
+}
+
+export function bindRange<Item extends { range: Range }>(
+    items: Item[],
+    cursorPosition: Position,
+    length: number
+): Item[] {
+    const range = new Range(length > 0 ? cursorPosition.translate(0, -length) : cursorPosition, cursorPosition);
+    for (const it of items) it.range = range;
+    return items;
 }

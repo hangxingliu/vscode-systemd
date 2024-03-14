@@ -23,7 +23,7 @@ export type SystemdValueEnum = {
     manPage?: string;
 
     /** The separator supported by this directive */
-    sep?: " " | ",";
-    /** The prefixes supported by this directive */
-    prefixes?: string[];
+    sep?: " " | "," | ":";
+    /** The prefix characters supported by this directive */
+    prefixChars?: string;
 };

@@ -11,7 +11,7 @@ const manPage = "systemd.unit(5)";
  * Condition checks can use a pipe symbol ("`|`") after the equals sign ("`Condition…=|…`"),
  * which causes the condition to become a *triggering* condition.
  */
-const prefixes = ["|"];
+const prefixChars = "|";
 
 export const valueEnum: SystemdValueEnum[] = [
     {
@@ -27,7 +27,7 @@ export const valueEnum: SystemdValueEnum[] = [
         section,
         manPage,
         docs: common.knownFirmwareConds,
-        prefixes,
+        prefixChars,
     },
     {
         directive: ["ConditionArchitecture", "AssertArchitecture"],
@@ -35,7 +35,7 @@ export const valueEnum: SystemdValueEnum[] = [
         manPage,
         /** uname */
         values: common.knownArchs,
-        prefixes,
+        prefixChars,
     },
     {
         directive: ["ConditionVirtualization", "AssertVirtualization"],
@@ -43,21 +43,21 @@ export const valueEnum: SystemdValueEnum[] = [
         section,
         docs: common.knownVirtualizationTechs,
         extends: PredefinedSignature.Boolean,
-        prefixes,
+        prefixChars,
     },
     {
         directive: ["ConditionSecurity", "AssertSecurity"],
         manPage,
         section,
         docs: common.knownSecurityTechs,
-        prefixes,
+        prefixChars,
     },
     {
         directive: ["ConditionCPUFeature", "AssertCPUFeature"],
         manPage,
         section,
         values: common.knownCPUFeatures,
-        prefixes,
+        prefixChars,
     },
     //
     {
