@@ -84,8 +84,6 @@ export class SystemdUnitsManager {
             if (boundary.test(pendingText[i])) break;
             pending++;
         }
-        const match = pendingText.match(/(?:^|\s)(.*?)$/);
-        if (!match) return [];
 
         if (!this.cached) {
             this.cached = this.builtInItems.map((it) => {
@@ -93,11 +91,13 @@ export class SystemdUnitsManager {
                 //#region patch
                 if (it.name === "blockdev@.target") {
                     completion.label = {label: it.name, detail: ' escaped-block-dev-node-path'};
+                    completion.filterText = it.name;
                     completion.insertText = new SnippetString('blockdev@\${0:escaped_block_dev_node_path}.target');
                 }
                 //#endregion patch
                 if (it.docs) completion.documentation = it.docs;
                 if (it.since) completion.since = it.since;
+                completion.commitCharacters = [' '];
                 return completion;
             });
         }
