@@ -17,7 +17,6 @@ for syscall in "${syscalls[@]}"; do
     docs="$(man "${syscall}.2" 2>/dev/null | awk '/^NAME$/{found=1;next;}found{print $0;exit}')";
     [ -n "$docs" ] || continue;
 
-    #shellcheck disable=SC2206
     names=();
     _names="${docs%%-*}";
     while true; do

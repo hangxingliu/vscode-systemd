@@ -533,7 +533,7 @@ export default [
     },
     {
         names: ["name_to_handle_at", "open_by_handle_at"],
-        docs: "obtain handle for a pathname and open file via a",
+        docs: "obtain handle for a pathname and open file via a handle",
     },
     {
         names: ["nanosleep"],
@@ -613,7 +613,7 @@ export default [
     },
     {
         names: ["readv", "writev", "preadv", "pwritev", "preadv2", "pwritev2"],
-        docs: "read or write data into multiple",
+        docs: "read or write data into multiple buffers",
     },
     {
         names: ["process_vm_readv", "process_vm_writev"],
@@ -953,7 +953,7 @@ export default [
     },
     {
         names: ["timerfd_create", "timerfd_settime", "timerfd_gettime"],
-        docs: "timers that notify via file descrip‐",
+        docs: "timers that notify via file descriptors",
     },
     {
         names: ["times"],

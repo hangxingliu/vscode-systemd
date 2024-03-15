@@ -1,5 +1,5 @@
 // author: hangxingliu
-// version: 2024-03-08
+// version: 2024-03-14
 import axios, { AxiosResponse } from "axios";
 import { load, CheerioAPI, Element, Cheerio } from "cheerio";
 export { load as loadHtml } from "cheerio";
@@ -287,6 +287,11 @@ export function getElementsInfo(elements: Cheerio<Element>, baseName = "elements
         result.push(getElementInfo(el, `${baseName}[${i}] `));
     });
     return result;
+}
+export function debugElements(elements: Cheerio<Element>, baseName = "elements") {
+    const info = getElementsInfo(elements, baseName);
+    if (info.length === 0) console.log(`elements.length = 0`);
+    info.forEach((it) => console.log(it));
 }
 
 export type OptionsForMatchingElements = {
