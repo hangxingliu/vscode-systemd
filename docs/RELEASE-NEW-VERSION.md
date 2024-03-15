@@ -24,7 +24,7 @@ date: 2024-02-26
 
 ## Update data to new systemd version
 
-- Add deprcated directives from `logs/v*-removed.json`
+- Add deprecated directives from `logs/v*-removed.json`
 - Check `logs/v*-changes.json` to update documentation in `src/hint-data/custom-value-enum`
 
 ## Test extension in Visual Studio Code Web

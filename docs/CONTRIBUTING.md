@@ -1,5 +1,5 @@
 ---
-date: 2024-02-25
+date: 2024-03-13
 ---
 # Contributing
 
@@ -9,19 +9,36 @@ date: 2024-02-25
 
 ```
 <project-root>
-  + cache                 Generated directory for cached http response
-  + docs                  Documentations for this project
-  + scripts               Some bash scripts for building, publishing, and fixing 
+  + artifacts/vscode        contains built *.vsix extension file and list file
+  + cache                   a generated directory for cached http response
+  + docs                    documents for development
+  + out                     a directory for built source code
+  + scripts                 contains some miscellaneous scripts for this project
   + src
-    + assets              Some asset files, including the icon of this extension
-	+ config              Internal configuration of this extension and 
-                          Visual Studio Code config loader
-    + hint-data           Generated data for auto-completion/help, and the loader for it
-    + parser              A simple parser for systemd configuration file
-	+ syntax              Systemd configuration syntax files and generator
-	+ utils               Utilities for downloading and generating hints/references data,
-                          and also some utility functions for extension runtime
+    + analyzer              contains some cli tools for analyzing the hint data and documents
+    + assets                contains the icon of this extension
+    + commands              source code related to Visual Studio Code commands
+    + config                source code related to Visual Studio Code configurations
+    + docs                  source code for transforming and generating documents for displaying
+    + hint-data
+      + custom-directives       contains manually maintained systemd directive data,
+                                  for those deprecated, removed, custom directives
+      + custom-value-enum       contains manually maintained systemd enumeration value data,
+                                  for value auto-completion 
+      + fetch                   scripts for fetching hint-data/enumeration/docs
+        - systemd-all.ts
+      + manager                 managers for loading and searching hint-data
+      + manifest                contains generated hint-data manifest json files
+    + lint                  contains some linting rules and source code of linting process 
+    + parser                a simple parser for systemd configuration file
+    + syntax                systemd configuration grammar files (tmLanguage) and its generator
+      - systemd.tmLanguage
+      - generate-tmLanguage.ts
+    + utils                 utilities
+    - build-contributes.ts  a generator for VSCode-related fields in package.json
+    - index.ts              the entry point of this extension
   + test
+  - ts                      a script for executing any Typescript file in this project 
 ```
 
 <!-- #region vscode-extension-dev -->
@@ -57,32 +74,81 @@ yarn install --ignore-optional
 
 ## Build
 
-``` bash
-# Clean built files
-yarn clean
+### Prerequisite knowledge for building
 
-# Build this project as desktop extension
-yarn run build:webpack
-```
+After executing commands such as `yarn build:ts` or `webpack`, 
+the built/bundled source code will be generated into the `out` directory.
 
-## Build Syntax
+Up to now, the `out` directory contains two distinct types of file structures:
 
-Sources:
+1. Bundled by the command `webpack` (or package scripts `build`, `build:webpack`). 
+In this scenario, the directory contains only a few files, including a bundled script file named `index.js`, 
+asset files,  and language grammar files.
+  - This structure is intended for the bundled extension, ensuring that no unnecessary files 
+  are included in the final extension file. 
+2. Built using the command `swc` (or package script `build:ts`). Here, the directory holds many
+built JavaScript files alongside other files.
+  - This structure is advantageous for development and debugging purposes.
 
-- `src/syntax/syntax.ts`
-- `src/syntax/patterns.ts`
-- `src/syntax/repository.ts`
-- `src/syntax/match-names.ts`
+To clean the `out` directory, you can execute the package script `clean` (`yarn run clean`)
 
-Target file:
-
-- `src/syntax/systemd.tmLanguage` (And The building script will copy it into the `out` directory for packing to the extension)
-
-## Update Hint Data
+### Build extension file
 
 ``` bash
-yarn build:dev
-yarn fetch:base
-yarn fetch:podman
-yarn fetch:capabilities
+# This package script `build` does the following tasks:
+# 1. clean up the `out` directory for previously generated files.
+# 2. bundle the script by the `webpack` command.
+# 3. copy asset files into the `out` directory
+yarn run build
 ```
+
+### Run TypeScript file
+
+``` bash
+./ts src/path/to/typescript-file.ts
+
+# debug mode:
+./ts inspect src/path/to/typescript-file.ts
+./ts --inspect-brk src/path/to/typescript-file.ts
+```
+
+### Make changes to the grammar/syntax
+
+The entrypoint of the grammar syntax rules: [src/syntax/syntax.ts](../src/syntax/syntax.ts)
+
+Executing the generator [src/syntax/generate-tmLanguage.ts](../src/syntax/generate-tmLanguage.ts) 
+to generate `systemd.tmLanguage` xml file from the grammar syntax rules.
+
+``` bash
+yarn build:ts && yarn build build:syntax
+```
+
+### Update hint data to the latest version
+
+``` bash
+yarn build:ts
+
+# Fetching and generating hint data for basic systemd directives
+yarn run fetch:base
+
+# Fetching and generating hint data about Podman Quadlet
+yarn run fetch:podman
+
+# Fetching and generating hint data about Linux Capabilities
+yarn run fetch:capabilities
+
+# Fetching and generating hint data about Linux syscalls
+yarn run fetch:syscalls
+```
+
+### Add new section names
+
+Please take a look at the file [src/syntax/const-sections.ts](../src/syntax/const-sections.ts)
+
+### Add custom directives
+
+Please add/modify them in the directory [src/hint-data/custom-directives](../src/hint-data/custom-directives)
+
+### Add enumeration completion for value
+
+Please add/modify them in the directory [src/hint-data/custom-value-enum](../src/hint-data/custom-value-enum)

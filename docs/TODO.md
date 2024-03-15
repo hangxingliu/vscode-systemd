@@ -17,17 +17,16 @@
 - [x] Settings for systemd version
 - [x] Add more deprecated/removed/renamed directives from `CHANGELOG` in systemd repo
 - [x] Update `extensionKind` to `["workspace", "ui"]` to allow user install it from local to remote
+- [x] Update target completion: <https://www.freedesktop.org/software/systemd/man/latest/systemd.special.html#default.target>
+- [x] Add completion for predefined filters and syscalls in <https://www.freedesktop.org/software/systemd/man/latest/systemd.exec.html#> and <https://man7.org/linux/man-pages/man2/syscalls.2.html>
+- [x] Add support for value prefixes and `sep` field in value enum rules
+- [x] Add and check all value completions
+- [x] Add docs about new folders (e.g., `custom-directives`)
 
-## 2.3.0
-
-- [ ] Add docs about new folders (e.g., `custom-directives`)
-- [ ] Add and check all value completions
-- [ ] Add support for value prefixes and `sep` field in value enum rules
-- [ ] Add completion for predefined filters and syscalls in <https://www.freedesktop.org/software/systemd/man/latest/systemd.exec.html#> and <https://man7.org/linux/man-pages/man2/syscalls.2.html>
-- [ ] Update documents for `Asset*` directives in systemd.unit(5) for more human-readable
 
 ## 2.x
 
+- [ ] Update documents for `Asset*` directives in systemd.unit(5) for more human-readable
 - [ ] Update to Systemd 256 (e.g., `IPv4ProxyARPPrivateVLAN=`)
 
 ## 3.x

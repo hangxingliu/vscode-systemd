@@ -17,6 +17,8 @@ displaying properly and unexpected email addresses
 - Renamed the following configurations: (The old names will still be supported in 2024)
     - `systemd.lintDirectiveKeys` => `systemd.directive-keys.lint`
     - `systemd.customDirectiveKeys` => `systemd.directive-keys.custom`
+- Fixed the parser to correctly detect unit types `sysupdated` and `repartd`
+- Updated unit name completion for full special system units 
 - Updated diagnostics to display detailed deprecation information and providing quick fixes for automatically renaming deprecated directives.
 - Updated documentation to the latest
 - Improved the process of changing unit file types
