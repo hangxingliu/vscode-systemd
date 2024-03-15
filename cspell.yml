@@ -10,7 +10,9 @@ ignorePaths:
   - src/hint-data/custom-value-enum/systemd-*.ts
   - src/hint-data/custom-value-enum/common.ts
   - src/hint-data/custom-value-enum/index.ts
+  - src/hint-data/custom-value-enum/common-syscalls.ts
   - src/hint-data/custom-directives/systemd-*.ts
+  - src/hint-data/fetch/utils/syscall-docs.ts
   - src/hint-data/*.json
   - "*.tmLanguage"
 ignoreRegExpList:
@@ -70,3 +72,12 @@ words:
   - syscalls
   - unescaping
   - balabalabala
+  - gotodir
+  - goback
+  - epoll
+  - blockdev
+  - loglevel
+  - filesystems
+  - tmpfs
+  - gsub
+  - syscall

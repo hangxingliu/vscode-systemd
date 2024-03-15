@@ -135,7 +135,7 @@ async function main() {
         const $ = await getHTMLDoc("syscall-sets", getManPageURL("systemd.exec(5)", "systemd"));
         print.start("extracting all predefined syscall sets");
 
-        const allTableHeadings = assertLength("tabel headings", $("body .table .title"), ">=10");
+        const allTableHeadings = assertLength("table headings", $("body .table .title"), ">=10");
         const matchedHeadings = matchElementsByText(
             allTableHeadings,
             ["Table 4. Currently predefined system call sets"],
