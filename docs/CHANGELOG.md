@@ -1,6 +1,6 @@
 # CHANGELOG
 
-### 2.2.0 (2024-03-xx)
+### 2.2.0 (2024-03-16)
 
 - Add auto-completion and signature hint support for boolean values for directives
 - Add support for a new unit file `iocost.conf`
