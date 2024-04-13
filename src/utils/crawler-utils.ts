@@ -1,5 +1,9 @@
-// author: hangxingliu
-// version: 2024-03-14
+//#region main
+// template: crawler-utils.ts
+// author:   hangxingliu
+// license:  MIT
+// version:  2024-03-17
+//
 import axios, { AxiosResponse } from "axios";
 import { load, CheerioAPI, Element, Cheerio } from "cheerio";
 export { load as loadHtml } from "cheerio";
@@ -24,6 +28,15 @@ export const green = (str: unknown) => `\x1b[32m${str}\x1b[39m`;
 export const yellow = (str: unknown) => `\x1b[33m${str}\x1b[39m`;
 export const red = (str: unknown) => `\x1b[31m${str}\x1b[39m`;
 //#endregion terminal style
+//
+
+//
+//#region the format for output
+let indentStyle = "\t";
+export function setIndentStyle(style: string) {
+    indentStyle = style;
+}
+//#endregion the format for output
 //
 
 //
@@ -458,13 +471,13 @@ export function toMarkdown(html: string): string {
         },
         replacement(content, node, options) {
             if (turndownHTMLSupported) {
-                let html = node["outerHTML"];
-                // simple replace for removing class names
-                html = html.replace(/(<\w+)\s+class="(.+?)"/g, "$1");
-                return html;
-            } else {
-                return "`" + node.textContent + "`";
+                const html = (node as HTMLElement)["outerHTML"];
+                if (typeof html === "string") {
+                    // simple replace for removing class names
+                    return html.replace(/(<\w+)\s+class="(.+?)"/g, "$1");
+                }
             }
+            return "`" + node.textContent + "`";
         },
     });
     return turndownService.turndown(html);
@@ -483,7 +496,7 @@ export function getMarkdownHelpFromElement($el: Cheerio<Element>): string {
 //
 
 export function writeJSON(filePath: string, object: unknown) {
-    writeFileSync(filePath, JSON.stringify(object, null, "\t") + "\n");
+    writeFileSync(filePath, JSON.stringify(object, null, indentStyle) + "\n");
 }
 
 export class JsonFileWriter<ItemType = unknown> {
@@ -510,3 +523,4 @@ export class JsonFileWriter<ItemType = unknown> {
         await new Promise<void>((resolve, reject) => stream.close((err) => (err ? reject(err) : resolve())));
     }
 }
+//#endregion main

@@ -3,6 +3,7 @@
 #region config
 PROJECT_ROOT=".."
 ARTIFACT_DIR="../artifacts/vscode"
+# ARTIFACT_DIR_NPM="../artifacts/npm";
 # VSCE_PAT="$OTHE_ENV_VAR"
 PREBUILD() { execute yarn build; }
 INIT_EXTRA_FILES() { execute cp -- docs/CHANGELOG.md CHANGELOG.md; }
@@ -13,7 +14,7 @@ CLEAN_EXTRA_FILES() { execute rm -- CHANGELOG.md; }
 #
 # template: vsce.sh
 #   author: hangxingliu
-#  version: 2024-03-12
+#  version: 2024-03-16
 #
 throw() { echo -e "fatal: $1" >&2; exit 1; }
 execute() { echo "$ $*"; "$@" || throw "Failed to execute '$1'"; }
@@ -78,6 +79,13 @@ do_build_vsix() {
 
     gotodir "$ARTIFACT_DIR";
     ARTIFACT_DIR="$(pwd)";
+    goback;
+    if [ -n "$ARTIFACT_DIR_NPM" ]; then
+        execute mkdir -p "$ARTIFACT_DIR_NPM";
+        gotodir "$ARTIFACT_DIR_NPM";
+        ARTIFACT_DIR_NPM="$(pwd)";
+        goback;
+    fi
 
     gotodir "$PROJECT_DIR";
 
@@ -87,7 +95,17 @@ do_build_vsix() {
     has_function "CLEAN_EXTRA_FILES" && trap CLEAN_EXTRA_FILES EXIT;
     has_function "PREBUILD" && PREBUILD;
 
-    local list_file vsix_file;
+    local list_file vsix_file npm_tgz_file;
+    if [ -n "$ARTIFACT_DIR_NPM" ]; then
+        list_file="${ARTIFACT_DIR_NPM}/${PKG_FULL_NAME}.list";
+        npm_tgz_file="${ARTIFACT_DIR_NPM}/${PKG_FULL_NAME}.tgz";
+
+        echo "$ npm pack --dryrun | tee $list_file";
+        npm pack --dryrun 2>&1 | sed 's/npm notice//' | tee "$list_file";
+        execute npm pack;
+        execute mv -f "${PKG_FULL_NAME}.tgz" "$npm_tgz_file";
+    fi
+
     list_file="${ARTIFACT_DIR}/${PKG_FULL_NAME}.list";
     vsix_file="${ARTIFACT_DIR}/${PKG_FULL_NAME}.vsix";
 

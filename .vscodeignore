@@ -9,8 +9,13 @@ ts
 # template:  .vscodeignore
 # author:    hangxingliu
 # license:   MIT
-# version:   2024-03-14
+# version:   2024-03-16
 #
+
+# config for building/bundling
+tsconfig*.json
+*.tsbuildinfo
+.swcrc
 
 # spellchecker
 cspell.yml
@@ -26,9 +31,6 @@ cache*
 # scripts
 scripts
 
-# config for building/bundling
-tsconfig*.json
-.swcrc
 
 # documents
 docs
@@ -36,6 +38,8 @@ docs
 # source files
 src
 *.d.ts
+
+# test files
 *.spec.*
 test
 
@@ -48,6 +52,7 @@ test
 # vscode configuartion and test files
 .vscode
 .vscode-test
+.vscode-test-web
 
 # ignore gitignore
 .gitignore
