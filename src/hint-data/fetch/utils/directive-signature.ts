@@ -28,6 +28,7 @@ export function extractDirectiveSignature(signatureString: string): ReadonlyArra
     const result = new Map<string, string[]>();
     for (const part of signatureString.split(/,\s+/)) {
         if (part.startsWith("--")) continue; // cli options
+        if (/^-\w$/.test(part)) continue; // cli options
         if (part.match(/^\$\w+(?:=\w*)?$/)) continue; // environment variables
         const mtx = part.match(/^([^\[=]+)(?:=(.*)|\[=\])?$/);
         if (!mtx) throw new Error(`Invalid directive "${signatureString}"`);

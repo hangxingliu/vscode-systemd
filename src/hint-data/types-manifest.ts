@@ -21,6 +21,7 @@ export type ManifestItem =
 
 export const enum PredefinedSignature {
     Boolean = "b",
+    BooleanOrAuto = "B",
 }
 export type ManifestItemForDirective = [
     type: ManifestItemType.Directive,
