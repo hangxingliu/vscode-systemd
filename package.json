@@ -219,7 +219,7 @@
     "optionalDependencies": {
         "@typescript-eslint/eslint-plugin": "^7",
         "@typescript-eslint/parser": "^7",
-        "@vscode/vsce": "^2.24.0",
+        "@vscode/vsce": "^2.26.0",
         "eslint": "^9"
     },
     "repository": {
