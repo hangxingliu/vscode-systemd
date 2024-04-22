@@ -207,7 +207,7 @@
         "escape-html": "^1.0.3",
         "html-entities": "^2.5.2",
         "https-proxy-agent": "^7",
-        "marked": "^12.0.1",
+        "marked": "^12.0.2",
         "rimraf": "^5",
         "swc-loader": "^0.2.3",
         "turndown": "^7.1.2",
