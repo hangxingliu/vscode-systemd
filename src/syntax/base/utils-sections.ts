@@ -1,5 +1,5 @@
-import { MapList } from "../utils/data-types";
-import type { SectionGroup, SectionsDefinition } from "./const-sections";
+import { MapList } from "../../utils/data-types";
+import type { SectionGroup, SectionsDefinition } from "../common/section-names";
 
 /**
  * Return all section names in lower case

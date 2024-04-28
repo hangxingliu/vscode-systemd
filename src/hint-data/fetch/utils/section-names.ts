@@ -2,7 +2,7 @@
 // Extract section names from the docs <h2> header text
 //
 
-import { SectionGroupName } from "../../../syntax/const-sections";
+import { SectionGroupName } from "../../../syntax/common/section-names";
 
 const defaultSectionNameForOptions = new Map([
     ["resolved.conf(5)", "Resolve"],

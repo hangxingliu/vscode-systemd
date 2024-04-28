@@ -2,7 +2,7 @@
  * <https://macromates.com/manual/en/language_grammars#naming_conventions>
  * <https://www.sublimetext.com/docs/scope_naming.html>
  */
-export const names = {
+export const scopes = {
     entityName: {
         section: "entity.name.section",
         unknownSection: "entity.name.unknown-section",
@@ -46,7 +46,7 @@ export const names = {
     jinja: {
         source: "source.jinja",
         expression: "source.jinja#expression",
-        comments: 'source.jinja#comments',
+        comments: "source.jinja#comments",
         variable: "variable.meta.scope.jinja",
         tag: "meta.scope.jinja.tag",
         raw: "meta.scope.jinja.raw",

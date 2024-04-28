@@ -274,3 +274,5 @@ export const defaultSections: Sections = Array.from(
 export const allSections: Sections = Array.from(
     new Set([...defaultSections, ...internalSections, ...allPodmanSections])
 );
+
+export const mkosiSections: Sections = ["Match", "Config", "Distribution", "Output", "Content", "Validation", "Host"];

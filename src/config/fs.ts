@@ -9,5 +9,8 @@ export const packageJSON = resolve(projectDir, 'package.json');
 
 export const manifestDir = resolve(hintDataDir, 'manifests');
 export const defaultManifestFile = resolve(hintDataDir, 'default.json');
-export const tmLanguageFile = resolve(srcDir, 'syntax/systemd.tmLanguage');
+export const tmLanguageFiles = {
+    systemd: resolve(srcDir, 'syntax/systemd.tmLanguage'),
+    mkosi: resolve(srcDir, 'syntax/mkosi.tmLanguage'),
+}
 

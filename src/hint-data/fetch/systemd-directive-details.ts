@@ -24,7 +24,7 @@ import {
     extractVersionInfoFromMarkdown,
     isBooleanArgument,
 } from "./utils/directive-signature";
-import { similarSections } from "../../syntax/const-sections";
+import { similarSections } from "../../syntax/common/section-names";
 import { extractSectionNameFromDocs } from "./utils/section-names";
 
 const ignoredH2Sections: string[] = [

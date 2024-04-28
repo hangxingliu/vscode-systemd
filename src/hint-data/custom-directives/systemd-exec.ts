@@ -1,4 +1,4 @@
-import { SectionGroupName } from "../../syntax/const-sections";
+import { SectionGroupName } from "../../syntax/common/section-names";
 import { manpageURLs } from "../manpage-url";
 import { CustomSystemdDirective } from "./types";
 

@@ -21,19 +21,17 @@ type ScopeNameRoot =
 type ScopeName = `${ScopeNameRoot}.${string}`;
 type OnigurumaRegExp = RegExp | string;
 
-export type TextMateGrammarPatterns<RepoNames> = Array<TextMateGrammarPattern<RepoNames> | undefined>;
-export type IncludeName<RepoNames> = RepoNames extends string
-    ? `#${RepoNames}` | "$self" | ScopeName | `${ScopeName}#${string}`
-    : never;
+export type TextMateGrammarPatterns = Array<TextMateGrammarPattern | undefined>;
+export type IncludeName = `#${string}` | "$self" | ScopeName | `${ScopeName}#${string}`;
 
 /**
  * @see https://macromates.com/manual/en/language_grammars
  */
-export type TextMateGrammarConfig<RepoNames extends string> = {
+export type TextMateGrammarConfig = {
     name: string;
     scopeName: ScopeName;
-    patterns: TextMateGrammarPatterns<RepoNames>;
-    repository: TextMateGrammarRepository<RepoNames>;
+    patterns: TextMateGrammarPatterns;
+    repository: Record<string, TextMateGrammarPattern>;
 
     version?: string;
     uuid?: string;
@@ -43,20 +41,16 @@ export type TextMateGrammarConfig<RepoNames extends string> = {
     foldingStopMarker?: OnigurumaRegExp;
 };
 
-export type TextMateGrammarRepository<RepoNames extends string> = {
-    [repoNames in RepoNames]: TextMateGrammarPattern<RepoNames>;
-};
-
-export type TextMateGrammarCaptures<RepoNames> = Record<
+export type TextMateGrammarCaptures = Record<
     string,
     | ScopeName
     | {
           name: ScopeName;
-          patterns?: TextMateGrammarPattern<RepoNames>;
+          patterns?: TextMateGrammarPattern;
       }
 >;
 
-export type TextMateGrammarPattern<RepoNames> = {
+export type TextMateGrammarPattern = {
     /**
      * the name which gets assigned to the portion matched.
      * This is used for styling and scope-specific settings and actions,
@@ -70,16 +64,16 @@ export type TextMateGrammarPattern<RepoNames> = {
     contentName?: ScopeName;
     comment?: string;
 
-    beginCaptures?: TextMateGrammarCaptures<RepoNames>;
-    captures?: TextMateGrammarCaptures<RepoNames>;
-    endCaptures?: TextMateGrammarCaptures<RepoNames>;
+    beginCaptures?: TextMateGrammarCaptures;
+    captures?: TextMateGrammarCaptures;
+    endCaptures?: TextMateGrammarCaptures;
 
     begin?: OnigurumaRegExp;
     match?: OnigurumaRegExp;
     end?: OnigurumaRegExp;
 
-    patterns?: TextMateGrammarPatterns<RepoNames>;
+    patterns?: TextMateGrammarPatterns;
 
-    include?: IncludeName<RepoNames>;
+    include?: IncludeName;
 };
 //#endregion main

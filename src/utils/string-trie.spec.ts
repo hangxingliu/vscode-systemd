@@ -1,5 +1,5 @@
-import { allSections } from "../syntax/const-sections";
-import { getOrderedSectionNames } from "../syntax/sections-utils";
+import { allSections } from "../syntax/common/section-names";
+import { getOrderedSectionNames } from "../syntax/base/utils-sections";
 import { Trie } from "./string-trie";
 
 testPrefix();

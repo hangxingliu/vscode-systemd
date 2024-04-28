@@ -1,4 +1,4 @@
-const rawItems = require("../hint-data/manifests/capabilities.json");
+const rawItems = require("../../hint-data/manifests/capabilities.json");
 const allCapNames = new Set<string>();
 for (const item of rawItems) {
     if (!Array.isArray(item) || typeof item[1] !== "string") continue;

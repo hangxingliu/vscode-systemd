@@ -34,7 +34,7 @@ import {
     scopeSections,
     allPodmanSections,
     iocostSections,
-} from "../syntax/const-sections";
+} from "../syntax/common/section-names";
 
 const fileTypeToSections = new Map<SystemdFileType, SectionsDefinition>([
     [SystemdFileType.target, []],
