@@ -1,0 +1,11 @@
+{
+    "name": "@hangxingliu/test-textmate-grammar",
+    "version": "1.0.0",
+    "private": true,
+    "author": "hangxingliu",
+    "devDependencies": {
+        "@types/node": "^20.12.7",
+        "vscode-oniguruma": "^2.0.1",
+        "vscode-textmate": "^9.0.0"
+    }
+}
