@@ -9,9 +9,9 @@ export class RepositoryManager {
     readonly usage: { [name in RepositoryNames]: number };
 
     constructor() {
-        const usage: any = {};
+        const usage: { [name in RepositoryNames]?: number } = {};
         for (const name of Object.keys(this.repo)) usage[name] = 0;
-        this.usage = usage;
+        this.usage = usage as typeof this.usage;
     }
 
     /**
