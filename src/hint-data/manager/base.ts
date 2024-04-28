@@ -105,6 +105,8 @@ export class HintDataManager {
             if (signatures) {
                 if (signatures === PredefinedSignature.Boolean) {
                     label.detail = " boolean";
+                } else if (signatures === PredefinedSignature.BooleanOrAuto) {
+                    label.detail = " boolean|auto";
                 } else {
                     label.detail = " " + signatures;
                 }
@@ -229,7 +231,7 @@ export class HintDataManager {
                 }
                 if (item.fixHelp || renames[i]) {
                     extraProps.fix = {
-                        help: item.fixHelp || item.docs || '',
+                        help: item.fixHelp || item.docs || "",
                         url: item.fixURL,
                         rename: renames[i],
                     };

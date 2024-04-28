@@ -41,7 +41,6 @@ export class SystemdCompletionProvider implements CompletionItemProvider {
         "@",
     ];
     private fileTypeToSections: Array<Array<CompletionItem>> = [];
-    private booleanItems: CompletionItem[] | undefined;
     private podmanEnabled: boolean;
     constructor(private readonly config: ExtensionConfig, private readonly managers: HintDataManagers) {
         this.podmanEnabled = config.podmanCompletion;
@@ -68,22 +67,21 @@ export class SystemdCompletionProvider implements CompletionItemProvider {
             this.podmanEnabled = this.config.podmanCompletion;
             this.fileTypeToSections = [];
         }
-        this.booleanItems = undefined;
     };
 
     private readonly extendsValueEnum: ValueEnumExtendsFn = (rule) => {
-        if (rule.extends === PredefinedSignature.Boolean) return this.getBooleanCompletion();
+        if (rule.extends === PredefinedSignature.Boolean) return this.getBooleanCompletion(false);
+        if (rule.extends === PredefinedSignature.BooleanOrAuto) return this.getBooleanCompletion(true);
     };
 
-    getBooleanCompletion() {
-        if (this.booleanItems) return this.booleanItems;
+    getBooleanCompletion(withAuto: boolean) {
         const enums = this.config.booleanStyle.split("-");
-        this.booleanItems = enums.map((it, index) => {
+        if (withAuto) enums.push("auto");
+        return enums.map((it, index) => {
             const ci = new CompletionItem(it, CompletionItemKind.Keyword);
             ci.sortText = `bool${index}`;
             return ci;
         });
-        return this.booleanItems;
     }
 
     provideCompletionItems(
@@ -158,7 +156,10 @@ export class SystemdCompletionProvider implements CompletionItemProvider {
                     const list = this.managers.getDirectiveList(directive, { section, file });
                     if (list && list.length > 0) {
                         const directive = list[0];
-                        if (directive.signatures === PredefinedSignature.Boolean) return this.getBooleanCompletion();
+                        if (directive.signatures === PredefinedSignature.Boolean)
+                            return this.getBooleanCompletion(false);
+                        if (directive.signatures === PredefinedSignature.BooleanOrAuto)
+                            return this.getBooleanCompletion(true);
                     }
                 }
                 return;

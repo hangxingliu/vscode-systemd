@@ -6,6 +6,18 @@ import { createMarkdown } from "../utils/vscode";
 import { ExtensionConfig } from "../config/vscode-config-loader";
 import { SignatureInformation } from "vscode";
 import { PredefinedSignature } from "../hint-data/types-manifest";
+import { RequiredDirectiveCompletionItem } from "../hint-data/types-runtime";
+
+export function genSignaturesCore(
+    directive: Readonly<Pick<RequiredDirectiveCompletionItem, "signatures">>,
+    config: Readonly<Pick<ExtensionConfig, "booleanStyle">>
+): ReadonlyArray<string> {
+    if (directive.signatures === PredefinedSignature.Boolean) return [config.booleanStyle.split("-").join("|")];
+    if (directive.signatures === PredefinedSignature.BooleanOrAuto)
+        return [config.booleanStyle.split("-").concat("auto").join("|")];
+    if (isNonEmptyArray(directive.signatures)) return directive.signatures;
+    return [];
+}
 
 export function genSignatureDocsForDirective(
     managers: HintDataManagers,
@@ -32,17 +44,11 @@ export function genSignatureDocsForDirective(
         if (directive.fix?.help) docsMarkdown += directive.fix.help;
         else docsMarkdown += docs ? docs.str.value : "";
 
-        const signStrings: string[] = [];
-        if (directive.signatures === PredefinedSignature.Boolean) {
-            signStrings.push(config.booleanStyle.split("-").join("|"));
-        } else if (isNonEmptyArray(directive.signatures)) {
-            signStrings.push(...signStrings);
-        }
-
+        let signStrings = genSignaturesCore(directive, config);
         if (!signStrings[0]) {
             let defaultSign = `${directive.directiveName}=`;
             if (section) defaultSign = `[${section.name}] ${defaultSign}`;
-            signStrings[0] = defaultSign;
+            signStrings = [defaultSign];
         }
         for (const signString of signStrings)
             signatures.push(new SignatureInformation(signString, createMarkdown(docsMarkdown)));
