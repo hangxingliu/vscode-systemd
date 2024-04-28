@@ -42,6 +42,7 @@
         "build:webpack": "webpack --mode production --devtool hidden-source-map",
         "copy:assets": "cd src && copyfiles '**/*.{tmLanguage,png}' ../out",
         "fetch:base": "node --enable-source-maps out/hint-data/fetch/systemd-all",
+        "fetch:mkosi": "node --enable-source-maps out/hint-data/fetch/mkosi",
         "fetch:podman": "node --enable-source-maps out/hint-data/fetch/podman-quadlet",
         "fetch:capabilities": "node --enable-source-maps out/hint-data/fetch/linux-capabilities",
         "fetch:syscalls": "node --enable-source-maps out/hint-data/fetch/linux-syscalls",
@@ -54,6 +55,17 @@
     ],
     "contributes": {
         "languages": [
+            {
+                "id": "mkosi-conf",
+                "aliases": [
+                    "Mkosi Configuration",
+                    "mkosi-conf"
+                ],
+                "filenamePatterns": [
+                    "mkosi.conf"
+                ],
+                "configuration": "./language-configuration.json"
+            },
             {
                 "id": "systemd-conf",
                 "aliases": [
@@ -101,6 +113,11 @@
                 "language": "systemd-conf",
                 "scopeName": "source.systemd",
                 "path": "./out/syntax/systemd.tmLanguage"
+            },
+            {
+                "language": "mkosi-conf",
+                "scopeName": "source.mkosi",
+                "path": "./out/syntax/mkosi.tmLanguage"
             }
         ],
         "commands": [
