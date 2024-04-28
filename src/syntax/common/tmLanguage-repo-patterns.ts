@@ -113,7 +113,7 @@ export const allRepositories = {
     numbers: {
         patterns: [
             {
-                match: /(?<=\s|=)\d+(?:\.\d+)?(?=\s|$)/,
+                match: /(?<=\s|=)\d+(?:\.\d+)?(?=[\s:]|$)/,
                 name: scopes.numeric,
             },
         ],
@@ -121,11 +121,11 @@ export const allRepositories = {
     sizes: {
         patterns: [
             {
-                match: /(?<=\s|=)\d+(?:\.\d+)?[KMGT](?=\s|$)/,
+                match: /(?<=\s|=)\d+(?:\.\d+)?[KMGT](?=[\s:]|$)/,
                 name: scopes.numeric,
             },
             {
-                match: /(?<==)infinity(?=\s|$)/,
+                match: /(?<==)infinity(?=[\s:]|$)/,
                 name: scopes.numeric,
             },
         ],

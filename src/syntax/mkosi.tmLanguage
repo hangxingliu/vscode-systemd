@@ -124,7 +124,7 @@
           <key>name</key>
           <string>constant.numeric</string>
           <key>match</key>
-          <string>(?&lt;=\s|=)\d+(?:\.\d+)?(?=\s|$)</string>
+          <string>(?&lt;=\s|=)\d+(?:\.\d+)?(?=[\s:]|$)</string>
         </dict>
       </array>
     </dict>
@@ -136,13 +136,13 @@
           <key>name</key>
           <string>constant.numeric</string>
           <key>match</key>
-          <string>(?&lt;=\s|=)\d+(?:\.\d+)?[KMGT](?=\s|$)</string>
+          <string>(?&lt;=\s|=)\d+(?:\.\d+)?[KMGT](?=[\s:]|$)</string>
         </dict>
         <dict>
           <key>name</key>
           <string>constant.numeric</string>
           <key>match</key>
-          <string>(?&lt;==)infinity(?=\s|$)</string>
+          <string>(?&lt;==)infinity(?=[\s:]|$)</string>
         </dict>
       </array>
     </dict>
