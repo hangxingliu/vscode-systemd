@@ -15,6 +15,18 @@
         },
         {
             "type": "node",
+            "name": "Launch spec test",
+            "request": "launch",
+            "sourceMaps": true,
+            "skipFiles": [
+                "<node_internals>/**",
+                "**/node_modules/**"
+            ],
+            "preLaunchTask": "npm: build:ts",
+            "program": "${workspaceFolder}/out/parser-v2/tokenizer-wip.spec.js",
+        },
+        {
+            "type": "node",
             "name": "Attach",
             "port": 9229,
             "request": "attach",
