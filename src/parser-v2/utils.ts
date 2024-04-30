@@ -50,23 +50,8 @@ export class TextLocationUtils {
         this.line,
         this.char + inlineOffset,
     ];
-}
 
-export const tokenTypeNames: { [x in TokenType]: string } = {
-    [TokenType.none]: "none",
-    [TokenType.comment]: "comment",
-    [TokenType.section]: "section",
-    [TokenType.directiveKey]: "key",
-    [TokenType.directiveValue]: "value",
-    [TokenType.assignment]: "assignment",
-    [TokenType.unknown]: "unknown",
-};
-
-export function dumpToken(token: Token) {
-    let log = `Token { ${tokenTypeNames[token.type]}; `.padEnd(20);
-    const [from, to] = token.range;
-    log += `L${from[1] + 1},${from[2] + 1} ~ L${to[1] + 1},${to[2] + 1}; `.padEnd(16);
-    log += `text=${JSON.stringify(token.text)}; `;
-    log += `}`;
-    return log;
+    readonly inSameLine = (loc?: LocationTuple): boolean => {
+        return loc ? this.line === loc[1] : false;
+    };
 }

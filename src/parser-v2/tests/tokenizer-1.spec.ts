@@ -176,6 +176,7 @@ test("[A]U\nK=\\\n", ({ conf, diagnosis, range, loc }) => {
 });
 
 test("[A]U\nK=\\\n #", ({ conf, diagnosis, range, loc }) => {
+    process.env.is_debug = '1';
     const result = tokenizer(conf);
     diagnosis(result.tokens);
     deepStrictEqual(result.tokens, [

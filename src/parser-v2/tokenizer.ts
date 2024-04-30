@@ -90,19 +90,23 @@ export function tokenizer(conf: string, _opts?: TokenizerOptions): TokenizerResu
         }
 
         if (state.type === TokenType.none) {
-            if (ch === "=") {
-                state.type = TokenType.assignment;
-                enterToken(TokenType.none);
-                location.moveToNext();
-                continue;
-            }
-            if (state.valueMayNotEnd >= 2 || state.lastType === TokenType.assignment)
-                enterToken(TokenType.directiveValue);
-            else if (ch === "[") enterToken(TokenType.section);
-            else enterToken(TokenType.directiveKey);
-            checkEscapeChar(ch);
-            location.moveToNext();
+            const inSameLine = location.inSameLine(state.lastRange?.[1]);
+            const isValue = state.valueMayNotEnd >= 2 || (inSameLine && state.lastType === TokenType.assignment);
 
+            if (isValue) {
+                enterToken(TokenType.directiveValue);
+                checkEscapeChar(ch);
+            } else if (ch === "=" && state.lastType !== TokenType.assignment) {
+                handleAssignmentOperator();
+                continue;
+            } else if (ch === "[") {
+                enterToken(TokenType.section);
+            } else {
+                enterToken(TokenType.directiveKey);
+                checkEscapeChar(ch);
+            }
+
+            location.moveToNext();
             state.valueMayNotEnd = 0;
             continue;
         }
@@ -110,19 +114,18 @@ export function tokenizer(conf: string, _opts?: TokenizerOptions): TokenizerResu
         if (state.type === TokenType.section) {
             location.moveToNext();
             if (ch === "]") enterToken(TokenType.unknown);
-            else checkEscapeChar(ch);
+            // else checkEscapeChar(ch);
             continue;
         }
 
         if (state.type === TokenType.directiveKey) {
             if (ch === "=") {
                 enterToken(TokenType.assignment);
-                location.moveToNext();
-                enterToken(TokenType.none);
-            } else {
-                checkEscapeChar(ch);
-                location.moveToNext();
+                handleAssignmentOperator();
+                continue;
             }
+            checkEscapeChar(ch);
+            location.moveToNext();
             continue;
         }
 
@@ -141,7 +144,12 @@ export function tokenizer(conf: string, _opts?: TokenizerOptions): TokenizerResu
         const currentType = state.type;
         moveToNewLine();
         if (state.escapedFor) return enterToken(state.escapedFor);
-        if (mkosi && currentType === TokenType.directiveValue) state.valueMayNotEnd = 1;
+        if (mkosi) {
+            const valueMayNotEnd =
+                (currentType === TokenType.none && state.lastType === TokenType.assignment) ||
+                currentType === TokenType.directiveValue;
+            if (valueMayNotEnd) state.valueMayNotEnd = 1;
+        }
     }
 
     function handleWhiteSpace(ch: string) {
@@ -152,10 +160,7 @@ export function tokenizer(conf: string, _opts?: TokenizerOptions): TokenizerResu
 
     function handleCommentSign() {
         if (state.type !== TokenType.comment) {
-            if (!mkosi && state.passedLeadingBlank) {
-                location.moveToNext();
-                return false;
-            }
+            if (!mkosi && state.passedLeadingBlank) return false;
             state.passedLeadingBlank = false;
         }
         // const typeBeforeComment = state.type;
@@ -172,6 +177,7 @@ export function tokenizer(conf: string, _opts?: TokenizerOptions): TokenizerResu
     }
 
     function checkEscapeChar(ch: string) {
+        if (mkosi) return;
         if (ch === "\\") state.escapedFor = state.type;
         else state.escapedFor = TokenType.none;
     }
@@ -180,6 +186,13 @@ export function tokenizer(conf: string, _opts?: TokenizerOptions): TokenizerResu
         enterToken(TokenType.none);
         location.moveToNewLine();
         state.passedLeadingBlank = false;
+    }
+
+    function handleAssignmentOperator() {
+        state.type = TokenType.assignment;
+        state.from = location.get();
+        location.moveToNext();
+        enterToken(TokenType.none);
     }
 
     function enterToken(type: TokenType) {

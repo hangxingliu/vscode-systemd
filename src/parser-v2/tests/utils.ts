@@ -1,8 +1,29 @@
 import { inspect } from "util";
-import { LocationTuple, RangeTuple } from "../types.js";
+import { LocationTuple, RangeTuple, Token, TokenType } from "../types.js";
+import { deepStrictEqual, ok } from "assert";
 
 const DIM = `\u001b[2m`;
 const RESET = `\u001b[0m`;
+
+export const tokenTypeNames: { [x in TokenType]: string } = {
+    [TokenType.none]: "none",
+    [TokenType.comment]: "comment",
+    [TokenType.section]: "section",
+    [TokenType.directiveKey]: "key",
+    [TokenType.directiveValue]: "value",
+    [TokenType.assignment]: "assignment",
+    [TokenType.unknown]: "unknown",
+};
+
+export function dumpToken(token?: Token) {
+    if (!token) return `Undefined`;
+    let log = `Token { ${tokenTypeNames[token.type]}; `.padEnd(20);
+    const [from, to] = token.range;
+    log += `L${from[1] + 1},${from[2] + 1} ~ L${to[1] + 1},${to[2] + 1}; `.padEnd(16);
+    log += `text=${JSON.stringify(token.text)}; `;
+    log += `}`;
+    return log;
+}
 
 export class LocationUtils {
     constructor(private readonly text: string) {}
@@ -32,6 +53,39 @@ export class LocationUtils {
         }
         this.last = [targetOffset, lineNo, inlineOffset];
         return this.last;
+    }
+}
+
+export class AssertTokens {
+    private index = 0;
+    constructor(private readonly tokens: Token[]) {}
+    private validate(type: TokenType, text?: string) {
+        const i = this.index++;
+        const token = this.tokens[i];
+
+        const msg = `token[${i}] should be a ${tokenTypeNames[type]} node "${text}", actual: ${dumpToken(token)}`;
+        ok(token, msg);
+        deepStrictEqual(token.type, type);
+        if (typeof text !== "undefined") deepStrictEqual(token.text, text);
+        return this;
+    }
+    section(section: string) {
+        return this.validate(TokenType.section, section);
+    }
+    unknown(text: string) {
+        return this.validate(TokenType.unknown, text);
+    }
+    key(key: string) {
+        return this.validate(TokenType.directiveKey, key);
+    }
+    assignment() {
+        return this.validate(TokenType.assignment, "=");
+    }
+    value(key: string) {
+        return this.validate(TokenType.directiveValue, key);
+    }
+    comment(comment?: string) {
+        return this.validate(TokenType.comment, comment);
     }
 }
 

@@ -5,9 +5,6 @@ export function getForecast(
     state: TokenizerState,
     currentLocation: LocationTuple,
 ): TokenType {
-    if (state.escapedFor) return state.escapedFor;
-    if (state.valueMayNotEnd >= 2) return TokenType.directiveValue;
-
     // in the same line
     if (state.lastRange && currentLocation[1] === state.lastRange[1][1]) {
         const forecast = state.lastType;
@@ -21,5 +18,8 @@ export function getForecast(
         }
         return forecast || TokenType.none;
     }
+
+    if (state.escapedFor) return state.escapedFor;
+    if (state.valueMayNotEnd >= 2) return TokenType.directiveValue;
     return TokenType.none;
 }

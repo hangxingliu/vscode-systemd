@@ -1,5 +1,5 @@
 import { tokenizer } from "../tokenizer.js";
-import { dumpToken, tokenTypeNames } from "../utils.js";
+import { dumpToken, tokenTypeNames } from "./utils.js";
 import type { Token } from "../types.js";
 
 let conf = [
