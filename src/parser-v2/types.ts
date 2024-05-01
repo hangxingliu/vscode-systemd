@@ -86,3 +86,7 @@ export type TokenizerOptions = {
      */
     onlyLastToken?: boolean;
 };
+
+/** This type is the subset of the `vscode.FoldingRangeKind` */
+export type FoldingRangeKind = "Comment" | "Region";
+export type FoldingRange = [fromLine: number, toLine: number, kind?: FoldingRangeKind];

@@ -22,7 +22,7 @@ for (const file of files) {
 
     const from = performance.now();
 
-    const result = tokenizer(conf);
+    const result = tokenizer(conf, opts);
 
     const to = performance.now();
     elapsed += to - from;

@@ -89,6 +89,11 @@ export class AssertTokens {
     }
 }
 
+export function assertItems<T>(actual: T[], expected: T[]) {
+    for (let i = 0; i < expected.length; i++)
+        deepStrictEqual(actual[i], expected[i], `actual[${i}] !== expected[${i}]`);
+}
+
 export type TestFn = (conf: string, fn: (ctx: TestFnContext) => void) => void;
 export type TestFnContext = {
     conf: string;
