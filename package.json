@@ -46,7 +46,9 @@
         "fetch:podman": "node --enable-source-maps out/hint-data/fetch/podman-quadlet",
         "fetch:capabilities": "node --enable-source-maps out/hint-data/fetch/linux-capabilities",
         "fetch:syscalls": "node --enable-source-maps out/hint-data/fetch/linux-syscalls",
-        "test": "tsc --project tsconfig.json --outDir .tsc",
+        "test:tsc": "tsc --project tsconfig.json --outDir .tsc",
+        "test:specs": "./scripts/run-spec-tests.sh",
+        "test": "node scripts/run test:tsc test:specs",
         "lint": "eslint src",
         "clean": "rimraf out .tsc"
     },
