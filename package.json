@@ -59,7 +59,7 @@
                 "id": "mkosi-conf",
                 "aliases": [
                     "Mkosi Configuration",
-                    "mkosi-conf"
+                    "mkosi.conf"
                 ],
                 "filenamePatterns": [
                     "mkosi.conf"

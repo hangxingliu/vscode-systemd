@@ -1,4 +1,9 @@
-export const languageId = "systemd-conf";
+export const languageId = {
+    systemd: "systemd-conf",
+    mkosi: "mkosi-conf",
+};
+export const languageIds = [languageId.systemd, languageId.mkosi] as const;
+export const allLanguageIds = new Set(languageIds);
 
 export const languageAliases = ["Systemd Configuration", "systemd-conf", "systemd-unit-file"];
 export const firstLine = /^\[(Unit|Install)\]/;
@@ -19,14 +24,7 @@ export const jinja2extensions = [
     ".jinja",
 ];
 
-export const podmanExtensions = [
-    ".container",
-    ".volume",
-    ".network",
-    ".kube",
-    ".image",
-    ".pod",
-];
+export const podmanExtensions = [".container", ".volume", ".network", ".kube", ".image", ".pod"];
 
 export const extensions = [
     ".link",

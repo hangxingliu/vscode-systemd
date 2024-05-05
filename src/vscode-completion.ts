@@ -13,7 +13,7 @@ import {
 } from "vscode";
 import { getCursorInfoFromSystemdConf } from "./parser";
 import { CursorType } from "./parser/types";
-import { languageId } from "./syntax/const-language-conf";
+import { languageIds } from "./syntax/const-language-conf";
 import { ExtensionConfig } from "./config/vscode-config-loader";
 import { HintDataManagers } from "./hint-data/manager/multiple";
 import { RequiredDirectiveCompletionItem } from "./hint-data/types-runtime";
@@ -55,7 +55,7 @@ export class SystemdCompletionProvider implements CompletionItemProvider {
 
     register() {
         return languages.registerCompletionItemProvider(
-            [languageId],
+            languageIds,
             this,
             ...SystemdCompletionProvider.triggerCharacters
         );

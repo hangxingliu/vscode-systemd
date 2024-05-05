@@ -13,7 +13,7 @@ import {
 import { getCursorInfoFromSystemdConf } from "./parser";
 import { CursorType } from "./parser/types";
 import { HintDataManagers } from "./hint-data/manager/multiple";
-import { languageId } from "./syntax/const-language-conf";
+import { languageIds } from "./syntax/const-language-conf";
 import { SystemdDocumentManager } from "./vscode-documents";
 import { SystemdCapabilities } from "./hint-data/manager/capabilities";
 import { ExtensionConfig } from "./config/vscode-config-loader";
@@ -29,7 +29,7 @@ export class SystemdSignatureProvider implements SignatureHelpProvider, HoverPro
 
     register() {
         return languages.registerSignatureHelpProvider(
-            [languageId],
+            languageIds,
             this,
             ...SystemdSignatureProvider.triggerCharacters
         );
