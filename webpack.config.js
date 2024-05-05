@@ -20,6 +20,9 @@ const webExtensionConfig = {
 	resolve: {
 		mainFields: ["browser", "module", "main"], // look for `browser` entry point in imported node modules
 		extensions: [".ts", ".js"], // support ts-files and js-files
+        extensionAlias: {
+            ".js": [".ts", ".js"],
+        },
 		alias: {
 			// provides alternate implementation for node module and source files
 		},
