@@ -1,5 +1,5 @@
 import { TextDocument, EventEmitter, ExtensionContext, FileDeleteEvent } from "vscode";
-import { languageId } from "./syntax/const-language-conf";
+import { allLanguageIds, languageId } from "./syntax/const-language-conf";
 import { SystemdFileType, parseSystemdFilePath, podmanFileTypes } from "./parser/file-info";
 import { ExtensionConfig } from "./config/vscode-config-loader";
 
@@ -12,6 +12,7 @@ type SavedUnitType = {
     file: SystemdFileType;
 };
 
+type Doc = Pick<TextDocument, "languageId" | "fileName">;
 export class SystemdDocumentManager extends EventEmitter<SetDocumentTypeEvent> {
     static instance: SystemdDocumentManager;
     static init(context: ExtensionContext, config: ExtensionConfig) {
@@ -19,7 +20,12 @@ export class SystemdDocumentManager extends EventEmitter<SetDocumentTypeEvent> {
         return this.instance;
     }
 
-    private readonly types = new Map<string, SystemdFileType>();
+    static getDefaultType(doc: Doc, podmanEnabled: boolean) {
+        if (doc.languageId === languageId.mkosi) return SystemdFileType.mkosi;
+        return parseSystemdFilePath(doc.fileName, podmanEnabled);
+    }
+
+    private readonly types = new Map<string, [languageId: string, SystemdFileType]>();
     private readonly modified = new Set<string>();
     private podmanEnabled: boolean;
     private constructor(private readonly context: ExtensionContext, private readonly config: ExtensionConfig) {
@@ -37,15 +43,17 @@ export class SystemdDocumentManager extends EventEmitter<SetDocumentTypeEvent> {
         if (prev !== enabled) {
             let count = 0;
             const entries = Array.from(this.types.entries());
-            for (const [filePath, type] of entries) {
+            for (const [fileName, [languageId, type]] of entries) {
                 let reset = false;
                 if (!type) reset = true;
-                else if (!this.modified.has(filePath))
+                else if (!this.modified.has(fileName))
                     reset = enabled ? type === SystemdFileType.network : podmanFileTypes.has(type);
                 if (!reset) continue;
 
-                this.types.set(filePath, parseSystemdFilePath(filePath, enabled));
-                this.modified.delete(filePath);
+                const doc = { fileName, languageId } as const;
+                const newType = SystemdDocumentManager.getDefaultType(doc, enabled);
+                this.types.set(fileName, [languageId, newType]);
+                this.modified.delete(fileName);
                 count++;
             }
             if (count > 0) this.fire({ all: true });
@@ -84,8 +92,7 @@ export class SystemdDocumentManager extends EventEmitter<SetDocumentTypeEvent> {
     };
 
     readonly onDidOpenTextDocument = (document: TextDocument): boolean => {
-        if (document.languageId !== languageId) return false;
-        if (!document.uri) return false;
+        if (!allLanguageIds.has(document.languageId)) return false;
         if (this.types.has(document.fileName)) return true;
         this.getType(document);
         return true;
@@ -93,27 +100,28 @@ export class SystemdDocumentManager extends EventEmitter<SetDocumentTypeEvent> {
     readonly onDidDeleteFiles = (e: FileDeleteEvent) => {
         this.removeSavedType(e.files.map((it) => it.fsPath));
     };
-    readonly getType = (doc: Pick<TextDocument, "fileName">) => {
-        let type = this.types.get(doc.fileName);
-        if (typeof type !== "number") {
-            type = this.getSavedType(doc.fileName);
-            if (type === undefined) type = parseSystemdFilePath(doc.fileName, this.podmanEnabled);
+    readonly getType = (doc: Doc) => {
+        const result = this.types.get(doc.fileName);
+        if (!result) {
+            let type = this.getSavedType(doc.fileName);
+            if (type === undefined) type = SystemdDocumentManager.getDefaultType(doc, this.podmanEnabled);
             else this.modified.add(doc.fileName);
-            this.types.set(doc.fileName, type);
+            this.types.set(doc.fileName, [doc.languageId, type]);
+            return type;
         }
-        return type;
+        return result[1];
     };
-    readonly setType = (doc: Pick<TextDocument, "fileName">, type: SystemdFileType) => {
-        this.types.set(doc.fileName, type);
+    readonly setType = (doc: Doc, type: SystemdFileType) => {
+        this.types.set(doc.fileName, [doc.languageId, type]);
         this.saveType(doc.fileName, type);
         this.modified.add(doc.fileName);
         this.fire(doc);
     };
-    readonly setAutoType = (doc: Pick<TextDocument, "fileName">) => {
-        const type = parseSystemdFilePath(doc.fileName, this.podmanEnabled);
-        this.types.set(doc.fileName, type);
+    readonly setAutoType = (doc: Doc) => {
+        const type = SystemdDocumentManager.getDefaultType(doc, this.podmanEnabled);
+        this.types.set(doc.fileName, [doc.languageId, type]);
         this.modified.delete(doc.fileName);
         this.removeSavedType([doc.fileName]);
         this.fire(doc);
-    }
+    };
 }

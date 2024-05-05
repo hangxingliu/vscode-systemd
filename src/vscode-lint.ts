@@ -27,9 +27,12 @@ import {
 } from "./diagnostics";
 import type { HintDataManagers } from "./hint-data/manager/multiple";
 import { lintDirectiveValue } from "./lint/lint-directive-value";
-import { getDirectiveKeys } from "./parser/get-directive-keys";
-import { languageId } from "./syntax/const-language-conf";
+import { allLanguageIds } from "./syntax/const-language-conf";
 import type { SetDocumentTypeEvent, SystemdDocumentManager } from "./vscode-documents";
+import { getDirectivesFromTokens } from "./parser-v2/get-directives";
+import { tokenizer } from "./parser-v2/tokenizer";
+import { CommonOptions, LocationTuple } from "./parser-v2/types";
+import { SystemdFileType } from "./parser/file-info";
 
 export class SystemdLint implements CodeActionProvider {
     // NodeJS.Timer or number
@@ -65,7 +68,7 @@ export class SystemdLint implements CodeActionProvider {
     readonly onDidChangeTextDocument = (ev: TextDocumentChangeEvent) => {
         if (!this.config.lintDirectiveKeys) return;
         const { document, contentChanges } = ev;
-        if (document.languageId !== languageId) return;
+        if (!allLanguageIds.has(document.languageId)) return;
         if (!document.uri) return;
         if (contentChanges && contentChanges.length < 1) return;
         this.lintDocumentAsync(document);
@@ -73,7 +76,7 @@ export class SystemdLint implements CodeActionProvider {
 
     readonly onDidOpenTextDocument = (document: TextDocument) => {
         if (!this.config.lintDirectiveKeys) return;
-        if (document.languageId !== languageId) return;
+        if (!allLanguageIds.has(document.languageId)) return;
         if (!document.uri) return;
         this.lintDocumentAsync(document);
     };
@@ -86,7 +89,7 @@ export class SystemdLint implements CodeActionProvider {
     lintAll(onlyVisible = true) {
         const lint = (document?: TextDocument) => {
             if (!document) return;
-            if (document.languageId !== languageId) return;
+            if (!allLanguageIds.has(document.languageId)) return;
             if (!document.uri) return;
             this.lintDocument(document);
         };
@@ -105,18 +108,22 @@ export class SystemdLint implements CodeActionProvider {
     }
 
     lintDocument(document: TextDocument) {
-        const items: SystemdDiagnostic[] = [];
-        const dirs = getDirectiveKeys(document.getText());
         const { config } = this;
         const { customDirectiveKeys, customDirectiveRegexps } = config;
         const fileType = this.documents.getType(document);
 
+        const opts: CommonOptions = { mkosi: fileType === SystemdFileType.mkosi };
+        const { tokens } = tokenizer(document.getText(), opts);
+        const dirs = getDirectivesFromTokens(tokens);
+        // console.log("lintDocument", dirs);
+
+        const items: SystemdDiagnostic[] = [];
         const managers = this.managers.subset(fileType);
         const deprecatedNames = this.getDeprecatedNames();
         dirs.forEach((it) => {
-            if (!it.directiveKey) return;
+            if (!it.key) return;
 
-            const directiveName = it.directiveKey.trim();
+            const directiveName = it.key.trim();
             const directiveNameLC = directiveName.toLowerCase();
             //#region lint by name
             if (directiveNameLC.startsWith("x-")) return;
@@ -125,13 +132,23 @@ export class SystemdLint implements CodeActionProvider {
             if (customDirectiveRegexps.findIndex((it) => it.test(directiveName)) >= 0) return;
             //#endregion lint by name
 
-            const getRange = () =>
-                new Range(new Position(it.loc1[1], it.loc1[2]), new Position(it.loc2[1], it.loc2[2]));
-            const getValueRange = () =>
-                new Range(
-                    new Position(it.loc2[1], it.loc2[2] + 1),
-                    new Position(it.loc2[1], it.loc2[2] + it.value.length + 1)
-                );
+            const {
+                keyRange: [start, end],
+                valueRanges,
+            } = it;
+            const getRange = () => new Range(new Position(start[1], start[2]), new Position(end[1], end[2]));
+            const getValueRange = () => {
+                let start: LocationTuple;
+                let end: LocationTuple;
+                if (valueRanges.length > 0) {
+                    start = valueRanges[0][0];
+                    end = valueRanges[valueRanges.length - 1][1];
+                } else {
+                    start = it.keyRange[0];
+                    end = it.keyRange[1];
+                }
+                return new Range(new Position(start[1], start[2]), new Position(end[1], end[2]));
+            };
 
             if (deprecatedNames.has(directiveName)) {
                 const matched = managers.getDirectiveList(directiveName, {
@@ -224,8 +241,8 @@ export class SystemdLint implements CodeActionProvider {
                     const action = new CodeAction(title, CodeActionKind.QuickFix);
                     action.command = {
                         title,
-                        command: 'vscode.open',
-                        arguments: [uri]
+                        command: "vscode.open",
+                        arguments: [uri],
                     };
                     action.diagnostics = [ds];
                     result.push(action);
