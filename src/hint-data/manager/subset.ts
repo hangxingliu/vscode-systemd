@@ -45,6 +45,8 @@ const fileTypeToDirectives = new Map<SystemdFileType, DirectiveCategory>([
     [SystemdFileType.podman_network, DirectiveCategory.podman],
     [SystemdFileType.podman_pod, DirectiveCategory.podman],
     [SystemdFileType.podman_volume, DirectiveCategory.podman],
+    // mkosi
+    [SystemdFileType.mkosi, DirectiveCategory.mkosi],
 ]);
 
 function _getSubsetOfManagers(
@@ -59,6 +61,10 @@ function _getSubsetOfManagers(
     const result: Array<HintDataManager> = [];
 
     switch (fileInfo) {
+        case SystemdFileType.mkosi:
+            filters[DirectiveCategory.default] = false;
+            filters[DirectiveCategory.mkosi] = true;
+            break;
         case SystemdFileType.target:
         case SystemdFileType.device:
         case SystemdFileType.slice:

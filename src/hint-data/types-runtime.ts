@@ -40,8 +40,10 @@ export const enum DirectiveCategory {
     veritytab = 29,
     fstab = 30,
     //#endregion todo
-    default = 31,
-    fallback = 32,
+    mkosi = 31,
+    //
+    default = 32,
+    fallback = 33,
 }
 
 export type ManPageInfo = {

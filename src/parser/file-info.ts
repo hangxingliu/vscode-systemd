@@ -77,6 +77,11 @@ export const enum SystemdFileType {
     //
     //
     //
+    /** https://github.com/systemd/mkosi/blob/main/mkosi/resources/mkosi.md */
+    mkosi = 48,
+    //
+    //
+    //
     /** https://docs.podman.io/en/latest/markdown/podman-systemd.unit.5.html */
     podman_container = 64,
     podman_volume = 65,
@@ -132,6 +137,8 @@ export const systemdFileTypeNames: { [type in SystemdFileType]: string } = {
     [SystemdFileType.system]: "systemd-system.conf - System and session service manager configuration files",
     [SystemdFileType.iocost]: "iocost.conf - iocost solution manager configuration files",
     //
+    [SystemdFileType.mkosi]: "mkosi.conf - Build Bespoke OS Images",
+    //
     [SystemdFileType.podman_container]: "Podman Quadlet container units (*.container)",
     [SystemdFileType.podman_pod]: "Podman Quadlet pod units (*.pod)",
     [SystemdFileType.podman_image]: "Podman Quadlet image files (*.image)",
@@ -184,6 +191,14 @@ export function parseSystemdFilePath(filePath: string | undefined | null, enable
         return SystemdFileType.network;
     }
     if (ext === "conf") {
+        const index = filePath.lastIndexOf('/');
+        const fileName = index >= 0 ? filePath.slice(index + 1) : filePath;
+
+        //
+        if (fileName === 'mkosi.local.conf') return SystemdFileType.mkosi;
+        if (fileName === 'mkosi.conf') return SystemdFileType.mkosi;
+        if (filePath.includes("mkosi.conf.d/")) return SystemdFileType.mkosi;
+
         if (filePath.includes("service.d/")) return SystemdFileType.service;
         if (filePath.includes("slice.d/")) return SystemdFileType.slice;
         if (filePath.includes("scope.d/")) return SystemdFileType.scope;

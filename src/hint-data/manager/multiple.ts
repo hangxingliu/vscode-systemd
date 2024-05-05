@@ -99,6 +99,9 @@ export class HintDataManagers {
         this.initFromItems(DirectiveCategory.timer, require("../manifests/timer.json"));
         this.initFromItems(DirectiveCategory.timesyncd, require("../manifests/timesyncd.json"));
 
+        const mkosi = new HintDataManager(DirectiveCategory.mkosi, manpageURLs.mkosiBase);
+        this.initManager(mkosi, require("../manifests/mkosi.json"));
+
         const podman = new HintDataManager(DirectiveCategory.podman, manpageURLs.podmanBase);
         podman.bindValueEnum(podmanValueEnum);
         this.initManager(podman, require("../manifests/podman.json"));
