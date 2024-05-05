@@ -28,6 +28,17 @@ export type Token = {
     text?: string;
 };
 
+export type CommonOptions = {
+    /**
+     * Enable `mkosi` syntax.
+     * The syntax for multi-line values and comments in `mkosi` configurations differs
+     * from that in `systemd` configurations.
+     *
+     * @see https://github.com/systemd/mkosi/blob/dcb48a90012b4b8e173863089f83a9f8a93b3671/mkosi/config.py#L1736
+     */
+    mkosi?: boolean;
+};
+
 export type TokenizerState = {
     /** Indicates if the tokenizer has moved past the leading whitespace of a line */
     passedLeadingBlank?: boolean;
@@ -66,16 +77,7 @@ export type TokenizerResult = {
     forecast: TokenType;
 };
 
-export type TokenizerOptions = {
-    /**
-     * Enable `mkosi` syntax.
-     * The syntax for multi-line values and comments in `mkosi` configurations differs
-     * from that in `systemd` configurations.
-     *
-     * @see https://github.com/systemd/mkosi/blob/dcb48a90012b4b8e173863089f83a9f8a93b3671/mkosi/config.py#L1736
-     */
-    mkosi?: boolean;
-
+export type TokenizerOptions = CommonOptions & {
     /**
      * Provide previous tokenizer result to tokenzie incrementally
      */
@@ -85,6 +87,17 @@ export type TokenizerOptions = {
      * Keep only the last token, rather than all tokens
      */
     onlyLastToken?: boolean;
+};
+
+export type SystemdDirective = {
+    section?: string;
+
+    key: string;
+    keyRange: RangeTuple;
+
+    /** `undefined` indicates that this directive is not complete, and no `=` */
+    value?: string;
+    valueRanges: RangeTuple[];
 };
 
 /** This type is the subset of the `vscode.FoldingRangeKind` */

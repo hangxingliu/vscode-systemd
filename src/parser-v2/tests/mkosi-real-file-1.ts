@@ -1,7 +1,6 @@
 import { readFileSync } from "fs";
 import { resolve } from "path";
 import { tokenizer } from "../tokenizer";
-import { getDirectivesFromTokens } from "../get-directive-keys";
 import { AssertTokens } from "./utils";
 
 const filePath = resolve(__dirname, "../../../test/samples/mkosi/mkosi/mkosi.conf");
@@ -72,7 +71,3 @@ new AssertTokens(result.tokens)
     .key("@QemuMem")
     .assignment()
     .value("4G");
-
-// console.log(result.tokens);
-// const directives = getDirectivesFromTokens(result.tokens);
-// console.log(directives);

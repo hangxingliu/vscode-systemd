@@ -1,4 +1,4 @@
-import { LocationTuple, Token, TokenType } from "./types.js";
+import { LocationTuple } from "./types.js";
 
 export class TextLocationUtils {
     offset: number;
