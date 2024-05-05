@@ -20,16 +20,9 @@ import {
 } from "../types-manifest";
 import { CustomSystemdDirective } from "../custom-directives";
 import { createMarkdown } from "../../utils/vscode";
+import { isHiddenManPage } from "./hidden-manpage";
 
 type ExtraProps<T extends CompletionItem> = Omit<T, keyof CompletionItem>;
-
-const hiddenManPageTitles = new Set([
-    "vconsole.conf(5)",
-    "crypttab(5)",
-    // A separate [Device] section does not exist, since no device-specific options may be configured.
-    // https://www.freedesktop.org/software/systemd/man/latest/systemd.device.html
-    "systemd.device(5)",
-]);
 
 export class HintDataManager {
     readonly manPageBaseUri: Uri;
@@ -75,10 +68,7 @@ export class HintDataManager {
             else url = Uri.joinPath(base, rawUri);
             this.manPages[manPageIndex] = { title, desc, url };
             this.manPageIndexes.set(title, manPageIndex);
-            // `man man`:
-            // 5      File Formats and Conventions
-            // /etc/vconsole.conf
-            if (!title.includes("(5)") || hiddenManPageTitles.has(title)) this.hiddenManPages.add(manPageIndex);
+            if (isHiddenManPage(title, url)) this.hiddenManPages.add(manPageIndex);
             return;
         }
 
