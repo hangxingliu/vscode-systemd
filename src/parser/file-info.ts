@@ -186,7 +186,7 @@ export function parseSystemdFilePath(filePath: string | undefined | null, enable
     if (type) return type;
 
     if (ext === "network") {
-        if (enablePodman && (filePath.includes("containers/") || filePath.includes("podman/")))
+        if (enablePodman && (filePath.includes("containers/") || filePath.includes("podman/") || filePath.includes("quadlets/")))
             return SystemdFileType.podman_network;
         return SystemdFileType.network;
     }
