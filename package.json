@@ -90,6 +90,7 @@
                     ".kube",
                     ".image",
                     ".pod",
+                    ".build",
                     ".link",
                     ".dnssd",
                     ".netdev",

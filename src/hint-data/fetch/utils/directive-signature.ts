@@ -5,6 +5,7 @@ const _PODMAN_BOOLEAN_DIRECTIVES = new Set([
     "[Container]ReadOnly",
     "[Container]ReadOnlyTmpfs",
     "[Container]RunInit",
+    "[Container]StartWithPod",
 
     "[Kube]KubeDownForce",
 
@@ -13,6 +14,9 @@ const _PODMAN_BOOLEAN_DIRECTIVES = new Set([
     "[Network]IPv6",
 
     "[Volume]Copy",
+
+    "[Build]ForceRM",
+    "[Build]TLSVerify",
 
     "[Image]AllTags",
     "[Image]TLSVerify",

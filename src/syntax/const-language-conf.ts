@@ -24,7 +24,7 @@ export const jinja2extensions = [
     ".jinja",
 ];
 
-export const podmanExtensions = [".container", ".volume", ".network", ".kube", ".image", ".pod"];
+export const podmanExtensions = [".container", ".volume", ".network", ".kube", ".image", ".pod", ".build"];
 
 export const extensions = [
     ".link",

@@ -32,7 +32,7 @@ main().catch((error) => {
 async function main() {
     SimpleHttpCache.init(cacheDir);
     const $ = await getHTMLDoc("podman-systemd.unit", url);
-    const $allH1 = findElements($, "h1", ">=11");
+    const $allH1 = findElements($, "h1", ">=12");
     // $allH1.map((i, el) => console.log($(el).text()));
     const matchedH1 = matchElementsByText(
         $allH1,
@@ -42,6 +42,7 @@ async function main() {
             "Kube units [Kube]",
             "Network units [Network]",
             "Volume units [Volume]",
+            "Build units [Build]",
             "Image units [Image]",
         ],
         {}
@@ -69,7 +70,7 @@ async function main() {
         jsonFile.writeItem([ManifestItemType.Section, sectionId, sectionName]);
         print.start(`processing "${h1text}" ...`);
 
-        const $allCode = findElements($h1.parent(), "section > h2 > code", ">0");
+        const $allCode = findElements($h1.parent(), "section > h2 > code:first-child", ">0");
 
         const allDocs: ManifestItemForDocsMarkdown[] = [];
         const allDirectives: ManifestItemForDirective[] = [];
