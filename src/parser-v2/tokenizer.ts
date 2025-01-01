@@ -48,7 +48,7 @@ export function tokenizer(conf: string, _opts?: TokenizerOptions): TokenizerResu
     let tokenHandler: typeof _addToken | typeof _saveLastToken = _addToken;
 
     let state = { ...TOKENIZER_INIT_STATE };
-    let tokens: Token[] = [];
+    const tokens: Token[] = [];
 
     if (_opts) {
         if (typeof _opts.mkosi === "boolean") mkosi = _opts.mkosi;
@@ -95,7 +95,7 @@ export function tokenizer(conf: string, _opts?: TokenizerOptions): TokenizerResu
 
             if (isValue) {
                 enterToken(TokenType.directiveValue);
-                checkEscapeChar(ch);
+                checkEscapeChar(ch, TokenType.directiveValue);
             } else if (ch === "=" && state.lastType !== TokenType.assignment) {
                 handleAssignmentOperator();
                 continue;
@@ -103,7 +103,7 @@ export function tokenizer(conf: string, _opts?: TokenizerOptions): TokenizerResu
                 enterToken(TokenType.section);
             } else {
                 enterToken(TokenType.directiveKey);
-                checkEscapeChar(ch);
+                checkEscapeChar(ch, TokenType.directiveKey);
             }
 
             location.moveToNext();
@@ -124,13 +124,13 @@ export function tokenizer(conf: string, _opts?: TokenizerOptions): TokenizerResu
                 handleAssignmentOperator();
                 continue;
             }
-            checkEscapeChar(ch);
+            checkEscapeChar(ch, TokenType.directiveValue);
             location.moveToNext();
             continue;
         }
 
         if (state.type === TokenType.directiveValue) {
-            checkEscapeChar(ch);
+            checkEscapeChar(ch, TokenType.directiveValue);
             location.moveToNext();
             continue;
         }
@@ -176,9 +176,9 @@ export function tokenizer(conf: string, _opts?: TokenizerOptions): TokenizerResu
         return true;
     }
 
-    function checkEscapeChar(ch: string) {
+    function checkEscapeChar(ch: string, escapedFor: typeof state.escapedFor) {
         if (mkosi) return;
-        if (ch === "\\") state.escapedFor = state.type;
+        if (ch === "\\") state.escapedFor = escapedFor;
         else state.escapedFor = TokenType.none;
     }
 

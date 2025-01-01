@@ -49,7 +49,7 @@ export type TokenizerState = {
      *
      * This state is useful for resolving the type of multi-line values
      */
-    escapedFor?: TokenType;
+    escapedFor?: TokenType.none | TokenType.directiveValue | TokenType.directiveKey;
 
     /**
      * This state is designed for `mkosi` configuration.
