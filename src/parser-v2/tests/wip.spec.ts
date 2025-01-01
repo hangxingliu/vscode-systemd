@@ -1,5 +1,6 @@
+/* eslint-disable prefer-const */
 import { tokenizer } from "../tokenizer.js";
-import { dumpToken, tokenTypeNames } from "./utils.js";
+import { dumpToken, tokenTypeNames } from "../token-dump.js";
 import type { Token } from "../types.js";
 
 let conf = [
