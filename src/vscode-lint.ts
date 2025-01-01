@@ -112,7 +112,8 @@ export class SystemdLint implements CodeActionProvider {
         const { customDirectiveKeys, customDirectiveRegexps } = config;
         const fileType = this.documents.getType(document);
 
-        const opts: CommonOptions = { mkosi: fileType === SystemdFileType.mkosi };
+        const mkosiMode = fileType === SystemdFileType.mkosi
+        const opts: CommonOptions = { mkosi: mkosiMode };
         const { tokens } = tokenizer(document.getText(), opts);
         const dirs = getDirectivesFromTokens(tokens);
         // console.log("lintDocument", dirs);
@@ -123,8 +124,12 @@ export class SystemdLint implements CodeActionProvider {
         dirs.forEach((it) => {
             if (!it.key) return;
 
-            const directiveName = it.key.trim();
+            let directiveName = it.key.trim();
+            // compatible with the old mkosi `@` syntax (they have removed it)
+            if (mkosiMode && directiveName.startsWith('@'))
+                directiveName = directiveName.slice(1);
             const directiveNameLC = directiveName.toLowerCase();
+
             //#region lint by name
             if (directiveNameLC.startsWith("x-")) return;
             if (directiveNameLC.startsWith("-")) return;

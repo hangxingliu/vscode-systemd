@@ -31,3 +31,26 @@ Key=line1
  line2
 Key2=val # Comment
 ```
+
+### Deprecated `@` "Default Value" Syntax
+
+Old:
+
+> <https://github.com/systemd/mkosi/blob/8aefea6923dd049d060eea7e88f9054b674b432e/mkosi/resources/mkosi.md>
+>
+> If a setting's name in the configuration file is prefixed with `@`, 
+> it configures the default value used for that setting if no explicit default value is set. 
+> This can be used to set custom default values in configuration files that can still be overridden by
+> specifying the setting explicitly via the CLI.
+
+
+They removed it in the commit [1b8f7f240dfdc85bc7bdf2b3aea3c590d2203eba](https://github.com/systemd/mkosi/commit/1b8f7f240dfdc85bc7bdf2b3aea3c590d2203eba):
+
+> Note that settings configured via the command line always override
+> settings configured via configuration files. If the same setting is
+> configured more than once via configuration files, later assignments
+> override earlier assignments except for settings that take a collection
+> of values. Also, settings read from `mkosi.local.conf` will override
+> settings from configuration files that are parsed later but not settings
+> specified on the CLI.
+
