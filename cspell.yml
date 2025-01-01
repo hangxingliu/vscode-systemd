@@ -3,6 +3,7 @@ language: en
 dictionaries:
   - softwareTerms
   - bash
+allowCompoundWords: true
 ignorePaths:
   - src/hint-data/manifests
   - src/hint-data/wellknown-targets.ts
@@ -23,17 +24,23 @@ ignoreRegExpList:
   - /\/.+\//     # in RegExp
   - /`[\w\-=]+`/      # code in markdown
   - /@\w+(?:\s*\(.+?\))/        # usernames
-  - /HTMLSupported|JSONSchema/  # compound words
+  #region compound words
+  - /HTML(Entities|Element|Supported)/
+  - /TLSVerify|CPUFeatures|JSONSchema/
+  #endregion compound words
 words:
-  - automount
+  #region contributor names
   - bearmini
+  - hangxingliu
+  - marshallwp
+  #endregion contributor names
+  - automount
   - coredump
   - crypttab
   - dbus
   - dnssd
   - endregion
   - firstboot
-  - hangxingliu
   - headerlink
   - HOWTO
   - ifname
@@ -50,6 +57,7 @@ words:
   - oomd
   - pstore
   - Quadlet
+  - quadlets
   - refnamediv
   - refsect
   - repartd
@@ -81,3 +89,13 @@ words:
   - tmpfs
   - gsub
   - syscall
+  - mkosi
+  - dracut
+  - Bootloader
+  - UEFI
+  - virtualizers
+  - corepack
+  - iname # find -iname
+  - proot
+  - innotek
+  - Bochs

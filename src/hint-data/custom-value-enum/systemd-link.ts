@@ -39,7 +39,7 @@ export const valueEnum: SystemdValueEnum[] = [
         section: "Match",
         file,
         manPage,
-        values: common.knownArchs,
+        values: common.knownArches,
         sep: " ",
         prefixChars: "!",
     },

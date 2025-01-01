@@ -138,7 +138,7 @@ function exec(command, opts) {
 }
 
 /**
- * Resolve a cli script with the latest yarn compatiable
+ * Resolve a cli script with the latest yarn compatible
  * @param {string} defaultBinName
  * @param {string} [requirePath]
  * @returns {string[]}

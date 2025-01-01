@@ -1,5 +1,5 @@
 import { systemCallFilter } from "./common-syscalls";
-import { knownArchs } from "./common-unit-condition";
+import { knownArches } from "./common-unit-condition";
 import { SystemdValueEnum } from "./types";
 
 const manPage = "systemd.exec(5)";
@@ -9,7 +9,7 @@ export const valueEnum: SystemdValueEnum[] = [
     {
         directive: 'SystemCallArchitectures',
         manPage,
-        values: knownArchs,
+        values: knownArches,
         sep: ' ',
     },
     {

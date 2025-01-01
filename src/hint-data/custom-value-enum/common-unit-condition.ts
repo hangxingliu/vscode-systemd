@@ -72,7 +72,7 @@ export const knownSecurityTechs = {
         "Unified Kernel Image with PCR 11 Measurements, as per [systemd-stub(7)](systemd-stub.html).\nAdded in version 255.",
 };
 
-export const knownArchs = [
+export const knownArches = [
     "x86",
     "x86-64",
     "ppc",
