@@ -216,6 +216,10 @@
             }
         ]
     },
+    "vsce": {
+        "dependencies": false,
+        "yarn": false
+    },
     "devDependencies": {
         "@swc/cli": "^0.5.2",
         "@swc/core": "^1.10.4",
