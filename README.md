@@ -2,15 +2,16 @@
 
 [![.github/workflows/ci.yaml](https://github.com/hangxingliu/vscode-systemd/actions/workflows/ci.yaml/badge.svg)](https://github.com/hangxingliu/vscode-systemd/actions/workflows/ci.yaml)
 
-A Visual Studio Code extension that helps you read and write Systemd unit files
+A Visual Studio Code extension to help you read and write *Systemd unit config*, *mkosi config* and *Podman Quadlet unit files*.
 
 ![The screenshot of this extension](https://raw.githubusercontent.com/hangxingliu/vscode-systemd/HEAD/docs/images/screenshot-2.2.0.png)
 
 ## Features
 
-- Syntax highlighting and completion for variant systemd unit(configuration) files
-- Support for Podman systemd unit
-- Lint for systemd directive names
+- Syntax highlighting, completion and linter for the following files
+  - Various systemd unit files (configuration files)
+  - [mkosi](https://github.com/systemd/mkosi) configuration files
+  - [Podman Quadlet](https://github.com/containers/podman) unit files
 - Document and help information for directives and specifiers in the editor
 
 ## Installation
@@ -71,9 +72,10 @@ about building/contributing this project
 
 - [Systemd](https://github.com/systemd/systemd)
 - [Podman](https://github.com/containers/podman)
+- [mkosi](https://github.com/systemd/mkosi)
 - [TextMate Language Grammars](https://macromates.com/manual/en/language_grammars)
 - [Systemd Syntax](https://www.freedesktop.org/software/systemd/man/systemd.syntax.html#)
 - [Icon resources](https://github.com/edent/SuperTinyIcons)
 - [bearmini's systemd extension](https://github.com/bearmini/vscode-systemd-unit-file)
-    - I created this extension to improve bearmini's systemd extension. It only provided syntax highlights.
+    - I created this extension to improve bearmini's systemd extension. It only provides syntax highlights.
 
