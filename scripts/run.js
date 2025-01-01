@@ -6,20 +6,33 @@
 // template:    run-cjs.js
 // author:      hangxingliu
 // license:     MIT
-// version:     2024-03-12
+// version:     2024-10-02
 const { platform } = require("os");
 const { existsSync } = require("fs");
 const { resolve, basename, dirname } = require("path");
 const { spawn, spawnSync } = require("child_process");
 const runFromPackageScript = !!process.env.npm_execpath;
-const runFromYarn = /yarn\/bin/.test(process.env.npm_execpath || "");
 const isWin32 = platform() === "win32";
+// yarn/bin: classical yarn (v1)
+// /yarn:    yarn v2
+const runFromYarn = /(yarn\/bin|\/yarn$)/.test(process.env.npm_execpath || "");
 
-/** @see https://stackoverflow.com/questions/14031763 */
+const npmUA = process.env.npm_config_user_agent || "";
+const isYarnV2 = /\byarn\/([2-9]\d*|1\d+)\./.test(npmUA);
+
+const resetColor = "\x1b[0m";
+/**
+ * @see https://stackoverflow.com/questions/14031763
+ * @type {Array<()=>any>}
+ */
 const cleanupCallbacks = [];
 /** @param {number} [exitCode] */
 function cleanup(exitCode) {
-    while (cleanupCallbacks.length > 0) cleanupCallbacks.pop()();
+    let callback = cleanupCallbacks.pop();
+    while (callback) {
+        callback();
+        callback = cleanupCallbacks.pop();
+    }
     if (typeof exitCode === "number") process.exit(exitCode);
 }
 /** @param {() => void} callback */
@@ -46,7 +59,7 @@ function printExitStatus(bin, code, signal) {
 }
 
 /** @typedef {typeof process.env} SystemEnv */
-/** @typedef {{ env?: SystemEnv; cwd?: string; shortName?: boolean }} ExecSyncOptions */
+/** @typedef {{ env?: SystemEnv; cwd?: string; shortName?: boolean; showCmd?: boolean }} ExecSyncOptions */
 /** @typedef {ExecSyncOptions & { silent?: boolean }} ExecOptions */
 
 /**
@@ -69,10 +82,10 @@ function execSync(command, opts) {
         env.PATH = prependNodeModulesBinIntoPath(process.cwd(), env.PATH);
     }
 
-    console.error(`+ (sync) ${binName} ${args.join(" ")}`);
+    if (!opts || opts.showCmd !== false) console.error(`${resetColor}+ (sync) ${bin} ${args.join(" ")}`);
     const ret = spawnSync(bin, args, { cwd, env, stdio: ["inherit", "inherit", "inherit"] });
     if (ret.status !== 0) {
-        printExitStatus(bin, ret.status, ret.signal);
+        printExitStatus(binName, ret.status, ret.signal);
         process.exit(ret.status || 1);
     }
 }
@@ -100,19 +113,19 @@ function exec(command, opts) {
         env.PATH = prependNodeModulesBinIntoPath(process.cwd(), env.PATH);
     }
 
-    console.error(`+ ${binName} ${args.join(" ")}`);
+    if (!opts || opts.showCmd !== false) console.error(`+ ${bin} ${args.join(" ")}`);
     const child = spawn(bin, args, { cwd, env, stdio: [stdout, "inherit", "inherit"] });
 
     /** @type {Promise<number|null>} */
     const promise = new Promise((resolve, reject) => {
         child.on("error", reject);
         child.on("exit", (code, signal) => {
-            printExitStatus(bin, code, signal);
+            printExitStatus(binName, code, signal);
             return resolve(code);
         });
     });
     const kill = () => {
-        console.error(`killing ${bin} ...`);
+        console.error(`killing ${binName} ...`);
         try {
             child.kill();
         } catch (error) {
@@ -122,6 +135,24 @@ function exec(command, opts) {
 
     addCleanupCallback(kill);
     return { child, promise, kill };
+}
+
+/**
+ * Resolve a cli script with the latest yarn compatiable
+ * @param {string} defaultBinName
+ * @param {string} [requirePath]
+ * @returns {string[]}
+ */
+function resolveCmd(defaultBinName, requirePath) {
+    if (requirePath) {
+        try {
+            const scriptPath = require.resolve(requirePath);
+            return [process.execPath, scriptPath];
+        } catch (error) {
+            // noop
+        }
+    }
+    return [defaultBinName];
 }
 
 /**
@@ -180,7 +211,8 @@ async function runPackageScripts(args) {
     }
     if (scripts.length === 0) return;
     const base = [runFromYarn ? "yarn" : "npm", "run", "--silent"];
-    if (runFromYarn) base.splice(1, 0, "--ignore-engines");
+    if (isYarnV2) base.pop(); // remove '--silent'
+    else if (runFromYarn) base.splice(1, 0, "--ignore-engines");
     if (parallel) return Promise.all(scripts.map((script) => exec([...base, script]).promise));
     for (const script of scripts) execSync([...base, script]);
     return;
@@ -191,6 +223,7 @@ exports.exec = exec;
 exports.execSync = execSync;
 exports.isTrue = isTrue;
 exports.run = runPackageScripts;
+exports.resolveCmd = resolveCmd;
 if (typeof require !== "undefined" && require.main === module) {
     runPackageScripts(process.argv.slice(2)).catch((error) => {
         console.error(typeof error === "string" ? `Error: ${error}` : error);

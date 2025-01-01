@@ -13,6 +13,7 @@ module.exports = tseslint.config(eslint.configs.recommended, ...tseslint.configs
         // https://github.com/typescript-eslint/typescript-eslint/issues/2621
         "no-unused-vars": "off",
         "@typescript-eslint/no-unused-vars": ["warn", { args: "none" }],
+        "@typescript-eslint/no-require-imports": "off",
     },
     languageOptions: {
         globals: {

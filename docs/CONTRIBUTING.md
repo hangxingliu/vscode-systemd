@@ -1,5 +1,5 @@
 ---
-date: 2024-03-13
+date: 2025-01-01
 ---
 # Contributing
 
@@ -47,8 +47,12 @@ date: 2024-03-13
 
 - [Git](https://git-scm.com/)
 - [Node.js](https://nodejs.org/en/)
-- [Yarn Classic](https://classic.yarnpkg.com/en/)
+- [Yarn](https://yarnpkg.com/getting-started/install) 
 - [Visual Studio Code](https://code.visualstudio.com/)
+
+> [!NOTE]
+> 1. Only Node.js [LTS versions](https://nodejs.org/en/about/previous-releases) are supported
+> 2. The classic yarn cannot be used in this project.
 
 ## References
 
