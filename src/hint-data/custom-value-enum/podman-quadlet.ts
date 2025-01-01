@@ -1,3 +1,4 @@
+import { standardSignals } from "./common.js";
 import type { SystemdValueEnum } from "./types";
 
 const manPage = "podman-systemd.unit.5";
@@ -33,5 +34,12 @@ export const podmanValueEnum: ReadonlyArray<SystemdValueEnum> = [
             any: `exit non-zero if any container has failed`,
             none: `exit zero and ignore failed containers`,
         },
+    },
+    {
+        directive: "StopSignal",
+        section: "Container",
+        manPage,
+        tips: { SIGTERM: "default" },
+        docs: standardSignals,
     },
 ];

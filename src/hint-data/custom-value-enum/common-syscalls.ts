@@ -183,7 +183,7 @@ export const systemCallFilter: SystemdValueEnum = {
         getgroups32: "get/set list of supplementary group IDs",
         gethostname: "Alpha, was available onSPARC up to Linux 2.6.26   \nget/set hostname",
         getitimer: "get or set value of an interval timer",
-        getpagesize: "Not on x86   \nget memory page size",
+        getpagesize: "Alpha, SPARC/SPARC64 only   \nget memory page size",
         getpeername: "See notes on socketcall(2)   \nget name of connected peer socket",
         getpgid: "set/get process group",
         getpgrp: "set/get process group",
