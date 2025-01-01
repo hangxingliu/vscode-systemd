@@ -1,54 +1,30 @@
 import { getForecast } from "./tokenizer-forecast.js";
-import { RangeTuple, Token, TokenType, TokenizerOptions, TokenizerResult, TokenizerState } from "./types.js";
+import { initTokenizerStateIncrementally } from "./tokenizer-state.js";
+import { RangeTuple, TokenType, TokenizerOptions, TokenizerResult } from "./types.js";
 import { TextLocationUtils } from "./utils.js";
 
-export const TOKENIZER_INIT_STATE: Readonly<TokenizerState> = {
-    //
-    passedLeadingBlank: false,
-    escapedFor: TokenType.none,
-    valueMayNotEnd: 0,
-    //
-    from: [0, 0, 0],
-    type: TokenType.none,
-};
-function getStateForIncrement(
-    prevTokens: ReadonlyArray<Token>,
-    confLength: number,
-    onlyLastToken: boolean,
-    currentTokens: Token[]
-): TokenizerState | undefined {
-    for (let i = prevTokens.length - 1; i >= 1; i--) {
-        const token = prevTokens[i];
-        if (token.range[1][0] > confLength) continue;
-        if (token.type !== TokenType.directiveKey) continue;
-
-        currentTokens.length = 0;
-        if (onlyLastToken) {
-            const lastToken = prevTokens[i - 1];
-            currentTokens.push(lastToken);
-        } else {
-            currentTokens.push(...prevTokens.slice(0, i));
-        }
-        return {
-            //
-            passedLeadingBlank: false,
-            escapedFor: TokenType.none,
-            valueMayNotEnd: 0,
-            //
-            from: token.range[0],
-            type: token.type,
-        };
-    }
-}
-
+/**
+ * Tokenizing systemd/mkosi config. (text => token[])
+ * @param conf The text of the system/mkosi config
+ */
 export function tokenizer(conf: string, _opts?: TokenizerOptions): TokenizerResult {
+    const confLength = conf.length;
+
+    /**
+     * mkosi configuration mode.
+     * Check out {@link TokenizerOptions.mkosi} and the docs in this repo to know the differences
+     */
     let mkosi = false;
+
+    /**
+     * Keep only the last token, rather than all tokens {@link TokenizerOptions.onlyLastToken}
+     */
     let onlyLastToken = false;
 
+    /**
+     * The internal token handler for new determined tokens.
+     */
     let tokenHandler: typeof _addToken | typeof _saveLastToken = _addToken;
-
-    let state = { ...TOKENIZER_INIT_STATE };
-    const tokens: Token[] = [];
 
     if (_opts) {
         if (typeof _opts.mkosi === "boolean") mkosi = _opts.mkosi;
@@ -56,12 +32,8 @@ export function tokenizer(conf: string, _opts?: TokenizerOptions): TokenizerResu
             onlyLastToken = true;
             tokenHandler = _saveLastToken;
         }
-        const { prevTokens } = _opts;
-        if (prevTokens) {
-            const prevState = getStateForIncrement(prevTokens, conf.length, onlyLastToken, tokens);
-            if (prevState) state = prevState;
-        }
     }
+    const { state, tokens } = initTokenizerStateIncrementally(_opts?.prevTokens, confLength, onlyLastToken);
 
     const location = new TextLocationUtils(state.from);
     while (location.offset < conf.length) {
@@ -206,6 +178,7 @@ export function tokenizer(conf: string, _opts?: TokenizerOptions): TokenizerResu
         state.type = type;
         state.from = currentLocation;
     }
+
     function _addToken(type: TokenType, range: RangeTuple) {
         tokens.push({ type, range, text: conf.slice(range[0][0], range[1][0]) });
     }

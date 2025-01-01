@@ -34,7 +34,8 @@ export type CommonOptions = {
      * The syntax for multi-line values and comments in `mkosi` configurations differs
      * from that in `systemd` configurations.
      *
-     * @see https://github.com/systemd/mkosi/blob/dcb48a90012b4b8e173863089f83a9f8a93b3671/mkosi/config.py#L1736
+     * Please check out the function `parse_ini` in the following link for the details:
+     * @see https://github.com/systemd/mkosi/blob/23b17713f4446ca5a9c78eb3e7c99e17afaff408/mkosi/config.py#L2114
      */
     mkosi?: boolean;
 };
@@ -79,7 +80,7 @@ export type TokenizerResult = {
 
 export type TokenizerOptions = CommonOptions & {
     /**
-     * Provide previous tokenizer result to tokenzie incrementally
+     * Provide previous tokenizer result to tokenize incrementally
      */
     prevTokens?: Array<Token>;
 
