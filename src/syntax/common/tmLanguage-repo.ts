@@ -3,6 +3,15 @@ import { allRepositories } from "./tmLanguage-repo-patterns";
 
 export type RepositoryNames = keyof typeof allRepositories;
 
+/**
+ * A manager for `repository` in tmLanguage. It helps that generating only used repositories
+ * into the final grammar file.
+ *
+ * > `repository` in tmLanguage: a dictionary (i.e. key/value pairs) of rules which can be
+ * > included from other places in the grammar.
+ * > The key is the name of the rule and the value is the actual rule.
+ * > Further explanation (and example) follow with the description of the `include` rule key.
+ */
 export class RepositoryManager {
     readonly repo = allRepositories;
     readonly entries = Array.from(Object.entries(allRepositories));

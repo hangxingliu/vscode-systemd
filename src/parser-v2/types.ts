@@ -90,13 +90,22 @@ export type TokenizerOptions = CommonOptions & {
     onlyLastToken?: boolean;
 };
 
+/**
+ * A descriptor object for systemd directive.
+ * It would be created from the token list by the function `getDirectivesFromTokens`
+ */
 export type SystemdDirective = {
+    /** @example "[Unit]" */
     section?: string;
 
+    /** @example "After" */
     key: string;
     keyRange: RangeTuple;
 
-    /** `undefined` indicates that this directive is not complete, and no `=` */
+    /**
+     * `undefined` indicates that this directive is not complete, and no `=`
+     * @example "network.target"
+     */
     value?: string;
     valueRanges: RangeTuple[];
 };
