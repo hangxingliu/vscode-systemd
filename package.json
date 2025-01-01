@@ -1,7 +1,7 @@
 {
     "name": "vscode-systemd-support",
     "displayName": "Systemd Helper",
-    "description": "A Visual Studio Code extension that helps you read and write Systemd unit files",
+    "description": "A Visual Studio Code extension that helps you read and write Systemd unit/mkosi config/Podman Quadlet files",
     "icon": "out/assets/icon.png",
     "main": "out/index.js",
     "browser": "out/index.js",
@@ -11,7 +11,8 @@
     "author": "hangxingliu",
     "license": "MIT",
     "engines": {
-        "vscode": "^1.64.0"
+        "vscode": "^1.64.0",
+        "node": "^16.9 || >=18.0"
     },
     "categories": [
         "Programming Languages",
