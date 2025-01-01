@@ -76,6 +76,7 @@ function _getSubsetOfManagers(
             break;
         //#region podman related patch
         case SystemdFileType.podman_container:
+        case SystemdFileType.podman_volume:
             filters[DirectiveCategory.service] = true;
             filters[DirectiveCategory.podman] = true;
             break;
