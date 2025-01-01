@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 #region config
-BUILD=( yarn --silent --ignore-engines run build:ts );
+BUILD=( yarn run build:ts );
 PATH_REWRITE_FROM=src
 PATH_REWRITE_TO=out
 EXTRA_NODE_ARGS=( --enable-source-maps ) # --inspect
