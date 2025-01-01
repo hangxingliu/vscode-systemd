@@ -89,6 +89,7 @@ export const enum SystemdFileType {
     podman_network = 67,
     podman_image = 68,
     podman_pod = 69,
+    podman_build = 70,
 }
 
 export const podmanFileTypes = new Set([
@@ -98,6 +99,7 @@ export const podmanFileTypes = new Set([
     SystemdFileType.podman_network,
     SystemdFileType.podman_image,
     SystemdFileType.podman_pod,
+    SystemdFileType.podman_build,
 ]);
 
 export const systemdFileTypeNames: { [type in SystemdFileType]: string } = {
@@ -145,6 +147,7 @@ export const systemdFileTypeNames: { [type in SystemdFileType]: string } = {
     [SystemdFileType.podman_network]: "Podman Quadlet network files (*.network)",
     [SystemdFileType.podman_volume]: "Podman Quadlet volume files (*.volume)",
     [SystemdFileType.podman_kube]: "Podman Quadlet kube units (*.kube)",
+    [SystemdFileType.podman_build]: "Podman Quadlet build files (*.build)",
 };
 
 const fileExtToType = new Map<string, SystemdFileType>([
@@ -168,6 +171,7 @@ const fileExtToType = new Map<string, SystemdFileType>([
     ["image", SystemdFileType.podman_image],
     ["volume", SystemdFileType.podman_volume],
     ["kube", SystemdFileType.podman_kube],
+    ["build", SystemdFileType.podman_build],
 ]);
 
 export function parseSystemdFilePath(filePath: string | undefined | null, enablePodman = true): SystemdFileType {

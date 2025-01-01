@@ -1,0 +1,8 @@
+[Build]
+# Tag the image to be built
+ImageTag=localhost/imagename
+
+# Set the working directory to the path of the unit file,
+# expecting to find a Containerfile/Dockerfile
+# + other files needed to build the image
+SetWorkingDirectory=unit

@@ -77,6 +77,7 @@ const fileTypeToSections = new Map<SystemdFileType, SectionsDefinition>([
     [SystemdFileType.podman_network, podmanSections.Network],
     [SystemdFileType.podman_pod, podmanSections.Pod],
     [SystemdFileType.podman_image, podmanSections.Image],
+    [SystemdFileType.podman_build, podmanSections.Build],
 ]);
 
 export function getSectionCompletionItems(fileType: SystemdFileType, enabledPodman: boolean) {

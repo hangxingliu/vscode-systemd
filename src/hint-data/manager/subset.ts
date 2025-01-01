@@ -45,6 +45,7 @@ const fileTypeToDirectives = new Map<SystemdFileType, DirectiveCategory>([
     [SystemdFileType.podman_network, DirectiveCategory.podman],
     [SystemdFileType.podman_pod, DirectiveCategory.podman],
     [SystemdFileType.podman_volume, DirectiveCategory.podman],
+    [SystemdFileType.podman_build, DirectiveCategory.podman],
     // mkosi
     [SystemdFileType.mkosi, DirectiveCategory.mkosi],
 ]);

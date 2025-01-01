@@ -215,7 +215,7 @@ export const networkSections: Sections = [
     "TrivialLinkEqualizer",
 ];
 
-type PodmanUnitType = "Container" | "Kube" | "Volume" | "Network" | "Image" | "Pod";
+type PodmanUnitType = "Container" | "Kube" | "Volume" | "Network" | "Image" | "Pod" | "Build";
 export const podmanSections: { [x in PodmanUnitType]: Sections } = {
     Container: ["Container", "Service"],
     Kube: ["Kube"],
@@ -223,6 +223,7 @@ export const podmanSections: { [x in PodmanUnitType]: Sections } = {
     Network: ["Network"],
     Image: ["Image"],
     Pod: ["Pod"],
+    Build: ["Build"],
 };
 export const allPodmanSections: Sections = [
     ...podmanSections.Container,
