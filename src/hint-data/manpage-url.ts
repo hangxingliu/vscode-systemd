@@ -25,8 +25,8 @@ export const manpageURLs = {
     podman: "https://docs.podman.io/en/latest/markdown/podman-systemd.unit.5.html",
     podmanBase: "https://docs.podman.io/en/latest/markdown/",
     //
-    mkosi: "https://raw.githubusercontent.com/systemd/mkosi/main/mkosi/resources/mkosi.md",
-    mkosiBase: "https://github.com/systemd/mkosi/blob/main/mkosi/resources/",
+    mkosi: "https://raw.githubusercontent.com/systemd/mkosi/main/mkosi/resources/man/mkosi.1.md",
+    mkosiBase: "https://github.com/systemd/mkosi/blob/main/mkosi/resources/man/",
     //
     capabilities: "https://man7.org/linux/man-pages/man7/capabilities.7.html",
     capabilitiesBase: "https://man7.org/linux/man-pages/man7/",
