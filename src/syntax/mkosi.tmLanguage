@@ -8,7 +8,7 @@
   <array>
     <dict>
       <key>include</key>
-      <string>#comments</string>
+      <string>#mkosiComments</string>
     </dict>
     <dict>
       <key>include</key>
@@ -43,7 +43,7 @@
       <array>
         <dict>
           <key>include</key>
-          <string>#comments</string>
+          <string>#mkosiComments</string>
         </dict>
         <dict>
           <key>include</key>
@@ -74,7 +74,7 @@
   </array>
   <key>repository</key>
   <dict>
-    <key>comments</key>
+    <key>mkosiComments</key>
     <dict>
       <key>patterns</key>
       <array>
@@ -82,7 +82,7 @@
           <key>name</key>
           <string>comment.line.number-sign</string>
           <key>match</key>
-          <string>^\s*[#;].*\n</string>
+          <string>#.*\n</string>
         </dict>
       </array>
     </dict>

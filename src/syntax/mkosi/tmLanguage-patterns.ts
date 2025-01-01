@@ -12,7 +12,7 @@ export function getMkosiPatterns(_repo: RepositoryManager): TextMateGrammarPatte
     const jinjaPattern: TextMateGrammarPattern | undefined = ENABLED_JINJA ? include(repo.embeddedJinja) : undefined;
 
     return [
-        include(repo.comments),
+        include(repo.mkosiComments),
         jinjaPattern,
         include(repo.mkosiSections),
         {
@@ -25,7 +25,7 @@ export function getMkosiPatterns(_repo: RepositoryManager): TextMateGrammarPatte
                 "3": scopes.operator.assignment,
             },
             patterns: [
-                include(repo.comments),
+                include(repo.mkosiComments),
                 jinjaPattern,
                 include(repo.variables),
                 include(repo.quotedString),

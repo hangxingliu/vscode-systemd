@@ -44,7 +44,8 @@ export function tokenizer(conf: string, _opts?: TokenizerOptions): TokenizerResu
             else handleWhiteSpace(ch);
             continue;
         }
-        if (ch === ";" || ch === "#") {
+        // mkosi only supports the comment started with "#"
+        if (ch === "#" || (mkosi === false && ch === ";")) {
             if (handleCommentSign()) continue;
         }
 

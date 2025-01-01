@@ -50,6 +50,14 @@ export const allRepositories = {
             },
         ],
     },
+    mkosiComments: {
+        patterns: [
+            {
+                match: /#.*\n/,
+                name: scopes.comment,
+            },
+        ],
+    },
     sections: {
         patterns: [
             {
