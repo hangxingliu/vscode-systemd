@@ -89,11 +89,11 @@ test("[S]\nKey=Val\\\nue", ({ conf, diagnosis }) => {
     deepStrictEqual(directives[0].value, "Value");
 });
 
-test("[S]\nKey=Val\\\n  # comments\nue", ({ conf, diagnosis }) => {
+test("[S]\nKey=Val\\\n  # comments\n ue", ({ conf, diagnosis }) => {
     const { tokens } = tokenizer(conf);
     diagnosis(tokens);
     deepStrictEqual(tokens.length, 7);
-    new AssertTokens(tokens).section("[S]").key("Key").assignment().value("Val\\").value("  ").comment().value("ue");
+    new AssertTokens(tokens).section("[S]").key("Key").assignment().value("Val\\").value("  ").comment().value(" ue");
 
     const directives = getDirectivesFromTokens(tokens);
     diagnosis(directives);
@@ -101,7 +101,7 @@ test("[S]\nKey=Val\\\n  # comments\nue", ({ conf, diagnosis }) => {
     deepStrictEqual(directives.length, 1);
     deepStrictEqual(directives[0].section, '[S]');
     deepStrictEqual(directives[0].key, 'Key');
-    deepStrictEqual(directives[0].value, 'Value');
+    deepStrictEqual(directives[0].value, 'Val ue');
 });
 
 test("[S]\nKey=A\n  # comments\n  B", ({ conf, diagnosis }) => {

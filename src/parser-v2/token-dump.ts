@@ -13,6 +13,16 @@ export const tokenTypeNames: Readonly<Record<TokenType, string>> = {
     [TokenType.unknown]: "unknown",
 };
 
+export const nameToTokenType = {
+    none: TokenType.none,
+    comment: TokenType.comment,
+    section: TokenType.section,
+    key: TokenType.directiveKey,
+    value: TokenType.directiveValue,
+    assignment: TokenType.assignment,
+    unknown: TokenType.unknown,
+} satisfies Record<string, TokenType>;
+
 /**
  * Dump a given token to the string for debug purpose
  */
