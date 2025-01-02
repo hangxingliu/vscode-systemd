@@ -7,7 +7,7 @@ import {
     SpecifierCompletionItem,
 } from "../types-runtime";
 import { HintDataManager } from "./base";
-import { CursorInfo } from "../../parser";
+import { CursorContextInfo } from "../../parser-v2/get-cursor-context.js";
 import { isValidArrayIndex } from "../../utils/data-types";
 import { systemdValueEnum } from "../custom-value-enum";
 import { podmanValueEnum } from "../custom-value-enum/podman-quadlet";
@@ -240,7 +240,7 @@ export class HintDataManagers {
             if (it && it.resolveEnum) items = mergeItems(items, it.resolveEnum(context));
         return items;
     }
-    hasValueEnum(cursorContext: CursorInfo, fileType: SystemdFileType) {
+    hasValueEnum(cursorContext: CursorContextInfo, fileType: SystemdFileType) {
         for (const it of this.managers) if (it && it.hasEnum) if (it.hasEnum(cursorContext, fileType)) return true;
         return false;
     }

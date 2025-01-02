@@ -10,8 +10,6 @@ import {
     Hover,
     languages,
 } from "vscode";
-import { getCursorInfoFromSystemdConf } from "./parser";
-import { CursorType } from "./parser/types";
 import { HintDataManagers } from "./hint-data/manager/multiple";
 import { languageIds } from "./syntax/const-language-conf";
 import { SystemdDocumentManager } from "./vscode-documents";
@@ -20,6 +18,9 @@ import { ExtensionConfig } from "./config/vscode-config-loader";
 import { genHoverDocsForDirective } from "./docs/hover";
 import { genSignatureDocsForDirective } from "./docs/signature";
 import { SystemdUnitsManager } from "./hint-data/manager/special-units";
+import { isMkosiFile } from "./parser/file-info.js";
+import { SystemdCursorContext } from "./parser-v2/get-cursor-context.js";
+import { TokenType } from "./parser-v2/types.js";
 
 const zeroPos = new Position(0, 0);
 export class SystemdSignatureProvider implements SignatureHelpProvider, HoverProvider {
@@ -42,18 +43,20 @@ export class SystemdSignatureProvider implements SignatureHelpProvider, HoverPro
         context: SignatureHelpContext
     ): SignatureHelp | null {
         const beforeText = document.getText(new Range(zeroPos, position));
-        const cursor = getCursorInfoFromSystemdConf(beforeText);
-        if (cursor.type !== CursorType.directiveValue) return null;
-
         const fileType = SystemdDocumentManager.instance.getType(document);
+        const mkosi = isMkosiFile(fileType);
+        const cursor = SystemdCursorContext.get(beforeText, { mkosi });
+        if (cursor.complete !== TokenType.directiveValue) return null;
+
         const { managers } = this;
-        const directive = (cursor.directiveKey || "").trim();
+        const directive = (cursor.key?.name || "").trim();
+        const section = cursor.section?.name || "";
 
         /** hide signature if there are any value enum available */
         if (managers.hasValueEnum(cursor, fileType)) return null;
-        if (SystemdUnitsManager.instance.has(cursor.directiveKey)) return null;
+        if (SystemdUnitsManager.instance.has(directive)) return null;
 
-        const signatures = genSignatureDocsForDirective(managers, this.config, directive, cursor.section, fileType);
+        const signatures = genSignatureDocsForDirective(managers, this.config, directive, section, fileType);
         if (signatures) {
             const help = new SignatureHelp();
             help.activeSignature = 0;
@@ -65,23 +68,25 @@ export class SystemdSignatureProvider implements SignatureHelpProvider, HoverPro
 
     provideHover(document: TextDocument, position: Position): Hover | null {
         const beforeText = document.getText(new Range(zeroPos, position));
-        const cursor = getCursorInfoFromSystemdConf(beforeText);
-
         const fileType = SystemdDocumentManager.instance.getType(document);
+        const mkosi = isMkosiFile(fileType);
+        const cursor = SystemdCursorContext.get(beforeText, { mkosi });
 
         const { managers } = this;
         const range = document.getWordRangeAtPosition(position);
-        switch (cursor.type) {
-            case CursorType.directiveKey: {
+        switch (cursor.complete) {
+            case TokenType.directiveKey: {
+                const section = cursor.section?.name || '';
                 const directive = document.getText(range);
-                const docs = genHoverDocsForDirective(managers, directive, cursor.section, fileType);
+                const docs = genHoverDocsForDirective(managers, directive, section, fileType);
                 if (docs) return new Hover(docs, range);
                 break;
             }
-            case CursorType.directiveValue: {
+            case TokenType.directiveValue: {
                 // Capabilities
                 const cap = SystemdCapabilities.instance;
-                if (cap.testDirectiveKey(cursor.directiveKey)) {
+                const key = cursor.key?.name || '';
+                if (cap.testDirectiveKey(key)) {
                     const capName = document.getText(range);
                     const capItem = cap.getByName(capName);
                     if (capItem) return new Hover([capItem.name, capItem.docs]);

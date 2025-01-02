@@ -1,4 +1,4 @@
-import { CursorInfo } from "../../parser";
+import type { CursorContextInfo } from "../../parser-v2/get-cursor-context.js";
 import { SystemdFileType } from "../../parser/file-info";
 import { getArray } from "../../utils/data-types";
 import { SystemdValueEnum } from "../custom-value-enum/types";
@@ -16,8 +16,10 @@ const whitespace = /^\s$/;
 
 export type ValueEnumExtendsFn = (valueEnum: SystemdValueEnum) => CompletionItem[] | null | undefined;
 
+type MiniCursorContext = Pick<CursorContextInfo, 'key' | 'section'>;
+
 export type ResolveValueEnumContext = {
-    cursor: CursorInfo;
+    cursor: MiniCursorContext;
     file: SystemdFileType;
     position: Position;
     pendingText: string;
@@ -42,8 +44,8 @@ export class ValueEnumManager {
         }
     }
 
-    has(cursor: CursorInfo, file: SystemdFileType) {
-        const key = cursor.directiveKey;
+    has(cursor: MiniCursorContext, file: SystemdFileType) {
+        const key = cursor.key?.name;
         if (!key) return false;
 
         const keyLC = key.trim().toLowerCase();
@@ -54,7 +56,7 @@ export class ValueEnumManager {
         const { cursor, file, extendsFn, position, pendingText } = context;
 
         // todo: sep, prefix, triggerCharacter ...
-        const key = cursor.directiveKey;
+        const key = cursor.key?.name;
         if (!key) return;
 
         const keyLC = key.trim().toLowerCase();
@@ -66,7 +68,7 @@ export class ValueEnumManager {
         const docs: Record<string, string> = {};
         const tips: Record<string, string> = {};
 
-        let section = cursor.section || "";
+        let section = cursor.section?.name || "";
         if (section) section = section.replace(/[\[\]]/g, "");
 
         const exactMatch = enums.filter((it) => it.directive === key);

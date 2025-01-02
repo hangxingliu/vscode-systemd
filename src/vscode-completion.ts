@@ -11,13 +11,11 @@ import {
     CompletionItemKind,
     CompletionItemTag,
 } from "vscode";
-import { getCursorInfoFromSystemdConf } from "./parser";
-import { CursorType } from "./parser/types";
 import { languageIds } from "./syntax/const-language-conf";
 import { ExtensionConfig } from "./config/vscode-config-loader";
 import { HintDataManagers } from "./hint-data/manager/multiple";
 import { RequiredDirectiveCompletionItem } from "./hint-data/types-runtime";
-import { SystemdFileType } from "./parser/file-info";
+import { isMkosiFile, SystemdFileType } from "./parser/file-info";
 import { getSectionCompletionItems } from "./hint-data/get-section-completion";
 import { getCalendarCompletion } from "./hint-data/get-calendar-completion";
 import { SystemdDocumentManager } from "./vscode-documents";
@@ -25,6 +23,8 @@ import { SystemdCapabilities } from "./hint-data/manager/capabilities";
 import { PredefinedSignature } from "./hint-data/types-manifest";
 import { ValueEnumExtendsFn } from "./hint-data/manager/value-enum";
 import { SystemdUnitsManager } from "./hint-data/manager/special-units";
+import { SystemdCursorContext } from "./parser-v2/get-cursor-context.js";
+import { TokenType } from "./parser-v2/types.js";
 
 const zeroPos = new Position(0, 0);
 const deprecatedTags = [CompletionItemTag.Deprecated];
@@ -92,14 +92,15 @@ export class SystemdCompletionProvider implements CompletionItemProvider {
     ): CompletionItem[] | undefined {
         // console.log(`char=${JSON.stringify(context.triggerCharacter)} kind=${context.triggerKind}`);
         const beforeText = document.getText(new Range(zeroPos, position));
-        const cursorContext = getCursorInfoFromSystemdConf(beforeText);
         const file = SystemdDocumentManager.instance.getType(document);
-        const { section } = cursorContext;
         const version = this.config.version;
 
-        switch (cursorContext.type) {
-            case CursorType.directiveKey: {
+        const mkosi = isMkosiFile(file);
+        const cursor = SystemdCursorContext.get(beforeText, { mkosi });
+        switch (cursor.complete) {
+            case TokenType.directiveKey: {
                 const pending = getPendingText();
+                const section = cursor.section?.name || "";
 
                 let directives = this.managers.filterDirectives(pending, { section, file });
                 if (!directives) return;
@@ -115,14 +116,15 @@ export class SystemdCompletionProvider implements CompletionItemProvider {
                 for (const it of directives) it.range = range;
                 return directives;
             }
-            case CursorType.section: {
+            case TokenType.section: {
                 return this.getSectionItems(file);
             }
-            case CursorType.directiveValue: {
+            case TokenType.directiveValue: {
                 const pending = getPendingText();
                 if (pending.endsWith("%") && !pending.endsWith("%%")) return this.managers.getSpecifiers();
 
-                const directive = cursorContext.directiveKey;
+                const directive = cursor.key?.name || "";
+                const section = cursor.section?.name || "";
                 if (directive) {
                     const capabilities = SystemdCapabilities.instance.getCompletionItems(directive);
                     if (capabilities) return capabilities;
@@ -143,7 +145,7 @@ export class SystemdCompletionProvider implements CompletionItemProvider {
                 }
 
                 const items = this.managers.filterValueEnum({
-                    cursor: cursorContext,
+                    cursor,
                     file,
                     position,
                     pendingText: pending,
@@ -167,8 +169,8 @@ export class SystemdCompletionProvider implements CompletionItemProvider {
         }
 
         function getPendingText() {
-            if (!cursorContext || !cursorContext.pendingLoc) return "";
-            const offset = cursorContext.pendingLoc[0];
+            if (!cursor || !cursor.from) return "";
+            const offset = cursor.from[0];
             return beforeText.slice(offset);
         }
     }
