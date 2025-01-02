@@ -1,5 +1,9 @@
-import { LocationTuple } from "./types.js";
+import { LocationTuple, RangeTuple, Token } from "./types.js";
 
+/**
+ * A utility class for managing text cursor position for the tokenizer.
+ * With this class, the tokenizer does not require much logic for computing offsets and line numbers.
+ */
 export class TextLocationUtils {
     offset: number;
     private line: number;
@@ -54,4 +58,38 @@ export class TextLocationUtils {
     readonly inSameLine = (loc?: LocationTuple): boolean => {
         return loc ? this.line === loc[1] : false;
     };
+}
+
+/**
+ * A value token collector for collecting directive value text from multiple lines according to
+ * specified syntax rules.
+ * For example:
+ * The sample data `{ value: "Val1 Val2", ranges: [{...}, {...}]}` can be collected from
+ * the following configuration:
+ * ``` plaintext
+ * Key=Val1\
+ * # comment
+ *  Val2
+ * ```
+ */
+export class ValueTokenCollector {
+    private started = false;
+    readonly ranges: RangeTuple[] = [];
+    value = "";
+
+    constructor(readonly mkosi: boolean) {}
+    addValueToken(token: Token) {
+        const { started } = this;
+        const { text, range } = token;
+        this.ranges.push(range);
+
+        if (this.mkosi) {
+            this.value += (started ? "\n" : "") + (text || "").replace(/^\s+/, "");
+        } else if (!started) {
+            this.value = text || "";
+        } else if (text && !/^\s*$/.test(text)) {
+            this.value = this.value!.replace(/\\$/, "") + text;
+        }
+        this.started = true;
+    }
 }

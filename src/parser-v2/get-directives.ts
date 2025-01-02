@@ -1,4 +1,5 @@
 import { CommonOptions, SystemdDirective, Token, TokenType } from "./types.js";
+import { ValueTokenCollector } from "./utils.js";
 
 export function getDirectivesFromTokens(tokens: Token[], options?: CommonOptions) {
     const mkosi = options && options.mkosi ? true : false;
@@ -24,23 +25,16 @@ export function getDirectivesFromTokens(tokens: Token[], options?: CommonOptions
 
         if (++i >= tokens.length) break;
         if (tokens[i].type !== TokenType.assignment) continue;
-        directive.value = "";
 
-        let started = false;
+        const collector = new ValueTokenCollector(mkosi);
         for (i++; i < tokens.length; i++) {
-            const { type, text, range } = tokens[i];
+            const { type } = tokens[i];
             if (type === TokenType.comment) continue;
             if (type !== TokenType.directiveValue) break;
-            directive.valueRanges.push(range);
-            if (mkosi) {
-                directive.value += (started ? "\n" : "") + (text || "").replace(/^\s+/, "");
-            } else if (!started) {
-                directive.value = text || "";
-            } else if (text && !/^\s*$/.test(text)) {
-                directive.value = directive.value!.replace(/\\$/, "") + text;
-            }
-            started = true;
+            collector.addValueToken(tokens[i]);
         }
+        directive.value = collector.value;
+        directive.valueRanges = collector.ranges;
         i--;
         continue;
     }
