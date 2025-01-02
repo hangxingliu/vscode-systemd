@@ -10,7 +10,7 @@ import {
 import { tokenizer } from "./parser-v2/tokenizer";
 import { getFoldingRanges } from "./parser-v2/get-folding-ranges";
 import { SystemdDocumentManager } from "./vscode-documents";
-import { SystemdFileType, systemdFileTypeNames } from "./parser/file-info";
+import { isMkosiFile, systemdFileTypeNames } from "./parser/file-info.js";
 
 export class SystemdFoldingRange implements FoldingRangeProvider {
     private _onDidChangeFoldingRanges = new EventEmitter<void>();
@@ -21,7 +21,7 @@ export class SystemdFoldingRange implements FoldingRangeProvider {
         const typeName = systemdFileTypeNames[fileType];
         console.log(`provideFoldingRanges("${document.uri.toString()}", "${typeName}")`);
 
-        const { tokens } = tokenizer(document.getText(), { mkosi: fileType === SystemdFileType.mkosi });
+        const { tokens } = tokenizer(document.getText(), { mkosi: isMkosiFile(fileType) });
         const ranges = getFoldingRanges(tokens);
         return ranges.map((it) => new FoldingRange(it[0], it[1], it[2] ? FoldingRangeKind[it[2]] : undefined));
     }

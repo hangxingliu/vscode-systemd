@@ -174,6 +174,10 @@ const fileExtToType = new Map<string, SystemdFileType>([
     ["build", SystemdFileType.podman_build],
 ]);
 
+export function isMkosiFile(fileType: SystemdFileType) {
+    return fileType === SystemdFileType.mkosi;
+}
+
 export function parseSystemdFilePath(filePath: string | undefined | null, enablePodman = true): SystemdFileType {
     if (!filePath) return SystemdFileType.unknown;
     let mtx = filePath.match(/\.([\w-]+)$/);

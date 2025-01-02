@@ -32,7 +32,7 @@ import type { SetDocumentTypeEvent, SystemdDocumentManager } from "./vscode-docu
 import { getDirectivesFromTokens } from "./parser-v2/get-directives";
 import { tokenizer } from "./parser-v2/tokenizer";
 import { CommonOptions, LocationTuple } from "./parser-v2/types";
-import { SystemdFileType } from "./parser/file-info";
+import { isMkosiFile } from "./parser/file-info";
 
 export class SystemdLint implements CodeActionProvider {
     // NodeJS.Timer or number
@@ -112,8 +112,8 @@ export class SystemdLint implements CodeActionProvider {
         const { customDirectiveKeys, customDirectiveRegexps } = config;
         const fileType = this.documents.getType(document);
 
-        const mkosiMode = fileType === SystemdFileType.mkosi
-        const opts: CommonOptions = { mkosi: mkosiMode };
+        const mkosi = isMkosiFile(fileType);
+        const opts: CommonOptions = { mkosi };
         const { tokens } = tokenizer(document.getText(), opts);
         const dirs = getDirectivesFromTokens(tokens);
         // console.log("lintDocument", dirs);
@@ -126,7 +126,7 @@ export class SystemdLint implements CodeActionProvider {
 
             let directiveName = it.key.trim();
             // compatible with the old mkosi `@` syntax (they have removed it)
-            if (mkosiMode && directiveName.startsWith('@'))
+            if (mkosi && directiveName.startsWith('@'))
                 directiveName = directiveName.slice(1);
             const directiveNameLC = directiveName.toLowerCase();
 
