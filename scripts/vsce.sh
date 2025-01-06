@@ -8,19 +8,21 @@ ARTIFACT_DIR="../artifacts/vscode"
 PREBUILD() { execute yarn build; }
 INIT_EXTRA_FILES() { execute cp -- docs/CHANGELOG.md CHANGELOG.md; }
 CLEAN_EXTRA_FILES() { execute rm -- CHANGELOG.md; }
+VSCE_EXTRA_ARGS=( --no-yarn ); # VSCE doesn't yarn v2
 #endregion config
 
 #region main
 #
 # template: vsce.sh
 #   author: hangxingliu
-#  version: 2024-03-16
+#  version: 2025-01-06
 #
 throw() { echo -e "fatal: $1" >&2; exit 1; }
 execute() { echo "$ $*"; "$@" || throw "Failed to execute '$1'"; }
 gotodir() { pushd -- "$1" >/dev/null || throw "failed to go to '$1'"; }
 goback() { popd >/dev/null || throw "failed to execute 'popd'"; }
 has_function() { [[ "$(type -t "$1")" == "function" ]]; }
+is_array() { declare -p "$1" 2> /dev/null | grep -q '^declare \-a'; }
 
 SCRIPT_DIR="$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )";
 PROJECT_DIR="${SCRIPT_DIR}/${PROJECT_ROOT}";
@@ -109,10 +111,13 @@ do_build_vsix() {
     list_file="${ARTIFACT_DIR}/${PKG_FULL_NAME}.list";
     vsix_file="${ARTIFACT_DIR}/${PKG_FULL_NAME}.vsix";
 
-    echo "$ vsce ls | tee $list_file";
-    "$VSCE" ls | awk '!/Detected presence of yarn.lock/' | tee "$list_file";
+    is_array VSCE_EXTRA_ARGS || VSCE_EXTRA_ARGS=();
 
-    execute "$VSCE" package --yarn --out "${vsix_file}" "${@}";
+    echo "$ vsce ls ${VSCE_EXTRA_ARGS[*]} | tee $list_file";
+    "$VSCE" ls "${VSCE_EXTRA_ARGS[@]}" |
+        awk '!/Detected presence of yarn.lock/' | tee "$list_file";
+
+    execute "$VSCE" package "${VSCE_EXTRA_ARGS[@]}" --out "${vsix_file}" "${@}";
     printf "+ created ${CYAN}%s${RESET}\n" "$vsix_file";
 }
 
