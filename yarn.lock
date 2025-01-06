@@ -3653,12 +3653,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"marked@npm:^12.0.2":
-  version: 12.0.2
-  resolution: "marked@npm:12.0.2"
+"marked@npm:^15.0.5":
+  version: 15.0.5
+  resolution: "marked@npm:15.0.5"
   bin:
     marked: bin/marked.js
-  checksum: 10c0/45ae2e1e3f06b30a5b5f64efc6cde9830c81d1d024fd7668772a3217f1bc0f326e66a6b8970482d9783edf1f581fecac7023a7fa160f2c14dbcc16e064b4eafb
+  checksum: 10c0/c05fadadc8203acdb17d96075ee25a221bf92b1e5feeacc3e454be668f0a162866c9e031f31cc791693c256edc658e24b54f985a6dc127bbd03e6784a1dad7fc
   languageName: node
   linkType: hard
 
@@ -5418,7 +5418,7 @@ __metadata:
     eslint: "npm:^9.17.0"
     html-entities: "npm:^2.5.2"
     https-proxy-agent: "npm:^7.0.6"
-    marked: "npm:^12.0.2"
+    marked: "npm:^15.0.5"
     rimraf: "npm:^6.0.1"
     swc-loader: "npm:^0.2.6"
     turndown: "npm:^7.2.0"
