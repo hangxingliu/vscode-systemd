@@ -17,7 +17,8 @@ import {
     ManifestItemType,
     PredefinedSignature,
 } from "../types-manifest";
-import { Cheerio, Element } from "cheerio";
+import { Cheerio } from "cheerio";
+import type { Element } from "domhandler";
 import { doesPodmanDirectiveAcceptsBoolean, extractDirectiveSignature } from "./utils/directive-signature";
 import { manpageURLs } from "../manpage-url";
 

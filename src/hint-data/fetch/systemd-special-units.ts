@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 
-import type { Cheerio, Element } from "cheerio";
+import type { Cheerio } from "cheerio";
+import type { Element } from "domhandler";
 import { cacheDir, manifestDir } from "../../config/fs";
 import { manpageURLs } from "../manpage-url";
 import {

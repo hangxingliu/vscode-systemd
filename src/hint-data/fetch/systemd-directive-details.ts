@@ -1,4 +1,5 @@
-import { Cheerio, Element } from "cheerio";
+import { Cheerio } from "cheerio";
+import type { Element } from "domhandler";
 import {
     DuplicateChecker,
     assertLength,

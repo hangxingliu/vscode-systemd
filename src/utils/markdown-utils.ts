@@ -133,7 +133,7 @@ export function getTokensInSection(markdownTokens: TokensList, headingIndex: num
 }
 
 function htmlToPlainText(html: string) {
-    const text = load(html, { decodeEntities: false }).text();
+    const text = load(html, { xml: false }).text();
     if (text.match(/^\s*$/)) return "";
     return text.replace(/(^\n+|\n+$)/g, "");
 }

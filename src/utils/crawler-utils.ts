@@ -5,7 +5,8 @@
 // version:  2024-03-17
 //
 import axios, { AxiosResponse } from "axios";
-import { load, CheerioAPI, Element, Cheerio } from "cheerio";
+import { load, CheerioAPI, Cheerio } from "cheerio";
+import type { Element } from "domhandler";
 export { load as loadHtml } from "cheerio";
 
 import { createHash } from "crypto";
