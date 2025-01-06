@@ -19,7 +19,7 @@ const TOKENIZER_INIT_STATE: Readonly<TokenizerState> = {
  * Providing the tokens from the previous tokenizing can incrementally initialize the state (can speed up the tokenizing).
  *
  * @param prevTokens Tokens from the previous tokenizing
- * @param confLengh The length of the config that the tokenizer will work on
+ * @param confLength The length of the config that the tokenizer will work on
  * @param onlyLastToken Keep only the last token rather than all tokens. {@link TokenizerOptions.onlyLastToken}
  */
 export function initTokenizerStateIncrementally(

@@ -22,8 +22,9 @@ ignoreRegExpList:
   - /<\/?\w+>/   # HTML tags
   - /[A-Z]{4,}/  # all uppercase
   - /\/.+\//     # in RegExp
-  - /`[\w\-=]+`/      # code in markdown
-  - /@\w+(?:\s*\(.+?\))/        # usernames
+  - /`[\w\-=]+`/ # code in markdown
+  - /@\w+(?:\s*\(.+?\))/     # usernames
+  - /\\n/        # escaped character for new line
   #region compound words
   - /HTML(Entities|Element|Supported)/
   - /TLSVerify|CPUFeatures|JSONSchema/
@@ -99,3 +100,7 @@ words:
   - proot
   - innotek
   - Bochs
+  - Conds
+  - bhyve # software name
+  - Virtuozzo  # company name
+  - Tomoyo     # kernal module

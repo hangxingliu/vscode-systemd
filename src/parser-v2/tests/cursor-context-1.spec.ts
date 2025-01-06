@@ -73,7 +73,7 @@ test(
         assert(ctx, at(1, 0), 'key');
         assert(ctx, at(1, 1), 'key', at(1, 0));
         assert(ctx, at(1, 2), 'assignment', undefined, undefined, '; ');
-        // assert(ctx, at(1, 3), 'unknown'); // <-- The behaviour at here is undefined
+        // assert(ctx, at(1, 3), 'unknown'); // <-- The behavior at here is undefined
         //
         assert(ctx, at(3, 8), 'comment');
         assert(ctx, at(3, 11), 'comment');

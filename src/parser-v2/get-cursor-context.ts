@@ -6,7 +6,7 @@ export type CursorContextInfo = {
     complete: TokenType;
     /**
      * If the token at the cursor is not one of the "comment", "unknown" or "assignment"
-     * and not yet compelete, this field indicates the starting location of this token.
+     * and not yet complete, this field indicates the starting location of this token.
      */
     from?: LocationTuple;
     section?: {
