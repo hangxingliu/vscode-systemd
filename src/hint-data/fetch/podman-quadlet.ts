@@ -1,9 +1,10 @@
 import { resolve } from "path";
-import { cacheDir, manifestDir } from "../../config/fs";
+import { cacheDir, logsDir, manifestDir } from "../../config/fs";
 import {
     JsonFileWriter,
     SimpleHttpCache,
     assertLength,
+    diagnosisElements,
     findElements,
     getHTMLDoc,
     getMarkdownHelpFromElement,
@@ -20,7 +21,9 @@ import {
 import { Cheerio } from "cheerio";
 import type { Element } from "domhandler";
 import { doesPodmanDirectiveAcceptsBoolean, extractDirectiveSignature } from "./utils/directive-signature";
-import { manpageURLs } from "../manpage-url";
+import { getVersionInfoInURL, manpageURLs } from "../manpage-url";
+import { HintDataChanges } from "./systemd-changes.js";
+import { CrawlerDiagnosisFile } from "../../utils/crawler-utils-diagnosis-file.js";
 
 const url = manpageURLs.podman;
 const targetFile = resolve(manifestDir, "podman.json");
@@ -32,8 +35,14 @@ main().catch((error) => {
 });
 async function main() {
     SimpleHttpCache.init(cacheDir);
+
+    const version = getVersionInfoInURL(url);
+    const diagnosis = CrawlerDiagnosisFile.initOrGet(logsDir, `podman-${version!.str}`);
+
     const $ = await getHTMLDoc("podman-systemd.unit", url);
     const $allH1 = findElements($, "h1", ">=12");
+    diagnosisElements($allH1, true);
+
     // $allH1.map((i, el) => console.log($(el).text()));
     const matchedH1 = matchElementsByText(
         $allH1,
@@ -45,11 +54,13 @@ async function main() {
             "Volume units [Volume]",
             "Build units [Build]",
             "Image units [Image]",
+            "Quadlet section [Quadlet]"
         ],
         {}
     );
 
     const manPageIndex = 1;
+    const prevManifest = HintDataChanges.fromFile(targetFile);
     const jsonFile = new JsonFileWriter<ManifestItem>(targetFile);
     jsonFile.writeItem([
         ManifestItemType.ManPageInfo,
@@ -64,7 +75,7 @@ async function main() {
     for (const h1 of matchedH1) {
         const $h1 = $(h1);
         const h1text = getText($h1);
-        const sectionNameMtx = h1text.match(/units\s+\[(\w+)\]/);
+        const sectionNameMtx = h1text.match(/(?:units|section)\s+\[(\w+)\]/);
         if (!sectionNameMtx) throw new Error(`Unknown header "${h1text}"`);
         const [, sectionName] = sectionNameMtx;
         const sectionId = nextSectionId++;
@@ -115,7 +126,24 @@ async function main() {
         jsonFile.writeItems(allDocs);
         jsonFile.writeItems(allDirectives);
     }
-    jsonFile.close();
+    await jsonFile.close();
+    const r = HintDataChanges.getChanges(prevManifest, HintDataChanges.fromFile(jsonFile.filePath));
+    if (r.logs.length > 0) {
+        diagnosis.writeHeader(`change info`);
+        r.logs.forEach((it) => diagnosis.write(it.type, it.explain));
+    }
+    if (r.newSections.length > 0) r.newSections.forEach((it) => diagnosis.write(`new-section`, it));
+
+    diagnosis.writeHeader(`overview`);
+    diagnosis.count(`removed directives`, r.removed.length);
+    diagnosis.count(`added directives`, r.added);
+    diagnosis.count(`changed directives`, r.changed);
+    diagnosis.count(`new sections`, r.newSections);
+    print.info(
+        `removed = ${r.removed.length}; added = ${r.added}; changed = ${r.changed}; new-sections = ${r.newSections.length}`
+    );
+    print.info(diagnosis.filePath);
+    return;
 
     function getText(el: Cheerio<Element>) {
         el = el.clone();

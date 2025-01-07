@@ -14,6 +14,7 @@ import {
     sleepSections,
     mountSections,
     podmanSections,
+    podmanCommonSections,
     socketSections,
     defaultSections,
     automountSections,
@@ -74,13 +75,13 @@ const fileTypeToSections = new Map<SystemdFileType, SectionsDefinition>([
     [SystemdFileType.timesyncd, timesyncdSections],
     [SystemdFileType.iocost, iocostSections],
     //
-    [SystemdFileType.podman_container, podmanSections.Container],
-    [SystemdFileType.podman_volume, podmanSections.Volume],
-    [SystemdFileType.podman_kube, podmanSections.Kube],
-    [SystemdFileType.podman_network, podmanSections.Network],
-    [SystemdFileType.podman_pod, podmanSections.Pod],
-    [SystemdFileType.podman_image, podmanSections.Image],
-    [SystemdFileType.podman_build, podmanSections.Build],
+    [SystemdFileType.podman_container, [...podmanSections.Container, ...podmanCommonSections]],
+    [SystemdFileType.podman_volume, [...podmanSections.Volume, ...podmanCommonSections]],
+    [SystemdFileType.podman_kube, [...podmanSections.Kube, ...podmanCommonSections]],
+    [SystemdFileType.podman_network, [...podmanSections.Network, ...podmanCommonSections]],
+    [SystemdFileType.podman_pod, [...podmanSections.Pod, ...podmanCommonSections]],
+    [SystemdFileType.podman_image, [...podmanSections.Image, ...podmanCommonSections]],
+    [SystemdFileType.podman_build, [...podmanSections.Build, ...podmanCommonSections]],
     //
     [SystemdFileType.mkosi, mkosiSections],
 ]);

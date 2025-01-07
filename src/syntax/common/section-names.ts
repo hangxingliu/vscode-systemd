@@ -233,6 +233,12 @@ export const networkSections: Sections = [
 ];
 
 type PodmanUnitType = "Container" | "Kube" | "Volume" | "Network" | "Image" | "Pod" | "Build";
+export const podmanCommonSections: Sections = [
+    [
+        "Quadlet",
+        "Some quadlet specific configuration is shared between different unit types. Those settings can be configured in the `[Quadlet]` section. (since v5.3.0)",
+    ],
+];
 export const podmanSections: { [x in PodmanUnitType]: Sections } = {
     Container: ["Container", "Service"],
     Kube: ["Kube"],
@@ -249,6 +255,7 @@ export const allPodmanSections: Sections = [
     ...podmanSections.Network,
     ...podmanSections.Pod,
     ...podmanSections.Volume,
+    ...podmanCommonSections,
 ];
 
 export const defaultSections: Sections = Array.from(

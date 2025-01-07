@@ -20,6 +20,8 @@ const _PODMAN_BOOLEAN_DIRECTIVES = new Set([
 
     "[Image]AllTags",
     "[Image]TLSVerify",
+
+    "[Quadlet]DefaultDependencies",
 ]);
 export function doesPodmanDirectiveAcceptsBoolean(section: string, directive: string) {
     return _PODMAN_BOOLEAN_DIRECTIVES.has(`[${section}]${directive}`);
