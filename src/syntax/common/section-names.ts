@@ -92,7 +92,15 @@ export const timesyncdSections: Sections = ["Time"];
 /** sleep.conf, sleep.conf.d/*.conf */
 export const sleepSections: Sections = ["Sleep"];
 /** networkd.conf, networkd.conf.d/*.conf */
-export const networkdSections: Sections = ["Network", "DHCPv4", "DHCPv6"];
+export const networkdSections: Sections = [
+    "Network",
+    "DHCPv4",
+    "DHCPv6",
+    //#region since v256
+    "DHCPServer",
+    "IPv6AcceptRA"
+    //#endregion since v256
+];
 /** coredump.conf, coredump.conf.d/*.conf */
 export const coredumpSections: Sections = ["Coredump"];
 /**
