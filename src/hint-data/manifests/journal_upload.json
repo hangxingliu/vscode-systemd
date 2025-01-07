@@ -5,7 +5,7 @@
 [4,2,"SSL key in PEM format.","#ServerKeyFile=",232],
 [4,3,"SSL CA certificate in PEM format.","#ServerCertificateFile=",232],
 [4,4,"SSL CA certificate.","#TrustedCertificateFile=",232],
-[4,5,"When network connectivity to the server is lost, this option configures the time to wait for the connectivity to get restored. If the server is not reachable over the network for the configured time, **systemd-journal-upload** exits. Takes a value in seconds (or in other time units if suffixed with \"ms\", \"min\", \"h\", etc). For details, see [systemd.time(5)](systemd.time.html).","#NetworkTimeoutSec=",249],
+[4,5,"When network connectivity to the server is lost, this option configures the time to wait for the connectivity to get restored. If the server is not reachable over the network for the configured time, **systemd-journal-upload** exits. Takes a value in seconds (or in other time units if suffixed with \"ms\", \"min\", \"h\", etc). For details, see [systemd.time(7)](systemd.time.html).","#NetworkTimeoutSec=",249],
 [2,"NetworkTimeoutSec",[],5,6,1],
 [2,"ServerCertificateFile",[],3,6,1],
 [2,"ServerKeyFile",[],2,6,1],

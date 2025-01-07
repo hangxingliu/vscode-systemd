@@ -1,12 +1,12 @@
 [
-[3,39,"systemd.automount(5)","systemd.automount — Automount unit configuration","systemd.automount.html"],
+[3,40,"systemd.automount(5)","systemd.automount — Automount unit configuration","systemd.automount.html"],
 [6,1,"Automount"],
 [4,1,"Takes an absolute path of a directory of the automount point. If the automount point does not exist at time that the automount point is installed, it is created. This string must be reflected in the unit filename. (See above.) This option is mandatory.","#Where=",null],
 [4,2,"Extra mount options to use when creating the autofs mountpoint. This takes a comma-separated list of options. This setting is optional. Note that the usual specifier expansion is applied to this setting, literal percent characters should hence be written as \"`%%`\".","#ExtraOptions=",250],
 [4,3,"Directories of automount points (and any parent directories) are automatically created if needed. This option specifies the file system access mode used when creating these directories. Takes an access mode in octal notation. Defaults to 0755.","#DirectoryMode=",null],
 [4,4,"Configures an idle timeout. Once the mount has been idle for the specified time, systemd will attempt to unmount. Takes a unit-less value in seconds, or a time span value such as \"5min 20s\". Pass 0 to disable the timeout logic. The timeout is disabled by default.","#TimeoutIdleSec=",220],
-[2,"DirectoryMode",[],3,39,1],
-[2,"ExtraOptions",[],2,39,1],
-[2,"TimeoutIdleSec",[],4,39,1],
-[2,"Where",[],1,39,1]
+[2,"DirectoryMode",[],3,40,1],
+[2,"ExtraOptions",[],2,40,1],
+[2,"TimeoutIdleSec",[],4,40,1],
+[2,"Where",[],1,40,1]
 ]

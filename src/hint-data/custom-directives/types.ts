@@ -25,6 +25,8 @@ export type CustomSystemdDirective = {
     manPage?: string;
     /** The URL of the man page */
     url?: string;
+    /** The since version */
+    since?: number;
 } & (
     | {
           name: string;

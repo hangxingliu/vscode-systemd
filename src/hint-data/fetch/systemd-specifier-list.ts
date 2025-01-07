@@ -21,8 +21,8 @@ export async function fetchSpecifiersList() {
     const $thead = findElements($table, "thead", "==1");
     assertInnerText($thead.find("th"), ["Specifier", "Meaning", "Details"], { ignoreWhiteSpace: true });
 
-    const trArray = findElements($table, "tbody tr", ">=39").toArray();
-    assertLength("tbody tr", trArray, 39, AssertLevel.WARNING);
+    const trArray = findElements($table, "tbody tr", ">=40").toArray();
+    assertLength("tbody tr", trArray, 40, AssertLevel.WARNING);
 
     const result: ManifestItemForSpecifier[] = [];
     for (let i = 0; i < trArray.length; i++) {

@@ -136,13 +136,18 @@ export class HintDataChanges {
                     deprecated: version,
                     section: dir.section,
                     manPage: dir.manPage,
+                    since: dir.since,
                 });
                 continue;
             }
             resolvedTo[index] = true;
 
             const dir2 = to.directives[index];
-            if (dir.since !== dir2.since) print.warn(`The since version of directive "${dir.name}" has changed!!!`);
+            if (dir.since !== dir2.since)
+                print.warn(
+                    `The since version of directive "${dir.name}" "${dir.manPage}" has changed!!!` +
+                        `(${dir.since} => ${dir2.since})`
+                );
 
             if (dir.docs !== dir2.docs) {
                 logs2.push(createLogs(dir, "CHANGED"));

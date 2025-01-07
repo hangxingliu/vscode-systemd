@@ -29,9 +29,10 @@ import { similarSections } from "../../syntax/common/section-names";
 import { extractSectionNameFromDocs } from "./utils/section-names";
 import { CrawlerDiagnosisFile } from "../../utils/crawler-utils-diagnosis-file.js";
 
-const ignoredH2Sections: string[] = [
+const ignoredH2Sections: Array<string | `${string}\n${string}`> = [
     "Commands",
     "Concepts",
+    "Configuration Directories and Precedence",
     "Description",
     "Directories",
     // "Environment",
@@ -48,6 +49,12 @@ const ignoredH2Sections: string[] = [
     "Process Exit Codes",
     "Implicit Dependencies",
     "Credentials\nsystemd-firstboot(1)",
+
+    // https://www.freedesktop.org/software/systemd/man/2/homectl.html
+    "User Record Properties",
+    // Added for systemd v256
+    // https://www.freedesktop.org/software/systemd/man/256/systemd-network-generator.service.html
+    "Credentials\nsystemd-network-generator.service(8)",
 ];
 
 export async function fetchDirectiveDetailsFromManPage(

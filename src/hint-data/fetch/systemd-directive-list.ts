@@ -40,6 +40,10 @@ const directiveHeadings: string[] = [
     // Colophon
 ];
 
+const ignoredManPage = [
+    `homectl(1)`
+] satisfies ReadonlyArray<`${string}(${number})`>;
+
 export type RawManPageInfo = {
     id: number;
     pageUri: string;
@@ -100,6 +104,8 @@ export async function fetchDirectivesList() {
             for (const it of $links) {
                 const pageName = $(it).text();
                 // ignore special pages
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                if (ignoredManPage.includes(pageName as any)) continue;
                 // if (pageName === 'systemd.net-naming-scheme(7)') continue;
 
                 let pageUri = it.attribs.href;
