@@ -201,6 +201,7 @@ async function main() {
     print.info(
         `removed = ${r.removed.length}; added = ${r.added}; changed = ${r.changed}; new-sections = ${r.newSections.length}`
     );
+    print.info(diagnosis.filePath);
     return;
 
     function getLinkId(text: string) {
