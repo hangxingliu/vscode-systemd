@@ -1,5 +1,5 @@
 ---
-date: 2025-01-06
+date: 2025-01-08
 # I hope that even after I am gone, this document could help someone else to maintain this project
 ---
 # Update Hint Data to The Latest Version
@@ -31,34 +31,73 @@ rm -r cache
 
 ``` bash
 # Please build this project once to generate fetch-related scripts
+# And you need to re-run the following command after you changed the source code in `src` directory.
 yarn build:ts
+```
 
-# Fetching and generating hint data for basic systemd directives
+### Update Systemd Support
+
+Firstly, update the systemd-related URL in [src/hint-data/manpage-url.ts](../src/hint-data/manpage-url.ts)
+Then, run the following command to fetch the docs data and detect the changes
+
+``` bash
+# There is a mechanism in the systemd docs fetch scripts for detecting changes in docs of systemd.
+# To ensure it works properly, please make sure there are no any dirty changes in the `manifests` directory 
+# before updating the hint data each time.
+git checkout -- src/hint-data/manifests; 
+git clean -f -- src/hint-data/manifests;
+
 yarn run fetch:base
+# or ./ts src/hint-data/fetch/systemd-all.ts
+```
+
+Then review the new log file in `logs` directory to check the following things:
+
+1. Does the fetch script work properly? Because the docs maybe updated in the structure. You may need to update the fetch scripts for the latest docs just like the changes on fetch scripts in this commit: <https://github.com/hangxingliu/vscode-systemd/commit/59e8aa90ff027e18a4213c6c9669e47895e9433f>
+2. Any new unit file types?
+    - If yes, then update the code like this commit: <https://github.com/hangxingliu/vscode-systemd/commit/27b4db8720b0d4f66db641f9129e626d475cb830>
+3. Any new sections?
+    - If yes, then update the code like this commit: <https://github.com/hangxingliu/vscode-systemd/commit/4e62132fae03f51619a84ac6b7371d01750791d4>
+4. Are there any directives that have been removed?
+    - If yes, please check out [the changelog in systemd repo](https://github.com/systemd/systemd/blob/main/NEWS) and generated the log file in `logs` directory that has a name like `systemd-xxxx.removed.json`.
+    - Then update the code like this commit: <https://github.com/hangxingliu/vscode-systemd/commit/dcdfc25ca0b2497b5c347f21138c6f47721cd1c1>
+5. Read the changelog from systemd and the check the log file to add more auto-completion support for values if any new just like this commit: <https://github.com/hangxingliu/vscode-systemd/commit/dcdfc25ca0b2497b5c347f21138c6f47721cd1c1>
+
+
+### Update Podman Quadlet Support
+
+``` bash
+git checkout -- src/hint-data/manifests; 
+git clean -f -- src/hint-data/manifests;
 
 # Fetching and generating hint data about Podman Quadlet
 yarn run fetch:podman
+```
 
+1. Are any new sections or file extensions added?
+  - https://github.com/hangxingliu/vscode-systemd/commit/68de80f339e4d54f574c418eb63c00afb6edb687
+  - https://github.com/hangxingliu/vscode-systemd/commit/2b7b123d05c1af3db4ee21b16fdd946a23377431
+  - https://github.com/hangxingliu/vscode-systemd/commit/525518f515c8a2313cc60316220b0dd99ef57f99
+2. Are any new directives that accepts boolean value added? Then please update `_PODMAN_BOOLEAN_DIRECTIVES` config and generate the manifest again
+
+
+### Update Mkosi Support
+
+``` bash
+git checkout -- src/hint-data/manifests; 
+git clean -f -- src/hint-data/manifests;
+
+# Fetching and generating hint data about Podman Quadlet
+yarn run fetch:mkosi
+```
+
+
+### Update Other Hint Data
+
+``` bash
 # Fetching and generating hint data about Linux Capabilities
 yarn run fetch:capabilities
 
 # Fetching and generating hint data about Linux syscalls
 yarn run fetch:syscalls
 ```
-
-## Manually Review
-
-### Podman Quadlet
-
-1. Are any new sections or file extensions added?
-  - https://github.com/hangxingliu/vscode-systemd/commit/68de80f339e4d54f574c418eb63c00afb6edb687
-  - https://github.com/hangxingliu/vscode-systemd/commit/2b7b123d05c1af3db4ee21b16fdd946a23377431
-2. Are any new directives that accepts boolean value added? Then please update `_PODMAN_BOOLEAN_DIRECTIVES` config and generate the manifest again
-
-### Mkosi
-
-
-## Update data to new systemd version
-
-- Add deprecated directives from `logs/v*-removed.json`
-- Check `logs/v*-changes.json` to update documentation in `src/hint-data/custom-value-enum`

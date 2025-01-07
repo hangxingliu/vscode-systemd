@@ -1,5 +1,17 @@
 # CHANGELOG
 
+### 3.0.0 (2025-01-xx)
+
+- Update the support to systemd v257 and podman v3.1.0
+- Add support for mkosi config files
+- Add folding range feature
+  - sections, multi-line comment, multi-line value and `#region` comments
+- Add more auto-completion for directive(setting) value.
+  - Add auto-completion support for directives that accept boolean or auto as values
+- Update file path detection for podmand `.network` file ([@marshallwp](https://github.com/marshallwp))
+- Refactor the parser for fixing issues and more editor features
+- Refactor some part of fetch scripts for comparing changes and generating diagnosis log
+
 ### 2.2.0 (2024-03-16)
 
 - Add auto-completion and signature hint support for boolean values for directives

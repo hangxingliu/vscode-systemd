@@ -1,5 +1,7 @@
 # TODO
 
+## Long time ago
+
 - [x] capabilities
     - https://man7.org/linux/man-pages/man7/capabilities.7.html
 - [x] Completion/Syntax for time spans, e.g., `OnCalendar=`, `weekly`
@@ -24,15 +26,24 @@
 - [x] Add docs about new folders (e.g., `custom-directives`)
 
 
-## 2.x
+## 3.0.0
 
+- [x] support for `BooleanOrAuto`
+- [x] Remove the old parser
+- [x] Update documents about mkosi support
+- [x] Update to Systemd v257
+
+## 3.x/4.x
+
+- [ ] Add more comments in the code to ensure this project can be easily maintained without me
+- [ ] Add some docs to eliminate user misunderstandings about `Unknown directive`
+- [ ] Specifiers in `systemd.link(5)`, `repart.d(5)`, `sysupdate.d(5)`, ...
+- [ ] New test files for `/etc/sysupdate.d/*.feature` (`sysupdate.features(5)`)
+- [ ] Add versioning support for podman quadlet
+- [ ] Add versioning support for mkosi
 - [ ] Update documents for `Asset*` directives in systemd.unit(5) for more human-readable
-- [ ] Update to Systemd 256 (e.g., `IPv4ProxyARPPrivateVLAN=`)
-
-## 3.x
-
 - [ ] Add support for `jinja2`
-- [ ] Settings for running `systemd` commands 
+- [ ] Add features that need to run `systemd` commands (start, stop, ...)
 - [ ] Lint/Test by `systemd-analyze`
-- [ ] Click and jump to unit file
-- [ ] Completion for unit file names
+- [ ] Click and go to the unit file
+- [ ] Auto-completion for unit file names

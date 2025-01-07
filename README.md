@@ -8,7 +8,7 @@ A Visual Studio Code extension to help you read and write *Systemd unit config*,
 
 ## Features
 
-- Syntax highlighting, completion and linter for the following files
+- Syntax highlighting, auto-completion, folding range and linter for the following files
   - Various systemd unit files (configuration files)
   - [mkosi](https://github.com/systemd/mkosi) configuration files
   - [Podman Quadlet](https://github.com/containers/podman) unit files
