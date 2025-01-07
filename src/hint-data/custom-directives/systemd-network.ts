@@ -3,8 +3,43 @@ import { CustomSystemdDirective } from "./types";
 
 const manPage = "systemd.network(5)";
 const url = manpageURLs.base + "systemd.network.html";
+const urlV255 = manpageURLs.historyBase(255) + "systemd.network.html";
 
 export const directives: CustomSystemdDirective[] = [
+    //
+    //#region deprecated since v256
+    {
+        name: "IPForward",
+        docs: 'Configures IP packet forwarding for the system. If enabled, incoming packets on any network interface will be forwarded to any other interfaces according to the routing table. Takes a boolean, or the values "`ipv4`" or "`ipv6`", which only enable IP packet forwarding for the specified address family. This controls the `net.ipv4.ip_forward` and `net.ipv6.conf.all.forwarding` sysctl options of the network interface (see [IP Sysctl](https://docs.kernel.org/networking/ip-sysctl.html) for details about sysctl options). Defaults to "`no`".\n\nNote: this setting controls a global kernel option, and does so one way only: if a network that has this setting enabled is set up the global setting is turned on. However, it is never turned off again, even after all networks with this setting enabled are shut down again.\n\nTo allow IP packet forwarding only between specific network interfaces use a firewall.',
+        fixHelp:
+            "`IPForward=` setting in `.network` file is deprecated and replaced with `IPv4Forwarding=` and `IPv6Forwarding=` settings. These new settings are supported both in `.network` file and `networkd.conf`. If specified in a `.network` file, they control corresponding per-link settings. If specified in networkd.conf, they control corresponding global settings. Note, previously `IPv6SendRA=` and `IPMasquerade=` implied `IPForward=`, but now they imply the new per-link settings. One of the simplest ways to migrate configurations, that worked as a router with the previous version, is enabling both `IPv4Forwarding=` and `IPv6Forwarding=` in `networkd.conf`. See systemd.network(5) and networkd.conf(5) for more details.",
+        deprecated: 256,
+        url,
+        section: "Network",
+        manPage,
+        since: 219,
+    },
+    {
+        name: "TTLPropagate",
+        docs: "Takes a boolean. When true enables TTL propagation at Label Switched Path (LSP) egress. When unset, the kernel's default will be used.",
+        fixHelp: "The implementation behind TTLPropagate= network setting has been removed and the setting is now ignored",
+        deprecated: 256,
+        section: "Route",
+        manPage,
+        since: 243,
+    },
+    {
+        name: "UseICMP6RateLimit",
+        docs: "Takes a boolean. When true, the ICMP6 rate limit received in the Router Advertisement will be set to ICMP6 rate limit based on the advertisement. Defaults to true.",
+        deprecated: 256,
+        fixURL: 'https://github.com/systemd/systemd/commit/39af486a7fdc67817652c51d9bf42ca051ed8ff2',
+        url: urlV255,
+        section: "IPv6AcceptRA",
+        manPage,
+        since: 255,
+    },
+    //#endregion deprecated since v256
+    //
     {
         name: "CriticalConnection",
         renamedTo: "KeepConfiguration",

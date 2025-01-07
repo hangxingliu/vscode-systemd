@@ -6,6 +6,19 @@ const url = manpageURLs.base + "systemd-system.conf.html";
 const section = "Manager";
 
 export const directives: CustomSystemdDirective[] = [
+    //
+    //#region deprecated since v256
+    {
+        name: "CrashReboot",
+        docs: "Configures various parameters of basic manager operation. These options may be overridden by the respective process and kernel command line arguments. See [systemd(1)](systemd.html) for details.",
+        fixHelp: "`CrashReboot=no` => `CrashAction=freeze`",
+        deprecated: 256,
+        section: "Manager",
+        manPage: "systemd-system.conf(5)",
+        since: 198,
+    },
+    //#endregion deprecated since v256
+    //
     {
         name: "ShutdownWatchdogSec",
         renamedTo: "RebootWatchdogSec",

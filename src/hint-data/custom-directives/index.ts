@@ -1,6 +1,8 @@
 import { directives as exec } from "./systemd-exec";
+import { directives as kernalCli } from "./systemd-kernal-command-line";
 import { directives as link } from "./systemd-link";
 import { directives as logind } from "./systemd-logind";
+import { directives as misc } from "./systemd-misc";
 import { directives as netdev } from "./systemd-netdev";
 import { directives as network } from "./systemd-network";
 import { directives as nspawn } from "./systemd-nspawn";
@@ -15,8 +17,10 @@ export { CustomSystemdDirective } from "./types";
 
 export const directives = {
     exec,
+    kernalCli,
     link,
     logind,
+    misc,
     netdev,
     network,
     nspawn,

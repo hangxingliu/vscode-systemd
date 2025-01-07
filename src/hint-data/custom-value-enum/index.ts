@@ -3,6 +3,7 @@ import { valueEnum as netdev } from "./systemd-netdev";
 import { valueEnum as network } from "./systemd-network";
 import { valueEnum as service } from "./systemd-service";
 import { valueEnum as socket } from "./systemd-socket";
+import { valueEnum as system } from "./systemd-system";
 import { valueEnum as unit } from "./systemd-unit";
 import { valueEnum as exec } from "./systemd-exec";
 import { valueEnum as kill } from "./systemd-kill";
@@ -18,6 +19,7 @@ export const systemdValueEnum: ReadonlyArray<SystemdValueEnum> = [
     ...netdev,
     ...network,
     ...socket,
+    ...system,
     ...kill,
     ...link,
     ...misc,

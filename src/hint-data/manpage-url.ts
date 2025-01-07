@@ -17,6 +17,8 @@ const manPageBase = {
     systemd: "https://www.freedesktop.org/software/systemd/man/latest/",
 };
 export const manpageURLs = {
+    historyBase: (version: number) => `https://www.freedesktop.org/software/systemd/man/${version}/`,
+    //
     base: "https://www.freedesktop.org/software/systemd/man/256/",
     specifiers: "https://www.freedesktop.org/software/systemd/man/256/systemd.unit.html",
     directives: "https://www.freedesktop.org/software/systemd/man/256/systemd.directives.html",

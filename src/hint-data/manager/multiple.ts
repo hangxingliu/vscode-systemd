@@ -110,17 +110,20 @@ export class HintDataManagers {
         defaults.bindValueEnum(systemdValueEnum);
         this.initManager(defaults, require("../manifests/default.json"));
 
+        this.addCustom(DirectiveCategory.default, directives.unit);
+        this.addCustom(DirectiveCategory.default, directives.resource_control);
         this.addCustom(DirectiveCategory.default, directives.exec);
+        this.addCustom(DirectiveCategory.default, directives.kernalCli);
+        this.addCustom(DirectiveCategory.default, directives.misc);
+        //
         this.addCustom(DirectiveCategory.link, directives.link);
         this.addCustom(DirectiveCategory.logind, directives.logind);
         this.addCustom(DirectiveCategory.netdev, directives.netdev);
         this.addCustom(DirectiveCategory.network, directives.network);
         this.addCustom(DirectiveCategory.nspawn, directives.nspawn);
-        this.addCustom(DirectiveCategory.default, directives.resource_control);
         this.addCustom(DirectiveCategory.service, directives.service);
         this.addCustom(DirectiveCategory.system, directives.system);
         this.addCustom(DirectiveCategory.sleep, directives.sleep);
-        this.addCustom(DirectiveCategory.default, directives.unit);
 
         const fallback = new HintDataManager(DirectiveCategory.fallback, manpageURLs.base);
         this.initManager(fallback);
