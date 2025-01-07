@@ -1,6 +1,6 @@
 import { resolve } from "path";
-import { cacheDir, manifestDir } from "../../config/fs";
-import { JsonFileWriter, SimpleHttpCache, getText } from "../../utils/crawler-utils";
+import { cacheDir, logsDir, manifestDir } from "../../config/fs";
+import { JsonFileWriter, SimpleHttpCache, getText, print } from "../../utils/crawler-utils";
 import {
     ManifestItem,
     ManifestItemForDirective,
@@ -10,9 +10,11 @@ import {
     PredefinedSignature,
 } from "../types-manifest";
 import { extractDirectiveSignature, isBooleanArgument } from "./utils/directive-signature";
-import { manpageURLs } from "../manpage-url";
+import { getVersionInfoInURL, manpageURLs } from "../manpage-url";
 import { findFirst, getTokensInSection, markdownLexer, toPlainText } from "../../utils/markdown-utils";
 import type { Token, Tokens } from "marked";
+import { CrawlerDiagnosisFile } from "../../utils/crawler-utils-diagnosis-file.js";
+import { HintDataChanges } from "./systemd-changes.js";
 
 const url = manpageURLs.mkosi;
 const targetFile = resolve(manifestDir, "mkosi.json");
@@ -23,6 +25,8 @@ main().catch((error) => {
     console.error(error.stack);
 });
 async function main() {
+    const version = getVersionInfoInURL(url);
+    const diagnosis = CrawlerDiagnosisFile.initOrGet(logsDir, `mkosi-${version.str}`);
     SimpleHttpCache.init(cacheDir);
 
     const pathnames = new URL(url).pathname.split("/");
@@ -30,6 +34,8 @@ async function main() {
     const manPageIndex = 1;
     let nextDocsId = 1;
     let nextSectionId = 1;
+
+    const prevManifest = HintDataChanges.fromFile(targetFile);
 
     const markdown = await getText("mkosi.md", url);
     const markdownTokens = markdownLexer(markdown);
@@ -83,6 +89,12 @@ async function main() {
         },
         "REQUIRED"
     );
+
+    const sectionsQueue: Array<{
+        sectionName: string;
+        sectionRefId: string;
+        tokens: Token[];
+    }> = [];
     for (let i = h2.index; i < markdownTokens.length; i++) {
         const h3 = findFirst<Tokens.Heading>(markdownTokens, {
             after: i,
@@ -92,16 +104,26 @@ async function main() {
         if (!h3) break;
 
         const h3text = h3.token.text;
+        diagnosis.write(`h3`, `${JSON.stringify(h3text)}`);
+
         const mtx = h3text.match(/^\s*\[([\w-]+)\]\s+section/i);
         if (!mtx) throw new Error(`Invalid h3 text "${h3text}"`);
 
         const [, sectionName] = mtx;
         const sectionRefId = manPageName + "#" + getLinkId(h3text || "");
 
+        const tokens = getTokensInSection(markdownTokens, h3.index);
+        diagnosis.count(`h3.tokens`, tokens);
+        sectionsQueue.push({ sectionName, sectionRefId, tokens });
+        i = h3.index - 1;
+    }
+    sectionsQueue.sort((a, b) => (a.sectionName > b.sectionName ? 1 : -1));
+
+    for (const { sectionName, sectionRefId, tokens } of sectionsQueue) {
         const sectionId = nextSectionId++;
         jsonFile.writeItem([ManifestItemType.Section, sectionId, sectionName]);
+        diagnosis.write(`section`, sectionName + " " + sectionRefId);
 
-        const tokens = getTokensInSection(markdownTokens, h3.index);
         const isDirectiveToken = (token: Token): token is Tokens.Paragraph =>
             token.type === "paragraph" && token.raw.startsWith("`");
 
@@ -146,14 +168,31 @@ async function main() {
                 ]);
             }
         }
+        diagnosis.count(`allDocs`, allDocs);
+        diagnosis.count(`allDirectives`, allDirectives);
+
         allDirectives.sort((a, b) => (a[1] > b[1] ? 1 : -1));
         jsonFile.writeItems(allDocs);
         jsonFile.writeItems(allDirectives);
-
-        i = h3.index - 1;
     }
 
-    jsonFile.close();
+    await jsonFile.close();
+
+    const r = HintDataChanges.getChanges(prevManifest, HintDataChanges.fromFile(jsonFile.filePath));
+    if (r.logs.length > 0) {
+        diagnosis.writeHeader(`change info`);
+        r.logs.forEach((it) => diagnosis.write(it.type, it.explain));
+    }
+    if (r.newSections.length > 0) r.newSections.forEach((it) => diagnosis.write(`new-section`, it));
+
+    diagnosis.writeHeader(`overview`);
+    diagnosis.count(`removed directives`, r.removed.length);
+    diagnosis.count(`added directives`, r.added);
+    diagnosis.count(`changed directives`, r.changed);
+    diagnosis.count(`new sections`, r.newSections);
+    print.info(
+        `removed = ${r.removed.length}; added = ${r.added}; changed = ${r.changed}; new-sections = ${r.newSections.length}`
+    );
     return;
 
     function getLinkId(text: string) {

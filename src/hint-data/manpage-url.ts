@@ -35,13 +35,15 @@ export const manpageURLs = {
 } as const;
 
 type VersionInfo = { str: string; asInt?: number };
-export function getVersionInfoInURL(url: `${string}/man/${string}`): VersionInfo;
+export function getVersionInfoInURL(url: `${string}/man/${string}` | `${string}/mkosi/${string}`): VersionInfo;
 export function getVersionInfoInURL(url?: string): VersionInfo | undefined;
 export function getVersionInfoInURL(url?: string): VersionInfo | undefined {
     // systemd
     let mtx = (url || "").match(/\/man\/(\d+|latest|devel)/i);
     // podman
     if (!mtx) mtx = (url || "").match(/\/(?:[\w\-]+)\/(v\d+\.\d+\.\d+|latest)\//i);
+    // mkosi
+    if (!mtx) mtx = (url || "").match(/\/systemd\/mkosi\/(main|[0-9a-f]{7})/i);
     if (!mtx) return;
     let str = mtx[1];
     let asInt: number | undefined = parseInt(str, 10);
