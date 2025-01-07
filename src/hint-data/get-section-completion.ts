@@ -35,6 +35,7 @@ import {
     scopeSections,
     allPodmanSections,
     iocostSections,
+    mkosiSections,
 } from "../syntax/common/section-names";
 
 const fileTypeToSections = new Map<SystemdFileType, SectionsDefinition>([
@@ -80,6 +81,8 @@ const fileTypeToSections = new Map<SystemdFileType, SectionsDefinition>([
     [SystemdFileType.podman_pod, podmanSections.Pod],
     [SystemdFileType.podman_image, podmanSections.Image],
     [SystemdFileType.podman_build, podmanSections.Build],
+    //
+    [SystemdFileType.mkosi, mkosiSections],
 ]);
 
 export function getSectionCompletionItems(fileType: SystemdFileType, enabledPodman: boolean) {

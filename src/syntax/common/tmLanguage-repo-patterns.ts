@@ -1,5 +1,5 @@
 import { scopes } from "./tmLanguage-scopes";
-import { allSections, mkosiSections } from "./section-names";
+import { allMkosiSections, allSections } from "./section-names";
 import type { TextMateGrammarPattern, TextMateGrammarPatterns } from "../base/tmLanguage-types";
 import { capabilityNamesRegExp } from "./capabilities";
 import { getOrderedSectionNames } from "../base/utils-sections";
@@ -73,7 +73,7 @@ export const allRepositories = {
     mkosiSections: {
         patterns: [
             {
-                match: "^\\s*\\[(" + getOrderedSectionNames(mkosiSections).join("|") + ")\\]",
+                match: "^\\s*\\[(" + getOrderedSectionNames(allMkosiSections).join("|") + ")\\]",
                 name: scopes.entityName.section,
             },
             {

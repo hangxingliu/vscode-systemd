@@ -107,3 +107,4 @@ words:
   - homectl
   - sysfsattr
   - udev
+  - devel

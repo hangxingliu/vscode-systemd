@@ -294,4 +294,20 @@ export const allSections: Sections = Array.from(
     new Set([...defaultSections, ...internalSections, ...allPodmanSections])
 );
 
-export const mkosiSections: Sections = ["Match", "Config", "Distribution", "Output", "Content", "Validation", "Host"];
+export const mkosiSections: Sections = [
+    "Config",
+    "Content",
+    "Distribution",
+    "Match",
+    "Host", // it has been removed in 2025
+    "Output",
+    "Validation",
+];
+
+/** haven't released */
+export const mkosiSectionsDevel: Sections = ["Include", "Runtime", "UKIProfile", "Build"];
+export const mkosiSectionsInOldVersion: Sections = [];
+
+export const allMkosiSections: Sections = Array.from(
+    new Set([...mkosiSections, ...mkosiSectionsDevel, ...mkosiSectionsInOldVersion])
+);

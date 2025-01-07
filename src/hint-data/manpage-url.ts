@@ -27,9 +27,8 @@ export const manpageURLs = {
     podman: "https://docs.podman.io/en/latest/markdown/podman-systemd.unit.5.html",
     podmanBase: "https://docs.podman.io/en/latest/markdown/",
     //
-    // mkosi: "https://raw.githubusercontent.com/systemd/mkosi/main/mkosi/resources/man/mkosi.1.md", //
-    mkosi: "https://raw.githubusercontent.com/systemd/mkosi/b67d9048ddabc1257efaf32a93381238672fdd6f/mkosi/resources/man/mkosi.1.md", // 2024-01-08
-    // mkosi: "https://raw.githubusercontent.com/systemd/mkosi/2d8ea594b1b44777f90b03e82f370ac604ff1482/mkosi/resources/mkosi.md", // 2024-09-29
+    // mkosi: "https://raw.githubusercontent.com/systemd/mkosi/b67d9048ddabc1257efaf32a93381238672fdd6f/mkosi/resources/man/mkosi.1.md", // 2024-01-08 (latest)
+    mkosi: "https://raw.githubusercontent.com/systemd/mkosi/v24.3/mkosi/resources/mkosi.md", // 2024-07-30
     mkosiBase: "https://github.com/systemd/mkosi/blob/main/mkosi/resources/man/",
     //
     capabilities: "https://man7.org/linux/man-pages/man7/capabilities.7.html",
@@ -45,10 +44,10 @@ export function getVersionInfoInURL(url?: string): VersionInfo | undefined {
     // podman
     if (!mtx) mtx = (url || "").match(/\/(?:[\w\-]+)\/(v\d+\.\d+\.\d+|latest)\//i);
     // mkosi
-    if (!mtx) mtx = (url || "").match(/\/systemd\/mkosi\/(main|[0-9a-f]{7})/i);
+    if (!mtx) mtx = (url || "").match(/\/systemd\/mkosi\/(main|[0-9a-f]{7}|v[\d\.]+)/i);
     if (!mtx) return;
     let str = mtx[1];
-    let asInt: number | undefined = parseInt(str, 10);
+    let asInt: number | undefined = str.match(/^\d+$/) ? parseInt(str, 10) : undefined;
     if (!Number.isSafeInteger(asInt)) asInt = undefined;
     else if (!str.startsWith("v")) str = `v${str}`;
     return { str, asInt };

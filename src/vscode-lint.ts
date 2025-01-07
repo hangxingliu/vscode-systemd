@@ -113,6 +113,10 @@ export class SystemdLint implements CodeActionProvider {
         const fileType = this.documents.getType(document);
 
         const mkosi = isMkosiFile(fileType);
+        // disable linting mkosi settings due to their settings are changing frequently
+        // linting them can produce many meaningless warnings
+        if (mkosi) return;
+
         const opts: CommonOptions = { mkosi };
         const { tokens } = tokenizer(document.getText(), opts);
         const dirs = getDirectivesFromTokens(tokens);
