@@ -29,6 +29,14 @@ code --install-extension hangxingliu.vscode-systemd-support
 code --install-extension vscode-systemd-support-${version}.vsix
 ```
 
+### Nightly Builds
+
+Nightly builds can be found and downloaded in Github Actions page 
+(Click any successful workflow run and the extension file is located in the **Artifacts** pane):
+<https://github.com/hangxingliu/vscode-systemd/actions/workflows/ci.yaml>
+
+![How to download nightly builds](docs/images/download-nightly-builds.jpg)
+
 ## Changelog
 
 ### 2.2.0 (2024-03-16)

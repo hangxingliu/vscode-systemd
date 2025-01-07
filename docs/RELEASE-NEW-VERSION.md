@@ -1,5 +1,5 @@
 ---
-date: 2024-03-16
+date: 2025-01-06
 ---
 # Release New Version SOP
 
@@ -21,11 +21,6 @@ date: 2024-03-16
 10. Release vsix file to Open VSX
     - URL: <https://open-vsx.org/user-settings/extensions>
     - **ONLY** Publish vsix file built through CI from: [github-ci]
-
-## Update data to new systemd version
-
-- Add deprecated directives from `logs/v*-removed.json`
-- Check `logs/v*-changes.json` to update documentation in `src/hint-data/custom-value-enum`
 
 ## Test extension in Visual Studio Code Web
 

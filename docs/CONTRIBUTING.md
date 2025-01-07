@@ -1,5 +1,5 @@
 ---
-date: 2025-01-01
+date: 2025-01-06
 ---
 # Contributing
 
@@ -30,7 +30,8 @@ date: 2025-01-01
       + manager                 managers for loading and searching hint-data
       + manifest                contains generated hint-data manifest json files
     + lint                  contains some linting rules and source code of linting process 
-    + parser                a simple parser for systemd configuration file
+    + parser-v2             a parser for systemd unit file, mkosi file and podman quadlet unit files
+    + parser                old parser source code
     + syntax                systemd configuration grammar files (tmLanguage) and its generator
       - systemd.tmLanguage
       - generate-tmLanguage.ts
@@ -129,21 +130,8 @@ yarn build:ts && yarn build build:syntax
 
 ### Update hint data to the latest version
 
-``` bash
-yarn build:ts
-
-# Fetching and generating hint data for basic systemd directives
-yarn run fetch:base
-
-# Fetching and generating hint data about Podman Quadlet
-yarn run fetch:podman
-
-# Fetching and generating hint data about Linux Capabilities
-yarn run fetch:capabilities
-
-# Fetching and generating hint data about Linux syscalls
-yarn run fetch:syscalls
-```
+Please check out the document [UPDATE-HINT-DATA.md](UPDATE-HINT-DATA.md) for more information about
+how to update all hint data (systemd documents, directives, ...) to the latest and the relevant SOP.
 
 ### Add new section names
 
