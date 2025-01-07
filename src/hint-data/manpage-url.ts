@@ -30,7 +30,26 @@ export const manpageURLs = {
     //
     capabilities: "https://man7.org/linux/man-pages/man7/capabilities.7.html",
     capabilitiesBase: "https://man7.org/linux/man-pages/man7/",
-};
+} as const;
+
+type VersionInfo = { str: string; asInt?: number };
+export function getVersionInfoInURL(url: `${string}/man/${string}`): VersionInfo;
+export function getVersionInfoInURL(url?: string): VersionInfo | undefined;
+export function getVersionInfoInURL(url?: string): VersionInfo | undefined {
+    // systemd
+    let mtx = (url || "").match(/\/man\/(\d+|latest|devel)/i);
+    // podman
+    if (!mtx) mtx = (url || "").match(/\/(?:[\w\-]+)\/(v\d+\.\d+\.\d+|latest)\//i);
+    if (!mtx) return;
+    let str = mtx[1];
+    let asInt: number | undefined = parseInt(str, 10);
+    if (!Number.isSafeInteger(asInt)) asInt = undefined;
+    else if (!str.startsWith("v")) str = `v${str}`;
+    return { str, asInt };
+}
+export function getVersionStrInURL(url?: string): string {
+    return getVersionInfoInURL(url)?.str || "unknown";
+}
 
 export function getManPageURL(name: `${string}(${number})`, base?: ManPageBase): string;
 export function getManPageURL(name: string, base?: ManPageBase): string | undefined;

@@ -41,20 +41,16 @@ async function main() {
     SimpleHttpCache.init(cacheDir);
     enableHTMLSupportedInMarkdown();
 
+    // network-online.target, ....
     await fetchSpecialUtils();
 
-    let verstr: string | undefined;
-    let version: number | undefined;
-    const mtx = manpageURLs.base.match(/\/man\/(\d+|latest)/i);
-    if (mtx) {
-        verstr = mtx[1];
-        version = parseInt(verstr, 10);
-        if (!Number.isSafeInteger(version)) version = undefined;
-    }
+    const systemdVersion = getVersionInfoInURL(manpageURLs.base);
 
+    // %a, %A, ...
     const specifiers = await fetchSpecifiersList();
     print.info(`found ${specifiers.length} specifiers`);
 
+    // get a list of directive to the further fetch
     const { total, directives, manPages } = await fetchDirectivesList();
     print.info(`found ${directives.size} directives (total=${total}) and ${manPages.length} man pages`);
 
@@ -81,22 +77,22 @@ async function main() {
         writer.nextIds = manPageResult.nextIds;
     }
     await defaultWriter.close();
-    const { logs, removed } = defaultWriter.getChanges(version);
+    const { logs, removed } = defaultWriter.getChanges(systemdVersion.asInt);
     if (logs.length > 0) logs.push("\n\n");
 
     for (const [name, writer] of nameToWriter) {
         if (writer.nextIds.docs === 1 || writer.nextIds.sections === 1) print.warn(`No any manifest in ${name}`);
         await writer.close();
 
-        const r = writer.getChanges(version);
+        const r = writer.getChanges(systemdVersion.asInt);
         if (r.logs.length > 0) r.logs.push("\n\n");
         logs.push(...r.logs);
         removed.push(...r.removed);
     }
 
     if (!existsSync(logsDir)) mkdirSync(logsDir);
-    const logFile = resolve(logsDir, `v${verstr}-changes.log`);
-    const logFile2 = resolve(logsDir, `v${verstr}-removed.json`);
+    const logFile = resolve(logsDir, `v${systemdVersion.str}-changes.log`);
+    const logFile2 = resolve(logsDir, `v${systemdVersion.str}-removed.json`);
     writeFileSync(logFile, logs.join("\n"));
     writeFileSync(logFile2, JSON.stringify(removed, null, 2));
     print.info(logFile);
