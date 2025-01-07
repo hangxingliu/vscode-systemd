@@ -37,6 +37,7 @@ const fileTypeToDirectives = new Map<SystemdFileType, DirectiveCategory>([
     [SystemdFileType.sleep, DirectiveCategory.sleep],
     [SystemdFileType.system, DirectiveCategory.system],
     [SystemdFileType.sysupdated, DirectiveCategory.sysupdated],
+    [SystemdFileType.sysupdate_features, DirectiveCategory.sysupdate_features],
     [SystemdFileType.timesyncd, DirectiveCategory.timesyncd],
     // podman
     [SystemdFileType.podman_container, DirectiveCategory.podman],

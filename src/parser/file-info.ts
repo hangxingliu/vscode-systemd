@@ -74,6 +74,11 @@ export const enum SystemdFileType {
     system = 30,
     /** https://www.freedesktop.org/software/systemd/man/latest/iocost.conf.html */
     iocost = 31,
+    /**
+     * @since v257
+     * https://www.freedesktop.org/software/systemd/man/latest/sysupdate.features.html
+     */
+    sysupdate_features = 32,
     //
     //
     //
@@ -138,6 +143,7 @@ export const systemdFileTypeNames: { [type in SystemdFileType]: string } = {
     [SystemdFileType.coredump]: "coredump.conf - Core dump storage configuration files",
     [SystemdFileType.system]: "systemd-system.conf - System and session service manager configuration files",
     [SystemdFileType.iocost]: "iocost.conf - iocost solution manager configuration files",
+    [SystemdFileType.sysupdate_features]: "sysupdate.features — Definition Files for Optional Features",
     //
     [SystemdFileType.mkosi]: "mkosi.conf - Build Bespoke OS Images",
     //
@@ -165,6 +171,7 @@ const fileExtToType = new Map<string, SystemdFileType>([
     ["netdev", SystemdFileType.netdev],
     ["scope", SystemdFileType.scope],
     ["slice", SystemdFileType.slice],
+    ["feature", SystemdFileType.sysupdate_features],
     // ["network", SystemdFileType.network],
     ["container", SystemdFileType.podman_container],
     ["pod", SystemdFileType.podman_pod],

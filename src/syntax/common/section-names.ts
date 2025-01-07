@@ -66,6 +66,8 @@ export const internalSections: Sections = [
 
 /** sysupdate.d/*.conf */
 export const sysupdatedSections: Sections = ["Transfer", "Source"];
+/** sysupdate.d/*.feature */
+export const sysupdateFeatureSections: Sections = ["Feature"];
 /** resolved.conf, esolved.conf.d/*.conf */
 export const resolvedSections: Sections = ["Resolve"];
 /** repart.d/*.conf */
@@ -247,6 +249,7 @@ export const defaultSections: Sections = Array.from(
         ...commonSections,
         //
         ...sysupdatedSections,
+        ...sysupdateFeatureSections,
         ...resolvedSections,
         ...repartdSections,
         ...pstoreSections,

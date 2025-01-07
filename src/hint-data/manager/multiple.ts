@@ -96,6 +96,7 @@ export class HintDataManagers {
         this.initFromItems(DirectiveCategory.swap, require("../manifests/swap.json"));
         this.initFromItems(DirectiveCategory.system, require("../manifests/system.json"));
         this.initFromItems(DirectiveCategory.sysupdated, require("../manifests/sysupdated.json"));
+        this.initFromItems(DirectiveCategory.sysupdate_features, require("../manifests/sysupdate_features.json"));
         this.initFromItems(DirectiveCategory.timer, require("../manifests/timer.json"));
         this.initFromItems(DirectiveCategory.timesyncd, require("../manifests/timesyncd.json"));
 

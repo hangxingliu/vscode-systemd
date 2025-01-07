@@ -34,16 +34,17 @@ export const enum DirectiveCategory {
     sleep = 24,
     system = 25,
     sysupdated = 26,
-    timesyncd = 27,
+    sysupdate_features = 27,
+    timesyncd = 28,
     //#region todo
-    crypttab = 28,
-    veritytab = 29,
-    fstab = 30,
+    crypttab = 29,
+    veritytab = 30,
+    fstab = 31,
     //#endregion todo
-    mkosi = 31,
+    mkosi = 32,
     //
-    default = 32,
-    fallback = 33,
+    default = 33,
+    fallback = 34,
 }
 
 export type ManPageInfo = {

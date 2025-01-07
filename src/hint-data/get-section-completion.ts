@@ -29,6 +29,7 @@ import {
     repartdSections,
     systemManagerSections,
     sysupdatedSections,
+    sysupdateFeatureSections,
     timesyncdSections,
     journalUploadSections,
     scopeSections,
@@ -68,6 +69,7 @@ const fileTypeToSections = new Map<SystemdFileType, SectionsDefinition>([
     [SystemdFileType.sleep, sleepSections],
     [SystemdFileType.system, systemManagerSections],
     [SystemdFileType.sysupdated, sysupdatedSections],
+    [SystemdFileType.sysupdate_features, sysupdateFeatureSections],
     [SystemdFileType.timesyncd, timesyncdSections],
     [SystemdFileType.iocost, iocostSections],
     //

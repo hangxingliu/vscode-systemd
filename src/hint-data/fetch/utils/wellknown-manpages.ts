@@ -54,4 +54,9 @@ export const wellknownManPages = {
     repartd: 'repart.d(5)',
     /** Transfer Definition Files for Automatic Updates */
     sysupdated: 'sysupdate.d(5)',
+    /**
+     * @since v257
+     * Definition Files for Optional Features
+     */
+    sysupdate_features: 'sysupdate.features(5)',
 } as const;

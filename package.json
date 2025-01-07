@@ -82,7 +82,8 @@
                     "**/systemd/*.conf",
                     "**/systemd/*.conf.d/*.conf",
                     "**/*.{service,slice,scope}.d/*.conf",
-                    "**/{repart,sysupdate}.d/*.conf"
+                    "**/{repart,sysupdate}.d/*.conf",
+                    "**/sysupdate.d/*.feature"
                 ],
                 "extensions": [
                     ".container",
@@ -142,10 +143,10 @@
                             "number",
                             "string"
                         ],
-                        "default": "latest",
+                        "default": 257,
                         "examples": [
-                            255,
-                            "v255",
+                            256,
+                            "v257",
                             "latest"
                         ],
                         "scope": "machine-overridable",

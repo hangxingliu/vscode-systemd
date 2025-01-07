@@ -12,13 +12,20 @@ export const filenamePatterns = [
     "**/systemd/*.conf.d/*.conf",
     "**/*.{service,slice,scope}.d/*.conf",
     "**/{repart,sysupdate}.d/*.conf",
+    "**/sysupdate.d/*.feature",
 ];
 
 export const jinja2extensions = [
     // `.in` is used in `systemd` repository (2024-02)
     {
         append: ".in",
-        for: ["**/systemd/*.conf", "**/*.{service,slice,scope}.d/*.conf", "**/{repart,sysupdate}.d/*.conf", ".service"],
+        for: [
+            "**/systemd/*.conf",
+            "**/*.{service,slice,scope}.d/*.conf",
+            "**/{repart,sysupdate}.d/*.conf",
+            "**/sysupdate.d/*.feature",
+            ".service",
+        ],
     },
     // https://jinja.palletsprojects.com/en/3.1.x/templates/#template-file-extension
     ".jinja",
