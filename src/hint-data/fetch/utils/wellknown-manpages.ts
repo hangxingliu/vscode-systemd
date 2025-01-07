@@ -54,4 +54,4 @@ export const wellknownManPages = {
     repartd: 'repart.d(5)',
     /** Transfer Definition Files for Automatic Updates */
     sysupdated: 'sysupdate.d(5)',
-};
+} as const;

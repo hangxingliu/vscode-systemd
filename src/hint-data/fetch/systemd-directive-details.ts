@@ -27,6 +27,7 @@ import {
 } from "./utils/directive-signature";
 import { similarSections } from "../../syntax/common/section-names";
 import { extractSectionNameFromDocs } from "./utils/section-names";
+import { CrawlerDiagnosisFile } from "../../utils/crawler-utils-diagnosis-file.js";
 
 const ignoredH2Sections: string[] = [
     "Commands",
@@ -53,6 +54,8 @@ export async function fetchDirectiveDetailsFromManPage(
     manPage: RawManPageInfo & { manPageURL: string },
     nextIds: { docs: number; sections: number }
 ) {
+    const diagnosis = CrawlerDiagnosisFile.get(true);
+
     // const manPageURL = resolveURL(manpageURLs.directives, pageUri);
     const { id: manPageId, pageName, pageUri, manPageURL } = manPage;
     const debugName = `man page "${pageName}"`;
@@ -89,13 +92,18 @@ export async function fetchDirectiveDetailsFromManPage(
     for (const h2 of $h2List) {
         const $h2 = $(h2);
         const h2text = getText($h2);
-        if (ignoredH2Sections.includes(h2text)) continue;
-        if (ignoredH2Sections.includes(`${h2text}\n${pageName}`)) continue;
+        const ignore = ignoredH2Sections.includes(h2text) || ignoredH2Sections.includes(`${h2text}\n${pageName}`);
+        if (ignore) {
+            diagnosis.write("man-page-h2", `[IGNORE] ${JSON.stringify(h2text)} ${JSON.stringify(pageName)}`);
+            continue;
+        }
 
-        // print.debug(h2text);
         const sectionName = extractSectionNameFromDocs(h2text, pageName);
+        diagnosis.write("man-page-h2", `${JSON.stringify(h2text)} ${JSON.stringify(pageName)}`);
+
         let sectionIndex: number | null = null;
         if (sectionName) {
+            diagnosis.write(`section-name`, sectionName);
             if (prevSection.name === sectionName) {
                 sectionIndex = prevSection.index;
             } else {
@@ -116,7 +124,9 @@ export async function fetchDirectiveDetailsFromManPage(
             dtList.push([dt, sectionIndex, sectionName]);
         }
     }
+    diagnosis.count(`dtList`, dtList);
 
+    let directiveCount = 0;
     const duplicate = new DuplicateChecker();
     for (const [dt, sectionIndex, sectionName] of dtList) {
         const $dt = $(dt);
@@ -163,6 +173,7 @@ export async function fetchDirectiveDetailsFromManPage(
             }
 
             duplicate.check(directive.name + (sectionName ? `in [${sectionName}]` : ""));
+            directiveCount++;
             pushResult([
                 ManifestItemType.Directive,
                 directive.name,
@@ -173,6 +184,7 @@ export async function fetchDirectiveDetailsFromManPage(
             ]);
         }
     }
+    diagnosis.count("directives", directiveCount);
     if (duplicate.hasDuplicate()) throw new Error(`Duplicate items in the page "${manPageURL}"`);
 
     result.directives.sort((a, b) => (a[1] > b[1] ? 1 : -1));

@@ -4,6 +4,7 @@
 // license:  MIT
 // version:  2024-03-17
 //
+/* eslint-disable class-methods-use-this */
 import axios, { AxiosResponse } from "axios";
 import { load, CheerioAPI, Cheerio } from "cheerio";
 import type { Element } from "domhandler";
@@ -15,6 +16,7 @@ import { resolve as resolvePath } from "path";
 import { deepStrictEqual } from "assert";
 import { existsSync, mkdirSync, readFileSync, writeFileSync, createWriteStream, WriteStream, appendFileSync } from "fs";
 import type * as TurndownType from "turndown";
+import { CrawlerDiagnosisFile } from "./crawler-utils-diagnosis-file.js";
 
 //
 //#region terminal style
@@ -28,6 +30,12 @@ export const cyan = (str: unknown) => `\x1b[36m${str}\x1b[39m`;
 export const green = (str: unknown) => `\x1b[32m${str}\x1b[39m`;
 export const yellow = (str: unknown) => `\x1b[33m${str}\x1b[39m`;
 export const red = (str: unknown) => `\x1b[31m${str}\x1b[39m`;
+/** @see https://github.com/chalk/ansi-regex/blob/main/index.js */
+const ansiRegexPattern = [
+    "[\\u001B\\u009B][[\\]()#;?]*(?:(?:(?:(?:;[-a-zA-Z\\d\\/#&.:=?%@~_]+)*|[a-zA-Z\\d]+(?:;[-a-zA-Z\\d\\/#&.:=?%@~_]*)*)?\\u0007)",
+    "(?:(?:\\d{1,4}(?:;\\d{0,4})*)?[\\dA-PR-TZcf-nq-uy=><~]))",
+].join("|");
+export const ANSI_REGEXP_ALL = new RegExp(ansiRegexPattern, "g");
 //#endregion terminal style
 //
 
@@ -55,6 +63,7 @@ class DiagnosticCollector {
         this.stack.pop();
     }
     warn(msg: string) {
+        CrawlerDiagnosisFile.get(false)?.write("warn", msg.replace(ANSI_REGEXP_ALL, ''));
         this.warnings.push(msg);
     }
 }
@@ -150,7 +159,7 @@ export function assert<T>(name: string, actual: unknown, expected: T): asserts a
     }
     try {
         deepStrictEqual(actual, expected);
-    } catch (error) {
+    } catch {
         let errMsg = `${bold(name)} should be equal to\n  ${JSON.stringify(expected)}\n`;
         errMsg += `But the actual value is\n  ${JSON.stringify(actual)}`;
         throw new Error(errMsg);
@@ -259,6 +268,12 @@ let httpsAgent: HttpsAgent;
 export async function getText(name: string, url: string, context?: string): Promise<string> {
     if (!httpsAgent) httpsAgent = getHttpsAgent();
 
+    const diagnosis = CrawlerDiagnosisFile.get(false);
+    if (diagnosis) {
+        diagnosis.write("fetch-name", name);
+        diagnosis.write("fetch-url", url);
+    }
+
     print.debug(`Getting http resource ${bold(name)} from ${underline(url)} ...`);
     const cache = SimpleHttpCache.instance?.get(url, context);
     if (cache) return cache.toString("utf-8");
@@ -306,6 +321,20 @@ export function debugElements(elements: Cheerio<Element>, baseName = "elements")
     const info = getElementsInfo(elements, baseName);
     if (info.length === 0) console.log(`elements.length = 0`);
     info.forEach((it) => console.log(it));
+}
+export function diagnosisElements(elements: Cheerio<Element>, dumpText?: boolean) {
+    const diagnosis = CrawlerDiagnosisFile.get(false);
+    if (!diagnosis) return elements;
+    for (let i = 0, i2 = elements.length; i < i2; i++) {
+        const el = elements[i];
+        let log = `${el.tagName || ""}`;
+        const { id, class: _class } = el.attribs;
+        if (id) log += `#${id.match(/\s/) ? JSON.stringify(id) : id}`;
+        if (_class) log += `.${_class}`.replace(/\s+/g, ".");
+        if (dumpText) log += ` ${JSON.stringify(elements.eq(i).text())}`;
+        diagnosis.write("element", log);
+    }
+    return elements;
 }
 
 export type OptionsForMatchingElements = {

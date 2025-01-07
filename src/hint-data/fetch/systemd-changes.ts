@@ -8,6 +8,7 @@ import {
     isManifestItemForSection,
     isManifestItemForSpecifier,
 } from "../types-manifest";
+import { print } from "../../utils/crawler-utils.js";
 
 type ManPageInfo = {
     title: string;
@@ -106,17 +107,20 @@ export class HintDataChanges {
         return new HintDataChanges(items);
     }
     static getChanges(from: HintDataChanges, to: HintDataChanges, version?: number) {
-        const logs1: string[] = [];
-        const logs2: string[] = [];
+        type LogType = { type: "ADDED" | "REMOVED" | "CHANGED" | "CHANGED-SIGNATURE"; explain: string };
+        let added = 0;
+        let changed = 0;
+        const logs1: LogType[] = [];
+        const logs2: LogType[] = [];
         const resolvedTo: boolean[] = [];
         const removed: CustomSystemdDirective[] = [];
-        if (from.directives.length === 0) return { logs: logs1, removed };
+        if (from.directives.length === 0) return { logs: logs1, removed, added, changed };
 
-        const createLogs = (directive: Directive, type: string) => {
-            let log = `${type}: ${directive.name}`;
-            if (directive.section) log += ` [${directive.section}]`;
-            log += ` ${directive.manPage}`;
-            return log;
+        const createLogs = (directive: Directive, type: LogType["type"]) => {
+            let explain = `${directive.name}`;
+            if (directive.section) explain += `  [${directive.section}]`;
+            explain += ` ${directive.manPage}`;
+            return { type, explain };
         };
 
         for (const dir of from.directives) {
@@ -138,12 +142,16 @@ export class HintDataChanges {
             resolvedTo[index] = true;
 
             const dir2 = to.directives[index];
+            if (dir.since !== dir2.since) print.warn(`The since version of directive "${dir.name}" has changed!!!`);
+
             if (dir.docs !== dir2.docs) {
                 logs2.push(createLogs(dir, "CHANGED"));
+                changed++;
                 continue;
             }
             if (JSON.stringify(dir.signatures) !== JSON.stringify(dir2.signatures)) {
-                logs2.push(createLogs(dir, "CHANGED(SIGNATURE)"));
+                logs2.push(createLogs(dir, "CHANGED-SIGNATURE"));
+                changed++;
                 continue;
             }
         }
@@ -151,10 +159,13 @@ export class HintDataChanges {
         for (let i = 0; i < to.directives.length; i++) {
             if (resolvedTo[i]) continue;
             logs1.push(createLogs(to.directives[i], "ADDED"));
+            added++;
         }
         return {
             logs: [...logs1, ...logs2],
             removed,
+            added,
+            changed,
         };
     }
 }

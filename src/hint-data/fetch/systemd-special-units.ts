@@ -2,8 +2,8 @@
 
 import type { Cheerio } from "cheerio";
 import type { Element } from "domhandler";
-import { cacheDir, manifestDir } from "../../config/fs";
-import { manpageURLs } from "../manpage-url";
+import { cacheDir, logsDir, manifestDir } from "../../config/fs";
+import { getVersionStrInURL, manpageURLs } from "../manpage-url";
 import {
     print,
     SimpleHttpCache,
@@ -18,6 +18,7 @@ import { ManifestItemForSpecialUnit, ManifestItemType } from "../types-manifest"
 import { resolve } from "path";
 import { existsSync, mkdirSync } from "fs";
 import { extractVersionInfoFromMarkdown } from "./utils/directive-signature";
+import { CrawlerDiagnosisFile } from "../../utils/crawler-utils-diagnosis-file.js";
 
 class ManifestWriter extends JsonFileWriter<ManifestItemForSpecialUnit> {
     constructor(name: string) {
@@ -37,6 +38,10 @@ export async function main() {
     SimpleHttpCache.init(cacheDir);
     enableHTMLSupportedInMarkdown();
 
+    const diagnosis = CrawlerDiagnosisFile.initOrGet(
+        logsDir,
+        `systemd-${getVersionStrInURL(manpageURLs.specialUnits)}`
+    );
     const $ = await getHTMLDoc("special-units", manpageURLs.specialUnits);
     print.start("fetching all special units");
 
@@ -47,6 +52,8 @@ export async function main() {
 
     // 2024-03: length = 77
     const allDT = assertLength("dt", $(matchedH2).parent().find("dl.variablelist > dt"), ">=77");
+    diagnosis.anchor();
+    diagnosis.count('allDT', allDT);
     // console.log(allDT.length);
 
     let count = 0;
@@ -63,6 +70,7 @@ export async function main() {
         const v = extractVersionInfoFromMarkdown(_names, help);
         help = v.markdown;
 
+        diagnosis.write('special-unit', `${name}`);
         jsonFile.writeItem([ManifestItemType.SpecialUnit, name, help, v.version]);
     }
     jsonFile.close();

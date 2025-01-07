@@ -9,8 +9,10 @@ import {
     print,
 } from "../../utils/crawler-utils";
 import { ManifestItemForSpecifier, ManifestItemType } from "../types-manifest";
+import { CrawlerDiagnosisFile } from "../../utils/crawler-utils-diagnosis-file.js";
 
 export async function fetchSpecifiersList() {
+    const diagnosis = CrawlerDiagnosisFile.get(true);
     const $ = await getHTMLDoc("specifiers docs", manpageURLs.specifiers);
 
     print.start("processing specifiers document");
@@ -33,6 +35,7 @@ export async function fetchSpecifiersList() {
 
         const meaning = $td.eq(1).text();
         const markdown = getMarkdownHelpFromElement($td.eq(2));
+        diagnosis.write("specifier", mtx[1]);
         result.push([ManifestItemType.Specifier, mtx[1], meaning, markdown]);
     }
     return result;

@@ -2,12 +2,14 @@ import { manpageURLs } from "../manpage-url";
 import {
     AssertLevel,
     assertLength,
+    diagnosisElements,
     findElements,
     getHTMLDoc,
     matchElementsByText,
     print,
 } from "../../utils/crawler-utils";
 import { MapList } from "../../utils/data-types";
+import { CrawlerDiagnosisFile } from "../../utils/crawler-utils-diagnosis-file.js";
 
 const directiveHeadings: string[] = [
     // Name
@@ -53,17 +55,20 @@ export async function fetchDirectivesList() {
     let total = 0;
     const manPages: RawManPageInfo[] = [];
     const directives = new MapList<RawDirectiveLink>();
+    const diagnosis = CrawlerDiagnosisFile.get(true);
 
     const $ = await getHTMLDoc("directives docs", manpageURLs.directives);
     print.start("extracting all directives");
 
     const allH2 = findElements($, "h2", ">=24");
     assertLength("all <h2>", allH2, 26, AssertLevel.WARNING);
+    diagnosisElements(allH2);
 
     const directivesH2 = matchElementsByText(allH2, directiveHeadings, {});
     for (const h2 of directivesH2) {
         const $h2 = $(h2);
         const h2Name = $h2.text().trim();
+        // console.log('>>>', h2Name)
 
         const dtArray = findElements($h2.parent(), "dl.variablelist > dt", ">1", `h2"${h2Name}"`).toArray();
         for (const dt of dtArray) {
@@ -75,12 +80,19 @@ export async function fetchDirectivesList() {
             const $term = findElements($dt, "span.term", "==1", baseName);
             const termText = $term.text().trim();
 
-            if (!termText.match(/^([\w\s\$\%\{\}\-\.\+"']+)=?$/)) throw new Error(`Invalid term text "${termText}"`);
+            // Examples:
+            // Encrypt=
+            // ID_NET_NAME_ALLOW_sysfsattr=BOOL   (Actually the sys)
+            // udev.conf.*
+            if (!termText.match(/^([\w\s\$\%\{\}\-\.\+"']+)=?(?:BOOL)?$/) && !termText.match(/^([\w\.\*]+)/))
+                throw new Error(`Invalid term text "${termText}"`);
             // it is not a directive
             if (termText.indexOf("=") < 0) continue;
-            if (!termText.endsWith("=")) throw new Error(`Invalid term text "${termText}"`);
 
-            const directiveName = termText.slice(0, -1);
+            const termReplaceable = $term.find(".replaceable");
+            if (termReplaceable.length > 0) print.warn(`"${termText}" has ".replaceable" text`);
+
+            const directiveName = termText.slice(0, termText.indexOf("="));
             const $linkContainer = $dt.next("dd");
             assertLength(`${baseName}.next(dd)`, $linkContainer, "==1");
 
@@ -103,7 +115,7 @@ export async function fetchDirectivesList() {
                 if (manPage) {
                     manPage.directiveNames.push(directiveName);
                 } else {
-                    manPage = { id: manPages.length + 1, pageUri, pageName, directiveNames: [directiveName] };
+                    manPage = { id: 0, pageUri, pageName, directiveNames: [directiveName] };
                     manPages.push(manPage);
                 }
                 directives.push(directiveName, { directiveName, pageId: manPage.id });
@@ -111,6 +123,20 @@ export async function fetchDirectivesList() {
             }
         }
     }
+    manPages.sort((a, b) => a.pageName.localeCompare(b.pageName));
+    manPages.forEach((it, index) => it.id = index + 1);
 
+    diagnosis.count("directives", directives);
+    diagnosis.count("manPages", manPages);
+    for (const manPage of manPages) {
+        diagnosis.write(
+            "man-page",
+            JSON.stringify({
+                name: manPage.pageName,
+                uri: manPage.pageUri,
+                directives: manPage.directiveNames.length,
+            })
+        );
+    }
     return { total, directives, manPages };
 }
