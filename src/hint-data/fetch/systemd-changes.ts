@@ -110,11 +110,18 @@ export class HintDataChanges {
         type LogType = { type: "ADDED" | "REMOVED" | "CHANGED" | "CHANGED-SIGNATURE"; explain: string };
         let added = 0;
         let changed = 0;
-        const logs1: LogType[] = [];
-        const logs2: LogType[] = [];
+        const appendLogs: LogType[] = [];
         const resolvedTo: boolean[] = [];
         const removed: CustomSystemdDirective[] = [];
-        if (from.directives.length === 0) return { logs: logs1, removed, added, changed };
+        const newSections: string[] = [];
+        const result = {
+            logs: [] as LogType[],
+            removed,
+            added,
+            changed,
+            newSections,
+        };
+        if (from.directives.length === 0) return result;
 
         const createLogs = (directive: Directive, type: LogType["type"]) => {
             let explain = `${directive.name}`;
@@ -123,12 +130,19 @@ export class HintDataChanges {
             return { type, explain };
         };
 
+        for (const section of to.sections) {
+            if (!section) continue;
+            const oldSection = from.sections.find(it => it && it.name === section.name);
+            if (oldSection) continue;
+            newSections.push(section.name);
+        }
+
         for (const dir of from.directives) {
             const index = to.directives.findIndex(
                 (it) => dir.name === it.name && dir.manPage === it.manPage && dir.section === it.section
             );
             if (index < 0) {
-                logs1.push(createLogs(dir, "REMOVED"));
+                result.logs.push(createLogs(dir, "REMOVED"));
                 removed.push({
                     name: dir.name,
                     docs: dir.docs,
@@ -150,12 +164,12 @@ export class HintDataChanges {
                 );
 
             if (dir.docs !== dir2.docs) {
-                logs2.push(createLogs(dir, "CHANGED"));
+                appendLogs.push(createLogs(dir, "CHANGED"));
                 changed++;
                 continue;
             }
             if (JSON.stringify(dir.signatures) !== JSON.stringify(dir2.signatures)) {
-                logs2.push(createLogs(dir, "CHANGED-SIGNATURE"));
+                appendLogs.push(createLogs(dir, "CHANGED-SIGNATURE"));
                 changed++;
                 continue;
             }
@@ -163,14 +177,10 @@ export class HintDataChanges {
 
         for (let i = 0; i < to.directives.length; i++) {
             if (resolvedTo[i]) continue;
-            logs1.push(createLogs(to.directives[i], "ADDED"));
+            result.logs.push(createLogs(to.directives[i], "ADDED"));
             added++;
         }
-        return {
-            logs: [...logs1, ...logs2],
-            removed,
-            added,
-            changed,
-        };
+        result.logs.push(...appendLogs);
+        return result;
     }
 }

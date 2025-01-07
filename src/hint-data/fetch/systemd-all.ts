@@ -85,35 +85,44 @@ async function main() {
     const removed = r.removed;
     let added = r.added;
     let changed = r.changed;
-    if (r.logs.length > 0) {
-        diagnosis.writeHeader('change info (default)')
-        r.logs.forEach(it => diagnosis.write(it.type, it.explain));
-    }
+    let newSections = r.newSections.length;
+    printChangeInfo("default", r);
 
     for (const [name, writer] of nameToWriter) {
-        if (writer.nextIds.docs === 1 || writer.nextIds.sections === 1) print.warn(`No any manifest in ${name}`);
+        const noAnyDirectives = writer.nextIds.docs === 1 || writer.nextIds.sections === 1;
+        if (noAnyDirectives) print.warn(`No any manifest in ${name}`);
         await writer.close();
 
+        // Systemd removed `pstore.conf.html` from their website since v257
+        if (noAnyDirectives && name === "pstore.conf(5)") continue;
+
         const r = writer.getChanges(systemdVersion.asInt);
-        if (r.logs.length > 0) {
-            diagnosis.writeHeader(`change info (${name})`)
-            r.logs.forEach(it => diagnosis.write(it.type, it.explain));
-        }
+        printChangeInfo(name, r);
         added += r.added;
         changed += r.changed;
+        newSections += r.newSections.length;
         removed.push(...r.removed);
     }
 
-    diagnosis.writeHeader(`overview`)
+    diagnosis.writeHeader(`overview`);
     diagnosis.count(`removed directives`, removed.length);
     diagnosis.count(`added directives`, added);
     diagnosis.count(`changed directives`, changed);
-    print.info(`removed = ${removed.length}; added = ${added}; changed = ${changed}`);
+    diagnosis.count(`new sections`, newSections);
+    print.info(`removed = ${removed.length}; added = ${added}; changed = ${changed}; new-sections = ${newSections}`);
 
-    const removeInfoFileName = diagnosis.fileName.replace(/\.[\w-]+$/, '-removed.json');
+    const removeInfoFileName = diagnosis.fileName.replace(/\.[\w-]+$/, "-removed.json");
     const removeInfoFilePath = resolve(logsDir, removeInfoFileName);
     writeFileSync(removeInfoFilePath, JSON.stringify(removed, null, 2));
 
     print.info(diagnosis.filePath);
     print.info(removeInfoFilePath);
+
+    function printChangeInfo(pageName: string, r: ReturnType<ManifestWriter["getChanges"]>) {
+        if (r.logs.length > 0) {
+            diagnosis.writeHeader(`change info (${pageName})`);
+            r.logs.forEach((it) => diagnosis.write(it.type, it.explain));
+        }
+        if (r.newSections.length > 0) r.newSections.forEach((it) => diagnosis.write(`new-section`, it));
+    }
 }
