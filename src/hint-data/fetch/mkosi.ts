@@ -38,7 +38,7 @@ async function main() {
     const prevManifest = HintDataChanges.fromFile(targetFile);
 
     const markdown = await getText("mkosi.md", url);
-    const markdownTokens = markdownLexer(markdown);
+    const markdownTokens = markdownLexer(markdown, { gfm: true });
     jsonFile = new JsonFileWriter<ManifestItem>(targetFile);
     jsonFile.writeItem([
         ManifestItemType.ManPageInfo,
@@ -106,7 +106,7 @@ async function main() {
         const h3text = h3.token.text;
         diagnosis.write(`h3`, `${JSON.stringify(h3text)}`);
 
-        const mtx = h3text.match(/^\s*\[([\w-]+)\]\s+section/i);
+        const mtx = h3text.match(/^\s*\[([\w-]+)\](\s+section|\s*$)/i);
         if (!mtx) throw new Error(`Invalid h3 text "${h3text}"`);
 
         const [, sectionName] = mtx;
@@ -133,12 +133,20 @@ async function main() {
             const directiveToken = tokens[j];
             if (!isDirectiveToken(directiveToken)) continue;
 
-            const title = toPlainText(directiveToken.tokens || []);
+            let title = toPlainText(directiveToken.tokens || []);
+            const _docs: string[] = [];
+            const match = title.match(/\s+:\s+/);
+
+            if (match) {
+                const docsInSameToken = title.slice(match.index! + match[0].length);
+                title = title.slice(0, match.index!);
+                _docs.push(docsInSameToken);
+                // console.log(title, _docs);
+            }
             const signs = extractDirectiveSignature(title);
             // const directives = title.split(/,\s*/).filter((it) => !/^(?:--|-\w$)/.test(it));
             // console.log(directives);
 
-            const _docs: string[] = [];
             while (++j < tokens.length) {
                 if (isDirectiveToken(tokens[j])) break;
                 _docs.push(tokens[j].raw);
