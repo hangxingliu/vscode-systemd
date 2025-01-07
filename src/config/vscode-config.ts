@@ -23,8 +23,11 @@ export const all: VSCodeConfigs<AllRuntimeConfigs, typeof vscodeConfigNS> = {
     "systemd.version": {
         title: "Systemd version",
         type: ["number", "string"],
-        default: "latest",
-        examples: [255, "v255", "latest"],
+        /**
+         * Because this extension may include some directives from developing version of systemd, setting the default value to "latest" may provide some unavailable directives to users.
+         */
+        default: 257,
+        examples: [256, "v257", "latest"],
         scope: ConfigScope.machineOverridable,
         markdownDescription:
             "By adjusting this configuration, the extension will exclusively offer " +

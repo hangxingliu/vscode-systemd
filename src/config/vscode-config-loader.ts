@@ -106,7 +106,7 @@ export class ExtensionConfig extends EventEmitter<ReloadedConfigEvent> implement
             if (key.startsWith("/")) {
                 try {
                     customDirectiveRegexps.push(parseRegExp(key));
-                } catch (error) {
+                } catch {
                     window.showErrorMessage(`Systemd: Invalid regular expression "${key}" in configurations"`);
                 }
             } else {
