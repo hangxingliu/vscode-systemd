@@ -3,8 +3,31 @@ import { CustomSystemdDirective } from "./types";
 
 const manPage = "kernel-command-line(7)";
 const urlV255 = manpageURLs.historyBase(255) + "systemd.unit.html";
+const urlV256 = manpageURLs.historyBase(256) + "systemd.unit.html";
 
 export const directives: CustomSystemdDirective[] = [
+    //
+    //#region deprecated since v257
+    {
+        name: "rd.systemd.image_policy",
+        docs: "When GPT-based partition auto-discovery is used, configures the image dissection policy string to apply, as per [systemd.image-policy(7)](systemd.image-policy.html). For details see [systemd-gpt-auto-generator(8)](systemd-gpt-auto-generator.html).",
+        url: urlV256,
+        deprecated: 257,
+        section: "",
+        manPage,
+        since: 254,
+    },
+    {
+        name: "systemd.verity.root_options",
+        docs: "Configures the integrity protection root hash for the root and `/usr` file systems, and other related parameters. For details, see [systemd-veritysetup-generator(8)](systemd-veritysetup-generator.html).",
+        url: urlV256,
+        deprecated: 257,
+        section: "",
+        manPage,
+        since: 233,
+    },
+    //#endregion deprecated since v257
+    //
     {
         name: "net.naming-scheme",
         docs: "Parameters understood by the device event managing daemon. For details, see [systemd-udevd.service(8)](systemd-udevd.service.html).",

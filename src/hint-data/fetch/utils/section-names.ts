@@ -37,6 +37,7 @@ const defaultSectionNameForOptions = new Map([
  * @returns sectionName or `undefined`
  */
 export function extractSectionNameFromDocs(h2text: string, pageName: string) {
+    h2text = h2text.trim().replace(/\s+/g, ' ');
     const mtx = h2text.match(/^(.*?)\[([^\]]+)\](.+)$/);
     if (mtx) {
         const sectionName = mtx[2];
@@ -53,4 +54,7 @@ export function extractSectionNameFromDocs(h2text: string, pageName: string) {
 
     // patch 2
     if (pageName === "systemd.exec(5)") return SectionGroupName.Execution;
+
+    // patch 3 (they split sections since systemd v257)
+    if (pageName === "systemd-system.conf(5)") return "Manager";
 }

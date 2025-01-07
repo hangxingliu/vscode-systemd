@@ -1,0 +1,12 @@
+[
+[3,62,"sysupdate.features(5)","sysupdate.features — Definition Files for Optional Features","sysupdate.features.html"],
+[6,1,"Feature"],
+[4,1,"A short human readable description of this feature. This may be used as a label for this feature, so the string should meaningfully identify the feature among the features available in `sysupdate.d/`.","#Description=",257],
+[4,2,"A user-presentable URL to documentation about this feature. This setting supports specifier expansion; see below for details on supported specifiers.","#Documentation=",257],
+[4,3,"A URL to an [AppStream catalog](https://www.freedesktop.org/software/appstream/docs/chap-CatalogData.html) XML file. This may be used by software centers (such as GNOME Software or KDE Discover) to present rich metadata about this feature. This includes display names, chagnelogs, icons, and more. This setting supports specifier expansion; see below for details on supported specifiers.","#AppStream=",257],
+[4,4,"Whether or not this feature is enabled. If unspecified, the feature is disabled by default.","#Enabled=",257],
+[2,"AppStream",[],3,62,1],
+[2,"Description",[],1,62,1],
+[2,"Documentation",[],2,62,1],
+[2,"Enabled",[],4,62,1]
+]

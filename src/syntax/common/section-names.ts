@@ -100,8 +100,11 @@ export const networkdSections: Sections = [
     "DHCPv6",
     //#region since v256
     "DHCPServer",
-    "IPv6AcceptRA"
+    "IPv6AcceptRA",
     //#endregion since v256
+    //#region since v257
+    "IPv6AddressLabel",
+    //#endregion since v257
 ];
 /** coredump.conf, coredump.conf.d/*.conf */
 export const coredumpSections: Sections = ["Coredump"];
@@ -168,6 +171,10 @@ export const netdevSections: Sections = [
     "WireGuard",
     "WireGuardPeer",
     "Xfrm",
+    //#region since v257
+    "ClassfulMultiQueueing",
+    "BandMultiQueueing",
+    //#endregion since v257
 ];
 /** *.network */
 export const networkSections: Sections = [

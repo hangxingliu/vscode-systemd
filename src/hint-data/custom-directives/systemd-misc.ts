@@ -4,6 +4,20 @@ import { CustomSystemdDirective } from "./types";
 const urlV255 = manpageURLs.historyBase(255) + "systemd.unit.html";
 
 export const directives: CustomSystemdDirective[] = [
+    //
+    //#region deprecated since v257
+    {
+        name: "rd.systemd.image_policy",
+        docs: "Takes an image dissection policy string as argument (as per [systemd.image-policy(7)](systemd.image-policy.html)), and allows enforcing a policy on dissection and use of the automatically discovered GPT partition table entries.",
+        fixHelp: "The option with the `rd.` prefix is not implemented, the image policy is not applied in the initrd.",
+        fixURL: "https://github.com/systemd/systemd/commit/61cf8472e7ad47f127ce37f7a619bf929fc796ef",
+        deprecated: 257,
+        section: "",
+        manPage: "systemd-gpt-auto-generator(8)",
+        since: 254,
+    },
+    //#endregion deprecated since v257
+    //
     {
         name: "systemd.battery-check",
         docs: "Takes a boolean. If specified with false, **systemd-battery-check** command will return immediately with exit status 0 without checking battery capacity and AC power existence, and the service `systemd-battery-check.service` will succeed. This may be useful when the command wrongly detects and reports battery capacity percentage or AC power existence, or when you want to boot the system forcibly.",

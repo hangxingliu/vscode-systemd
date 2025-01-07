@@ -19,10 +19,10 @@ const manPageBase = {
 export const manpageURLs = {
     historyBase: (version: number) => `https://www.freedesktop.org/software/systemd/man/${version}/`,
     //
-    base: "https://www.freedesktop.org/software/systemd/man/256/",
-    specifiers: "https://www.freedesktop.org/software/systemd/man/256/systemd.unit.html",
-    directives: "https://www.freedesktop.org/software/systemd/man/256/systemd.directives.html",
-    specialUnits: "https://www.freedesktop.org/software/systemd/man/256/systemd.special.html",
+    base: "https://www.freedesktop.org/software/systemd/man/257/",
+    specifiers: "https://www.freedesktop.org/software/systemd/man/257/systemd.unit.html",
+    directives: "https://www.freedesktop.org/software/systemd/man/257/systemd.directives.html",
+    specialUnits: "https://www.freedesktop.org/software/systemd/man/257/systemd.special.html",
     //
     podman: "https://docs.podman.io/en/latest/markdown/podman-systemd.unit.5.html",
     podmanBase: "https://docs.podman.io/en/latest/markdown/",
