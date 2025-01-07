@@ -133,6 +133,11 @@ export class SystemdLint implements CodeActionProvider {
             //#region lint by name
             if (directiveNameLC.startsWith("x-")) return;
             if (directiveNameLC.startsWith("-")) return;
+            // temporary patch for dynamic directive names:
+            // ID_NET_NAME_ALLOW_${sysfsattr}=BOOL
+            // systemd.tty.columns.${tty}=
+            if (directiveName.startsWith('ID_NET_NAME_ALLOW_')) return;
+            if (directiveName.startsWith('systemd.tty.')) return;
             if (customDirectiveKeys.indexOf(directiveName) >= 0) return;
             if (customDirectiveRegexps.findIndex((it) => it.test(directiveName)) >= 0) return;
             //#endregion lint by name
