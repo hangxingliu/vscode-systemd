@@ -104,3 +104,6 @@ words:
   - bhyve # software name
   - Virtuozzo  # company name
   - Tomoyo     # kernal module
+  - homectl
+  - sysfsattr
+  - udev

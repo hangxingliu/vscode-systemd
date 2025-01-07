@@ -114,7 +114,7 @@ export class HintDataManagers {
         this.addCustom(DirectiveCategory.default, directives.unit);
         this.addCustom(DirectiveCategory.default, directives.resource_control);
         this.addCustom(DirectiveCategory.default, directives.exec);
-        this.addCustom(DirectiveCategory.default, directives.kernalCli);
+        this.addCustom(DirectiveCategory.default, directives.kernelCli);
         this.addCustom(DirectiveCategory.default, directives.misc);
         //
         this.addCustom(DirectiveCategory.link, directives.link);

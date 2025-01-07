@@ -1,5 +1,5 @@
 import { directives as exec } from "./systemd-exec";
-import { directives as kernalCli } from "./systemd-kernal-command-line";
+import { directives as kernelCli } from "./systemd-kernel-command-line";
 import { directives as link } from "./systemd-link";
 import { directives as logind } from "./systemd-logind";
 import { directives as misc } from "./systemd-misc";
@@ -17,7 +17,7 @@ export { CustomSystemdDirective } from "./types";
 
 export const directives = {
     exec,
-    kernalCli,
+    kernelCli,
     link,
     logind,
     misc,
