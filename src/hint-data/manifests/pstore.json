@@ -1,8 +1,8 @@
 [
-[3,60,"pstore.conf(5)","pstore.conf, pstore.conf.d — PStore configuration file","pstore.conf.html"],
+[3,15,"pstore.conf(5)","pstore.conf, pstore.conf.d — PStore configuration file","pstore.conf.html"],
 [6,1,"PStore"],
 [4,1,"Controls where to archive (i.e. copy) files from the pstore filesystem. One of \"`none`\", \"`external`\", and \"`journal`\". When \"`none`\", the tool exits without processing files in the pstore filesystem. When \"`external`\" (the default), files are archived into `/var/lib/systemd/pstore/`, and logged into the journal. When \"`journal`\", pstore file contents are logged only in the journal.","#Storage=",243],
 [4,2,"Controls whether or not files are removed from pstore after processing. Takes a boolean value. When true, a pstore file is removed from the pstore once it has been archived (either to disk or into the journal). When false, processing of pstore files occurs normally, but the files remain in the pstore. The default is true in order to maintain the pstore in a nearly empty state, so that the pstore has storage available for the next kernel error event.","#Unlink=",243],
-[2,"Storage",[],1,60,1],
-[2,"Unlink","b",2,60,1]
+[2,"Storage",[],1,15,1],
+[2,"Unlink","b",2,15,1]
 ]

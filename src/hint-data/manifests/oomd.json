@@ -1,10 +1,10 @@
 [
-[3,56,"oomd.conf(5)","oomd.conf, oomd.conf.d — Global systemd-oomd configuration files","oomd.conf.html"],
+[3,11,"oomd.conf(5)","oomd.conf, oomd.conf.d — Global systemd-oomd configuration files","oomd.conf.html"],
 [6,1,"OOM"],
 [4,1,"Sets the limit for memory and swap usage on the system before **systemd-oomd** will take action. If the fraction of memory used and the fraction of swap used on the system are both more than what is defined here, **systemd-oomd** will act on eligible descendant control groups with swap usage greater than 5% of total swap, starting from the ones with the highest swap usage. Which control groups are monitored and what action gets taken depends on what the unit has configured for `ManagedOOMSwap=`. Takes a value specified in percent (when suffixed with \"%\"), permille (\"‰\") or permyriad (\"‱\"), between 0% and 100%, inclusive. Defaults to 90%.","#SwapUsedLimit=",247],
 [4,2,"Sets the limit for memory pressure on the unit's control group before **systemd-oomd** will take action. A unit can override this value with `ManagedOOMMemoryPressureLimit=`. The memory pressure for this property represents the fraction of time in a 10 second window in which all tasks in the control group were delayed. For each monitored control group, if the memory pressure on that control group exceeds the limit set for longer than the duration set by `DefaultMemoryPressureDurationSec=`, **systemd-oomd** will act on eligible descendant control groups, starting from the ones with the most reclaim activity to the least reclaim activity. Which control groups are monitored and what action gets taken depends on what the unit has configured for `ManagedOOMMemoryPressure=`. Takes a fraction specified in the same way as `SwapUsedLimit=` above. Defaults to 60%.","#DefaultMemoryPressureLimit=",247],
 [4,3,"Sets the amount of time a unit's control group needs to have exceeded memory pressure limits before **systemd-oomd** will take action. Memory pressure limits are defined by `DefaultMemoryPressureLimit=` and `ManagedOOMMemoryPressureLimit=`. Must be set to 0, or at least 1 second. Defaults to 30 seconds when unset or 0.","#DefaultMemoryPressureDurationSec=",248],
-[2,"DefaultMemoryPressureDurationSec",[],3,56,1],
-[2,"DefaultMemoryPressureLimit",[],2,56,1],
-[2,"SwapUsedLimit",[],1,56,1]
+[2,"DefaultMemoryPressureDurationSec",[],3,11,1],
+[2,"DefaultMemoryPressureLimit",[],2,11,1],
+[2,"SwapUsedLimit",[],1,11,1]
 ]

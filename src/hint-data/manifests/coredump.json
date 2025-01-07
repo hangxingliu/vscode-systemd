@@ -1,16 +1,16 @@
 [
-[3,55,"coredump.conf(5)","coredump.conf, coredump.conf.d — Core dump storage configuration files","coredump.conf.html"],
+[3,1,"coredump.conf(5)","coredump.conf, coredump.conf.d — Core dump storage configuration files","coredump.conf.html"],
 [6,1,"Coredump"],
 [4,1,"Controls where to store cores. One of \"`none`\", \"`external`\", and \"`journal`\". When \"`none`\", the core dumps may be logged (including the backtrace if possible), but not stored permanently. When \"`external`\" (the default), cores will be stored in `/var/lib/systemd/coredump/`. When \"`journal`\", cores will be stored in the journal and rotated following normal journal rotation patterns.\n\nWhen cores are stored in the journal, they might be compressed following journal compression settings, see [journald.conf(5)](journald.conf.html). When cores are stored externally, they will be compressed by default, see below.\n\nNote that in order to process a coredump (i.e. extract a stack trace) the core must be written to disk first. Thus, unless `ProcessSizeMax=` is set to 0 (see below), the core will be written to `/var/lib/systemd/coredump/` either way (under a temporary filename, or even in an unlinked file), `Storage=` thus only controls whether to leave it there even after it was processed.","#Storage=",215],
 [4,2,"Controls compression for external storage. Takes a boolean argument, which defaults to \"`yes`\".","#Compress=",215],
 [4,3,"The maximum size in bytes of a core which will be processed. Core dumps exceeding this size may be stored, but the stack trace will not be generated. Like other sizes in this same config file, the usual suffixes to the base of 1024 are allowed (B, K, M, G, T, P, and E). Defaults to 1G on 32-bit systems, 32G on 64-bit systems.\n\nSetting `Storage=none` and `ProcessSizeMax=0` disables all coredump handling except for a log entry.","#ProcessSizeMax=",215],
 [4,4,"The maximum (compressed or uncompressed) size in bytes of a coredump to be saved in separate files on disk (default: 1G on 32-bit systems, 32G on 64-bit systems) or in the journal (default: 767M). Note that the journal service enforces a hard limit on journal log records of 767M, and will ignore larger submitted log records. Hence, `JournalSizeMax=` may be lowered relative to the default, but not increased. Unit suffixes are allowed just as in `ProcessSizeMax=`.\n\n`ExternalSizeMax=infinity` sets the core size to unlimited.","#ExternalSizeMax=",215],
 [4,5,"Enforce limits on the disk space, specified in bytes, taken up by externally stored core dumps. Unit suffixes are allowed just as in `ProcessSizeMax=`. `MaxUse=` makes sure that old core dumps are removed as soon as the total disk space taken up by core dumps grows beyond this limit (defaults to 10% of the total disk size). `KeepFree=` controls how much disk space to keep free at least (defaults to 15% of the total disk size). Note that the disk space used by core dumps might temporarily exceed these limits while core dumps are processed. Note that old core dumps are also removed based on time via [systemd-tmpfiles(8)](systemd-tmpfiles.html). Set either value to 0 to turn off size-based cleanup.","#MaxUse=",215],
-[2,"Compress","b",2,55,1],
-[2,"ExternalSizeMax",[],4,55,1],
-[2,"JournalSizeMax",[],4,55,1],
-[2,"KeepFree",[],5,55,1],
-[2,"MaxUse",[],5,55,1],
-[2,"ProcessSizeMax",[],3,55,1],
-[2,"Storage",[],1,55,1]
+[2,"Compress","b",2,1,1],
+[2,"ExternalSizeMax",[],4,1,1],
+[2,"JournalSizeMax",[],4,1,1],
+[2,"KeepFree",[],5,1,1],
+[2,"MaxUse",[],5,1,1],
+[2,"ProcessSizeMax",[],3,1,1],
+[2,"Storage",[],1,1,1]
 ]
