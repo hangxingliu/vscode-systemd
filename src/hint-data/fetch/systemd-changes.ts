@@ -108,8 +108,6 @@ export class HintDataChanges {
     }
     static getChanges(from: HintDataChanges, to: HintDataChanges, version?: number) {
         type LogType = { type: "ADDED" | "REMOVED" | "CHANGED" | "CHANGED-SIGNATURE"; explain: string };
-        let added = 0;
-        let changed = 0;
         const appendLogs: LogType[] = [];
         const resolvedTo: boolean[] = [];
         const removed: CustomSystemdDirective[] = [];
@@ -117,11 +115,10 @@ export class HintDataChanges {
         const result = {
             logs: [] as LogType[],
             removed,
-            added,
-            changed,
+            added: 0,
+            changed: 0,
             newSections,
         };
-        if (from.directives.length === 0) return result;
 
         const createLogs = (directive: Directive, type: LogType["type"]) => {
             let explain = `${directive.name}`;
@@ -137,6 +134,7 @@ export class HintDataChanges {
             newSections.push(section.name);
         }
 
+        if (from.directives.length === 0) return result;
         for (const dir of from.directives) {
             const index = to.directives.findIndex(
                 (it) => dir.name === it.name && dir.manPage === it.manPage && dir.section === it.section
@@ -165,12 +163,12 @@ export class HintDataChanges {
 
             if (dir.docs !== dir2.docs) {
                 appendLogs.push(createLogs(dir, "CHANGED"));
-                changed++;
+                result.changed++;
                 continue;
             }
             if (JSON.stringify(dir.signatures) !== JSON.stringify(dir2.signatures)) {
                 appendLogs.push(createLogs(dir, "CHANGED-SIGNATURE"));
-                changed++;
+                result.changed++;
                 continue;
             }
         }
@@ -178,7 +176,7 @@ export class HintDataChanges {
         for (let i = 0; i < to.directives.length; i++) {
             if (resolvedTo[i]) continue;
             result.logs.push(createLogs(to.directives[i], "ADDED"));
-            added++;
+            result.added++;
         }
         result.logs.push(...appendLogs);
         return result;
