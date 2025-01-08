@@ -15,10 +15,12 @@ VSCE_EXTRA_ARGS=( --no-yarn ); # VSCE doesn't yarn v2
 #
 # template: vsce.sh
 #   author: hangxingliu
-#  version: 2025-01-06
+#  version: 2025-01-08
+#     desc: A script for bundling extension file and publishing to the marketplace
 #
 throw() { echo -e "fatal: $1" >&2; exit 1; }
-execute() { echo "$ $*"; "$@" || throw "Failed to execute '$1'"; }
+print_cmd() { printf "\$ %s\n" "$*"; }
+execute() { print_cmd "$@"; "$@" || throw "Failed to execute '$1'"; }
 gotodir() { pushd -- "$1" >/dev/null || throw "failed to go to '$1'"; }
 goback() { popd >/dev/null || throw "failed to execute 'popd'"; }
 has_function() { [[ "$(type -t "$1")" == "function" ]]; }
@@ -31,6 +33,12 @@ TEMP_INFO_FILE="${PROJECT_DIR}/.vsce-show.log";
 VSCE="$(command -v vsce)";
 [ -z "$VSCE" ] && VSCE="${PROJECT_DIR}/node_modules/.bin/vsce";
 [ -x "$VSCE" ] || throw "vsce is not installed!";
+
+# open-vsx.org
+# https://github.com/eclipse/openvsx/wiki/Publishing-Extensions
+OVSX="$(command -v ovsx)";
+[ -z "$OVSX" ] && OVSX="${PROJECT_DIR}/node_modules/.bin/ovsx";
+[ -x "$OVSX" ] || OVSX="";
 
 command -v awk >/dev/null || throw "awk is not installed!";
 command -v node >/dev/null || throw "Node.js is not installed!";
@@ -65,13 +73,22 @@ dump_pkg_fields() {
     printf -- "- PKG_ID: ${CYAN}%s${RESET}\n" "$PKG_ID";
     printf -- "- PKG: ${CYAN}%s${RESET}\n" "$PKG_FULL_NAME";
 }
+# shellcheck disable=SC2120
 get_upstream_version() {
+    local mode="$1";
     [ -f "$TEMP_INFO_FILE" ] && execute rm -- "$TEMP_INFO_FILE";
-    echo "$ $VSCE show $PKG_ID";
-    "$VSCE" show "$PKG_ID" | tee "$TEMP_INFO_FILE";
+    if [ "$mode" == ovsx ]; then
+        echo "$ $OVSX get --metadata $PKG_ID";
+        "$OVSX" get --metadata "$PKG_ID" > "$TEMP_INFO_FILE";
+        UPSTREAM_VERSION="$(
+            awk '/"version":/ {gsub(/[",]/, "", $2); print $2;exit;}' "$TEMP_INFO_FILE")";
+    else
+        echo "$ $VSCE show $PKG_ID";
+        "$VSCE" show "$PKG_ID" | tee "$TEMP_INFO_FILE";
+        UPSTREAM_VERSION="$(
+            awk '/Version:/ {print $2;exit;}' "$TEMP_INFO_FILE")";
+    fi
 
-    UPSTREAM_VERSION="$(
-        awk '/Version:/ {print $2;exit;}' "$TEMP_INFO_FILE")";
     printf -- "- LATEST_VERSION: ${CYAN}%s${RESET}\n" "$UPSTREAM_VERSION";
 }
 
@@ -122,11 +139,12 @@ do_build_vsix() {
 }
 
 do_publish() {
+    mode="$1";
     gotodir "$PROJECT_DIR";
 
     init_pkg_fields;
     dump_pkg_fields publish;
-    get_upstream_version;
+    get_upstream_version "$mode";
     if [ "$UPSTREAM_VERSION" == "$PKG_VERSION" ]; then
         echo "+ failed: the version '$PKG_VERSION' has been already published";
         return 1;
@@ -134,19 +152,50 @@ do_publish() {
 
     has_function "PREBUILD" && PREBUILD;
 
-    export VSCE_PAT="$VSCE_PAT"
-    execute "$VSCE" verify-pat "$PKG_PUBLISHER";
-    execute "$VSCE" publish --yarn "${@}" "$PKG_VERSION";
-    printf "+ published ${CYAN}%s${RESET}\n" "$PKG_FULL_NAME";
+    if [ "$mode" == ovsx ]; then
+        # https://github.com/eclipse/openvsx/wiki/Publishing-Extensions;
+        local vsix_file
+        vsix_file="${ARTIFACT_DIR}/${PKG_FULL_NAME}.vsix";
+        [ -f "$vsix_file" ] || throw "The vsix file $vsix_file is missing";
+
+        [ -n "$OVSX_PAT" ] || throw "The required \$OVSX_PAT env variable is missing";
+
+        print_cmd "$OVSX" verify-pat -p '****' "$PKG_PUBLISHER";
+        "$OVSX" verify-pat -p "$OVSX_PAT" "$PKG_PUBLISHER" || throw "Invalid OVSX_PAT";
+
+        print_cmd "$OVSX" publish "$vsix_file" -p '****';
+        "$OVSX" publish "$vsix_file" -p "$OVSX_PAT" || throw "Failed to publish to open-vsx.org";
+    else
+        export VSCE_PAT="$VSCE_PAT"
+        execute "$VSCE" verify-pat "$PKG_PUBLISHER";
+        execute "$VSCE" publish --yarn "${@}" "$PKG_VERSION";
+        printf "+ published ${CYAN}%s${RESET}\n" "$PKG_FULL_NAME";
+    fi
+}
+
+do_get_upstream() {
+    gotodir "$PROJECT_DIR";
+
+    init_pkg_fields;
+    dump_pkg_fields publish;
+    get_upstream_version;
+    [ -n "$OVSX" ] && get_upstream_version ovsx;
 }
 
 case "$1" in
     publish)
         shift;
-        do_publish "${@}";;
+        do_publish vsce "${@}";;
+    publish-ovsx)
+        shift;
+        do_build_vsix;
+        do_publish ovsx "${@}";;
     vsix|build-vsix-and-list)
         shift;
         do_build_vsix "${@}";;
+    get)
+        shift;
+        do_get_upstream;;
     --)
         shift;
         execute "$VSCE" "${@}";;

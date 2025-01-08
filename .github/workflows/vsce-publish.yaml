@@ -7,9 +7,15 @@ jobs:
     runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4
-      - name: Install and build
-        run: corepack enable && yarn install yarn run build
-      - name: Publish VS Code extension
+      - name: Install
+        run: corepack enable && yarn install
+      - name: Install Tools for open-vsx.org
+        run: yarn add ovsx --optional
+      - name: Publish Extension to open-vsx.org
+        env:
+          OVSX_PAT: ${{ secrets.OVSX_PAT }}
+        run: bash scripts/vsce.sh publish-ovsx
+      - name: Publish Extension to Visual Studio Code Marketplace
         env:
           VSCE_PAT: ${{ secrets.VSCE_PAT }}
         run: bash scripts/vsce.sh publish
