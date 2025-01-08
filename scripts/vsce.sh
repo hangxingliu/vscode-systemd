@@ -15,7 +15,7 @@ VSCE_EXTRA_ARGS=( --no-yarn ); # VSCE doesn't yarn v2
 #
 # template: vsce.sh
 #   author: hangxingliu
-#  version: 2025-01-08
+#  version: 2025-01-09
 #     desc: A script for bundling extension file and publishing to the marketplace
 #
 throw() { echo -e "fatal: $1" >&2; exit 1; }
@@ -140,6 +140,7 @@ do_build_vsix() {
 
 do_publish() {
     mode="$1";
+    shift;
     gotodir "$PROJECT_DIR";
 
     init_pkg_fields;

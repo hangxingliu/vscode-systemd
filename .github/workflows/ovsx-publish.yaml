@@ -1,0 +1,18 @@
+name: publish-vscode-extension-to-open-vsx
+on:
+  # Only publish vscode extension manually
+  workflow_dispatch:
+jobs:
+  publish:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install
+        run: corepack enable && yarn install
+      - name: Install Tools for open-vsx.org
+        run: yarn add ovsx --optional
+      - name: Publish Extension to open-vsx.org
+        env:
+          OVSX_PAT: ${{ secrets.OVSX_PAT }}
+        run: bash scripts/vsce.sh publish-ovsx
+

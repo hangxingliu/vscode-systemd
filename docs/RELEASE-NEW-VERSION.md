@@ -1,5 +1,5 @@
 ---
-date: 2025-01-06
+date: 2025-01-09
 ---
 # Release New Version SOP
 
@@ -12,15 +12,13 @@ date: 2025-01-06
     2. Visual Studio Code Web - (See the subsequent section to get details)
     3. VSCodium - <https://vscodium.com/>
 6. Trigger `publish-vscode-extension` workflow on Github 
-7. Check it on <https://marketplace.visualstudio.com/manage/publishers/hangxingliu> after 10~15 minutes
-8. Create and push Git tag. e.g., `git tag 2.0.0-preview`, `git push --tags`
-9. Create a new release at [github-release-new]
+7. Trigger `publish-vscode-extension-to-open-vsx` workflow on Github
+8. Check it on <https://marketplace.visualstudio.com/manage/publishers/hangxingliu> after 10~15 minutes
+9. Create and push Git tag. e.g., `git tag 2.0.0-preview`, `git push --tags`
+10. Create a new release at [github-release-new]
     - Title: `<major>.<minor>.<patch>[-pre.<no>] (<year>-<month>-<day>)`
     - Content: copying from the [CHANGELOG.md](./CHANGELOG.md)
     - Assets: `*.vsix`
-10. Release vsix file to Open VSX
-    - URL: <https://open-vsx.org/user-settings/extensions>
-    - **ONLY** Publish vsix file built through CI from: [github-ci]
 
 ## Test extension in Visual Studio Code Web
 
@@ -48,6 +46,7 @@ yarn start
 - Scopes: (Click "Show all scopes")
     - [x] Marketplace > Manage
 
+<https://open-vsx.org/user-settings/extensions>
 
 [github-ci]: https://github.com/hangxingliu/vscode-systemd/actions/workflows/ci.yaml
 [github-release-new]: https://github.com/hangxingliu/vscode-systemd/releases/new
