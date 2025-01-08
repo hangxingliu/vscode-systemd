@@ -94,7 +94,7 @@
           <key>name</key>
           <string>entity.name.section</string>
           <key>match</key>
-          <string>^\s*\[(Config|Content|Distribution|Host|Match|Output|Validation)\]</string>
+          <string>^\s*\[(Build|Config|Content|Distribution|Host|Include|Match|Output|Runtime|UKIProfile|Validation)\]</string>
         </dict>
         <dict>
           <key>name</key>
