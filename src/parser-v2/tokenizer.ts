@@ -119,10 +119,15 @@ export function tokenizer(conf: string, _opts?: TokenizerOptions): TokenizerResu
         moveToNewLine();
         if (state.escapedFor) return enterToken(state.escapedFor);
         if (mkosi) {
-            const valueMayNotEnd =
+            const valueNotFinished =
                 (currentType === TokenType.none && state.prevType === TokenType.assignment) ||
                 currentType === TokenType.directiveValue;
-            if (valueMayNotEnd) state.valueNotFinished = 1;
+            if (valueNotFinished) {
+                state.valueNotFinished = 1;
+            } else if (state.valueNotFinished > 1) {
+                // reset the `valueNotFinished` to the correct state. the reason in its jsDoc
+                state.valueNotFinished = 1;
+            }
         }
     }
 

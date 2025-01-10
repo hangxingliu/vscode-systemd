@@ -35,8 +35,10 @@
 
 ## 3.x/4.x
 
+- [x] Fix the incorrect parsing of mkosi files that contains any comment line in the multi-line value
 - [ ] Add more comments in the code to ensure this project can be easily maintained without me
 - [ ] Add some docs to eliminate user misunderstandings about `Unknown directive`
+  - [ ] Add an optional to disable it in quick fix
 - [ ] Specifiers in `systemd.link(5)`, `repart.d(5)`, `sysupdate.d(5)`, ...
 - [ ] New test files for `/etc/sysupdate.d/*.feature` (`sysupdate.features(5)`)
 - [ ] Add versioning support for podman quadlet

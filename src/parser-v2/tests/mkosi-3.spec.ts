@@ -23,3 +23,28 @@ test("[Host] #", ({ conf, diagnosis, range }) => {
     ]);
     deepStrictEqual(forecast, TokenType.comment);
 });
+
+test("[Host]\nPackages=\n  acl\n  # comment\n", ({ conf, diagnosis, range }) => {
+    const { tokens, forecast } = tokenizer(conf, { mkosi: true });
+    diagnosis(tokens);
+    deepStrictEqual(forecast, TokenType.none);
+});
+
+test("[Host]\nPackages=\n  acl\n  # comment\n ", ({ conf, diagnosis, range }) => {
+    const { tokens, forecast } = tokenizer(conf, { mkosi: true });
+    diagnosis(tokens);
+    deepStrictEqual(forecast, TokenType.directiveValue);
+});
+
+test("[Host]\nPackages=\n  acl\nNew", ({ conf, diagnosis, range }) => {
+    const { tokens, forecast } = tokenizer(conf, { mkosi: true });
+    diagnosis(tokens);
+    deepStrictEqual(forecast, TokenType.directiveKey);
+});
+
+
+test("[Host]\nPackages=\n  acl\n  # comment\nNew", ({ conf, diagnosis, range }) => {
+    const { tokens, forecast } = tokenizer(conf, { mkosi: true });
+    diagnosis(tokens);
+    deepStrictEqual(forecast, TokenType.directiveKey);
+});
