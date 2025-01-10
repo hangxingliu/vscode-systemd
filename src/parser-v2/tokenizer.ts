@@ -50,6 +50,7 @@ export function tokenizer(conf: string, _opts?: TokenizerOptions): TokenizerResu
         }
 
         state.passedLeadingBlank = true;
+        /** @todo the following statements maybe removable (adding more tests for a double check)  */
         if (state.type === TokenType.comment) {
             location.moveToNext();
             continue;
@@ -57,19 +58,19 @@ export function tokenizer(conf: string, _opts?: TokenizerOptions): TokenizerResu
 
         if (state.escapedFor) {
             enterToken(state.escapedFor);
-            state.escapedFor = TokenType.none;
+            delete state.escapedFor;
             location.moveToNext();
             continue;
         }
 
         if (state.type === TokenType.none) {
-            const inSameLine = location.inSameLine(state.lastRange?.[1]);
-            const isValue = state.valueMayNotEnd >= 2 || (inSameLine && state.lastType === TokenType.assignment);
+            const inSameLine = location.inSameLine(state.prevRange?.[1]);
+            const isValue = state.valueNotFinished >= 2 || (inSameLine && state.prevType === TokenType.assignment);
 
             if (isValue) {
                 enterToken(TokenType.directiveValue);
                 checkEscapeChar(ch, TokenType.directiveValue);
-            } else if (ch === "=" && state.lastType !== TokenType.assignment) {
+            } else if (ch === "=" && state.prevType !== TokenType.assignment) {
                 handleAssignmentOperator();
                 continue;
             } else if (ch === "[") {
@@ -80,7 +81,7 @@ export function tokenizer(conf: string, _opts?: TokenizerOptions): TokenizerResu
             }
 
             location.moveToNext();
-            state.valueMayNotEnd = 0;
+            state.valueNotFinished = 0;
             continue;
         }
 
@@ -119,40 +120,36 @@ export function tokenizer(conf: string, _opts?: TokenizerOptions): TokenizerResu
         if (state.escapedFor) return enterToken(state.escapedFor);
         if (mkosi) {
             const valueMayNotEnd =
-                (currentType === TokenType.none && state.lastType === TokenType.assignment) ||
+                (currentType === TokenType.none && state.prevType === TokenType.assignment) ||
                 currentType === TokenType.directiveValue;
-            if (valueMayNotEnd) state.valueMayNotEnd = 1;
+            if (valueMayNotEnd) state.valueNotFinished = 1;
         }
     }
 
     function handleWhiteSpace(ch: string) {
-        if (state.passedLeadingBlank) state.escapedFor = TokenType.none;
-        else if (state.valueMayNotEnd > 0) state.valueMayNotEnd++;
+        if (state.passedLeadingBlank) delete state.escapedFor;
+        else if (state.valueNotFinished > 0) state.valueNotFinished++;
         location.moveToNext();
     }
 
     function handleCommentSign() {
+        /** @todo the following `if` cond maybe removable (adding more tests for a double check)  */
         if (state.type !== TokenType.comment) {
             if (!mkosi && state.passedLeadingBlank) return false;
             state.passedLeadingBlank = false;
         }
-        // const typeBeforeComment = state.type;
         enterToken(TokenType.comment);
 
         const nextIndex = conf.indexOf("\n", location.offset + 1);
         location.move((nextIndex < 0 ? conf.length : nextIndex) - location.offset);
         enterToken(TokenType.none);
-        // if (nextIndex >= 0) {
-        //     location.moveToNewLine();
-        //     enterToken(typeBeforeComment);
-        // }
         return true;
     }
 
     function checkEscapeChar(ch: string, escapedFor: typeof state.escapedFor) {
         if (mkosi) return;
         if (ch === "\\") state.escapedFor = escapedFor;
-        else state.escapedFor = TokenType.none;
+        else delete state.escapedFor;
     }
 
     function moveToNewLine() {
@@ -172,9 +169,9 @@ export function tokenizer(conf: string, _opts?: TokenizerOptions): TokenizerResu
         if (state.type === type) return;
         const currentLocation = location.get();
         if (state.type && state.from[0] !== currentLocation[0]) {
-            state.lastType = state.type;
-            state.lastRange = [state.from, currentLocation];
-            tokenHandler(state.lastType, state.lastRange);
+            state.prevType = state.type;
+            state.prevRange = [state.from, currentLocation];
+            tokenHandler(state.prevType, state.prevRange);
         }
         state.type = type;
         state.from = currentLocation;

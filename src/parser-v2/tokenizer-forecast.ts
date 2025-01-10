@@ -7,18 +7,18 @@ import { LocationTuple, TokenType, TokenizerState } from "./types.js";
 export function getForecast(conf: string, state: TokenizerState, currentLocation: LocationTuple): TokenType {
     const [, currentLine] = currentLocation;
     // in the same line
-    if (state.lastRange && currentLine === state.lastRange[1][1]) {
-        const { lastType } = state;
+    if (state.prevRange && currentLine === state.prevRange[1][1]) {
+        const { prevType: lastType } = state;
         if (lastType === TokenType.comment) return TokenType.comment;
         if (lastType === TokenType.assignment || lastType === TokenType.directiveValue) return TokenType.directiveValue;
 
         if (lastType === TokenType.section) {
-            const lastOffset = state.lastRange[1][0] - 1;
+            const lastOffset = state.prevRange[1][0] - 1;
             if (conf[lastOffset] === "]") return TokenType.unknown;
             return TokenType.section;
         }
         if (lastType === TokenType.directiveKey) {
-            const lastOffset = state.lastRange[1][0] - 1;
+            const lastOffset = state.prevRange[1][0] - 1;
             if (/^\s$/.test(conf[lastOffset])) return TokenType.assignment;
             return TokenType.directiveKey;
         }
@@ -27,6 +27,6 @@ export function getForecast(conf: string, state: TokenizerState, currentLocation
     }
 
     if (state.escapedFor) return state.escapedFor;
-    if (state.valueMayNotEnd >= 2) return TokenType.directiveValue;
+    if (state.valueNotFinished >= 2) return TokenType.directiveValue;
     return TokenType.none;
 }

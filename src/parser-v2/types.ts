@@ -50,7 +50,7 @@ export type TokenizerState = {
      *
      * This state is useful for resolving the type of multi-line values
      */
-    escapedFor?: TokenType.none | TokenType.directiveValue | TokenType.directiveKey;
+    escapedFor?: TokenType.directiveValue | TokenType.directiveKey;
 
     /**
      * This state is designed for `mkosi` configuration.
@@ -58,14 +58,23 @@ export type TokenizerState = {
      * following the first line. The tokenizer cannot immediately determine if the value has ended
      * when it encounters the character `\n`.
      *
-     * 0: the last value has ended;
-     * 1: maybe end;
-     * 2: the last value has not ended yet.
+     * Here is an example to show the relation between this state value and the location:
+     * ```
+     * A=┃   // valueNotFinished=0
+     *
+     * A=
+     * ┃     // valueNotFinished=1 (this location may be a start point for directive too)
+     *
+     * A=
+     *  ┃    // valueNotFinished=2 (this location is for value only)
+     * ```
      */
-    valueMayNotEnd: number;
+    valueNotFinished: number;
 
-    lastType?: TokenType;
-    lastRange?: RangeTuple;
+    /** The type of previous scanned token */
+    prevType?: TokenType;
+    /** The range of previous scanned token */
+    prevRange?: RangeTuple;
 
     /** The type of current(pending) token */
     type: TokenType;
@@ -74,7 +83,14 @@ export type TokenizerState = {
 };
 
 export type TokenizerResult = {
+    /**
+     * Generated tokens.
+     * The max length of this array is 1 if enabled {@link TokenizerOptions.onlyLastToken}
+     */
     tokens: Token[];
+    /**
+     * The expected token type at the end position of the given config string
+     */
     forecast: TokenType;
 };
 

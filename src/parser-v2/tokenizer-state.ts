@@ -7,8 +7,7 @@ import { Token, TokenizerState, TokenType, TokenizerOptions } from "./types.js";
 const TOKENIZER_INIT_STATE: Readonly<TokenizerState> = {
     //
     passedLeadingBlank: false,
-    escapedFor: TokenType.none,
-    valueMayNotEnd: 0,
+    valueNotFinished: 0,
     //
     from: [0, 0, 0],
     type: TokenType.none,
@@ -53,8 +52,7 @@ export function initTokenizerStateIncrementally(
 
     const newState: TokenizerState = {
         passedLeadingBlank: false,
-        escapedFor: TokenType.none,
-        valueMayNotEnd: 0,
+        valueNotFinished: 0,
         //
         from: token.range[0],
         type: token.type,
