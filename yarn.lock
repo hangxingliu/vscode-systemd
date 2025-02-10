@@ -211,10 +211,17 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@eslint/js@npm:9.17.0, @eslint/js@npm:^9.17.0":
+"@eslint/js@npm:9.17.0":
   version: 9.17.0
   resolution: "@eslint/js@npm:9.17.0"
   checksum: 10c0/a0fda8657a01c60aa540f95397754267ba640ffb126e011b97fd65c322a94969d161beeaef57c1441c495da2f31167c34bd38209f7c146c7225072378c3a933d
+  languageName: node
+  linkType: hard
+
+"@eslint/js@npm:^9.20.0":
+  version: 9.20.0
+  resolution: "@eslint/js@npm:9.20.0"
+  checksum: 10c0/10e7b5b9e628b5192e8fc6b0ecd27cf48322947e83e999ff60f9f9e44ac8d499138bcb9383cbfa6e51e780d53b4e76ccc2d1753b108b7173b8404fd484d37328
   languageName: node
   linkType: hard
 
@@ -5481,7 +5488,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "vscode-systemd-support@workspace:."
   dependencies:
-    "@eslint/js": "npm:^9.17.0"
+    "@eslint/js": "npm:^9.20.0"
     "@swc/cli": "npm:^0.5.2"
     "@swc/core": "npm:^1.10.6"
     "@types/node": "npm:^22.10.5"
