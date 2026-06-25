@@ -1,8 +1,9 @@
 export const languageId = {
     systemd: "systemd-conf",
     mkosi: "mkosi-conf",
+    systemdUnit: "systemd-unit-file",
 };
-export const languageIds = [languageId.systemd, languageId.mkosi] as const;
+export const languageIds = [languageId.systemd, languageId.mkosi, languageId.systemdUnit] as const;
 export const allLanguageIds = new Set(languageIds);
 
 export const languageAliases = ["Systemd Configuration", "systemd-conf", "systemd-unit-file"];
