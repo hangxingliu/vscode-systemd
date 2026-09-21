@@ -187,6 +187,9 @@ export function isMkosiFile(fileType: SystemdFileType) {
 
 export function parseSystemdFilePath(filePath: string | undefined | null, enablePodman = true): SystemdFileType {
     if (!filePath) return SystemdFileType.unknown;
+    if (filePath.endsWith(".ignore")) {
+        filePath = filePath.slice(0, -".ignore".length);
+    }
     let mtx = filePath.match(/\.([\w-]+)$/);
     if (!mtx) return SystemdFileType.unknown;
     let ext = mtx[1];
@@ -214,9 +217,17 @@ export function parseSystemdFilePath(filePath: string | undefined | null, enable
         if (fileName === 'mkosi.conf') return SystemdFileType.mkosi;
         if (filePath.includes("mkosi.conf.d/")) return SystemdFileType.mkosi;
 
-        if (filePath.includes("service.d/")) return SystemdFileType.service;
-        if (filePath.includes("slice.d/")) return SystemdFileType.slice;
-        if (filePath.includes("scope.d/")) return SystemdFileType.scope;
+        const dropInMtx = filePath.match(/\.([\w-]+)\.d[/\\]/);
+        if (dropInMtx) {
+            const dropInExt = dropInMtx[1].toLowerCase();
+            if (dropInExt === "network") {
+                if (enablePodman && (filePath.includes("containers/") || filePath.includes("podman/") || filePath.includes("quadlets/")))
+                    return SystemdFileType.podman_network;
+                return SystemdFileType.network;
+            }
+            const dropInType = fileExtToType.get(dropInExt);
+            if (dropInType) return dropInType;
+        }
         //
         if (filePath.includes("systemd/system.conf") || filePath.includes("systemd/user.conf"))
             return SystemdFileType.system;

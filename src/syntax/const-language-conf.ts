@@ -9,10 +9,9 @@ export const languageAliases = ["Systemd Configuration", "systemd-conf", "system
 export const firstLine = /^\[(Unit|Install)\]/;
 export const filenamePatterns = [
     "**/systemd/*.conf",
-    "**/systemd/*.conf.d/*.conf",
-    "**/*.{service,slice,scope}.d/*.conf",
-    "**/{repart,sysupdate}.d/*.conf",
+    "**/*.d/*.conf",
     "**/sysupdate.d/*.feature",
+    "**/*.ignore",
 ];
 
 export const jinja2extensions = [

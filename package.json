@@ -80,10 +80,9 @@
                 "firstLine": "^\\[(Unit|Install)\\]",
                 "filenamePatterns": [
                     "**/systemd/*.conf",
-                    "**/systemd/*.conf.d/*.conf",
-                    "**/*.{service,slice,scope}.d/*.conf",
-                    "**/{repart,sysupdate}.d/*.conf",
-                    "**/sysupdate.d/*.feature"
+                    "**/*.d/*.conf",
+                    "**/sysupdate.d/*.feature",
+                    "**/*.ignore"
                 ],
                 "extensions": [
                     ".container",
